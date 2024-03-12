@@ -1,0 +1,123 @@
+<!-- Template for instructions page -->
+<div id="resources" style="display: none;">
+  <img id="sky-image" src="img/sky.jpg">
+  <img id="sky-image1" src="img/sky1.jpg">
+  <img id="sky-image2" src="img/sky2.jpg">
+</div>
+<div id="practice-start">
+  <h2 class="text-center bolded-blue" data-i18n="litw-study-practice"></h2>
+  <h3 class="text-center" data-i18n="litw-practice-p1"></h3>
+  <button style="margin: auto;" class="btn btn-primary" type="submit" onclick="startPractice()" data-i18n="litw-study-start-practice"></button>
+</div>
+<div class='modal' id='task-modal' role='dialog'>
+  <div class='modal-dialog'>
+      <div class='modal-content' id='modal-content' style="min-height: 100%">
+          <div class='modal-body' id='modal-body' style="text-align: center">
+              <div id="practice-messages">
+                  <h2 data-i18n="litw-study-practice"></h2>
+                  <div id="practice-m1">
+                      <p data-i18n="litw-practice-p2-{{ task_type }}"></p>
+                  </div>
+                  <div id="practice-m2" style="display: none">
+                  </div>
+                  <div id="practice-m3" style="display: none">
+                      <p data-i18n="litw-practice-p3-{{ task_type }}"></p>
+                      <p data-i18n="litw-practice-p4"></p>
+                      <p data-i18n="litw-practice-p5"></p>
+                  </div>
+              </div>
+              <div id="result-messages" style="display: none">
+                  <h3 class="bolded-blue" data-i18n="litw-practice-p6"></h3>
+                  <h4 id="result-message"></h4>
+                  <p data-i18n="litw-practice-result-p2"></p>
+                  <p data-i18n="litw-practice-result-p3"></p>
+              </div>
+              <canvas id='prompt_canvas'></canvas>
+              <div id="response_div" style="display: none">
+                  <canvas id='response_canvas'></canvas>
+                  <span class="glyphicon glyphicon-ok"
+                        style="position: absolute; right: 0; top: 0; font-size: 5em; margin-right: 10px"
+                        onclick="doneAnswering()">
+                  </span>
+                  <span class="glyphicon glyphicon glyphicon-repeat"
+                        style="position: absolute; left: 0; top: 0; font-size: 5em; margin-right: 10px"
+                        onclick="rerunPractice()">
+                  </span>
+              </div>
+          </div>
+      </div>
+  </div>
+</div>
+<div id="practice-finish" style="display: none">
+  <h2 class="bolded-blue" data-i18n="litw-study-done-practice"></h2>
+  <h3 data-i18n="litw-study-p1"></h3>
+  <h4 data-i18n="litw-study-p2"></h4>
+</div>
+
+<script type="text/javascript">
+  var trial = {
+      promptBoxSize: 210,
+      promptLineLength: 70,
+      responseBoxSize: 300,
+      answers: []
+  }
+  var answered = false;
+  var task_type = "{{{ task_type }}}"
+
+  function startPractice(){
+      $('#practice-start').hide();
+      $('#task-modal').show();
+      runPractice(7000);
+  }
+
+  function runPractice(promptTimeout=5000) {
+      $('canvas').attr('width', ( $('#modal-content').width() ));
+      $('canvas').attr('height', ( $('#modal-content').height()-200 ));
+      LITW.study.draw('prompt_canvas', trial.promptBoxSize, trial.promptLineLength, 'sky-image1');
+      LITW.study.draw('response_canvas', trial.responseBoxSize, 0, 'sky-image2');
+      setTimeout(function(){
+          $('#prompt_canvas').hide();
+          $('#practice-m1').hide();
+          $('#practice-m2').show();
+          $('#ajax-working').show();
+          setTimeout(enableResponse, 5000);
+      }, promptTimeout);
+  }
+
+  function enableResponse() {
+      $('#ajax-working').hide();
+      $('#practice-m2').hide();
+      $('#practice-m3').show();
+      $('#response_div').show();
+      LITW.study.activateResponse(true);
+  }
+
+  function doneAnswering() {
+      if(answered) {
+          $('#btn-next-page').show()
+          $('#task-modal').hide();
+          $('#practice-finish').show();
+      } else {
+          LITW.study.activateResponse(false);
+          var answer = LITW.study.getCurrentLine();
+          var absolute = task_type === 'absolute' ? true : false;
+          var error = LITW.study.calculateAnswerError(trial.promptBoxSize, trial.promptLineLength, trial.responseBoxSize, answer, absolute);
+          LITW.study.drawComparison('response_canvas', trial.promptBoxSize, trial.promptLineLength, trial.responseBoxSize, answer);
+          $('#practice-m3').hide();
+          $('#result-message').text(`${$.i18n('litw-practice-result-p1')} ${error.proportion}%`);
+          $('#result-messages').show();
+          answered = true;
+      }
+  }
+
+  function rerunPractice() {
+      answered = false;
+      $('#practice-m3').hide();
+      $('#response_div').hide();
+      $('#practice-result').hide();
+      $('#result-messages').hide();
+      $('#practice-m1').show();
+      $('#prompt_canvas').show();
+      runPractice();
+  }
+</script>

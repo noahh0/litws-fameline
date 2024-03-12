@@ -1,0 +1,68 @@
+<!-- Template for instructions page -->
+<div id="resources" style="display: none;">
+	<img id="sky-image" src="img/sky.jpg">
+	<img id="sky-image1" src="img/sky1.jpg">
+	<img id="sky-image2" src="img/sky2.jpg">
+</div>
+
+<h2 class="text-center bolded-blue" data-i18n="litw-instruct-header-1_{{ task_order }}"></h2>
+<h3 class="text-center" data-i18n="litw-instruct-header-2_{{ task_order }}"></h3>
+<h4 class="text-center" data-i18n="litw-instruct-header-3_{{ task_order }}-{{ task_type }}"></h4>
+
+<div id="myCarousel" class="carousel slide" data-interval="false" data-ride="carousel" style="margin: auto; padding: 100px; display: block; max-width: 1400px">
+	<!-- Indicators -->
+	<ol class="carousel-indicators" style="list-style-type: circle">
+			<li data-target="#myCarousel" data-slide-to="0" class="active" style="padding: 10px; font-size: 30px;"></li>
+			<li data-target="#myCarousel" data-slide-to="1" style="padding: 10px;"></li>
+			<li data-target="#myCarousel" data-slide-to="2" style="padding: 10px;"></li>
+			<li data-target="#myCarousel" data-slide-to="3" style="padding: 10px;"></li>
+	</ol>
+
+	<!-- Wrapper for slides -->
+	<div class="carousel-inner">
+			<div class="carousel-item active">
+					<div style="display: flex; align-content: center; flex-direction: column">
+							<p class="text-center" data-i18n="litw-instruct-intro{{ task_order }}-{{ task_type }}"></p>
+							<img src="../img/instructions1.png">
+					</div>
+			</div>
+
+			<div class="carousel-item">
+					<div style="display: flex; align-content: center; flex-direction: column">
+							<p class="text-center" data-i18n="litw-instruct-examples{{ task_order }}-{{ task_type }}"></p>
+							<img src="../img/instructions-examples-{{ task_type }}.png">
+					</div>
+			</div>
+
+			<div class="carousel-item">
+					<div style="display: flex; align-content: center; flex-direction: column">
+							<p class="text-center" data-i18n="litw-instruct-rule_{{task_order}}"></p>
+							<img src="../img/instructions-rule.png">
+					</div>
+			</div>
+
+			<div class="carousel-item">
+					<div style="display: flex; align-content: center; flex-direction: column">
+							<p class="text-center" data-i18n="litw-instruct-keys_{{task_order}}"></p>
+							<img src="../img/instructions-keys.png">
+					</div>
+			</div>
+
+	</div>
+
+	<!-- Left and right controls -->
+	<a class="carousel-control-prev" href="#myCarousel" role="button" data-slide="prev">
+			<span class="carousel-control-prev-icon"></span>
+	</a>
+	<a class="carousel-control-next" href="#myCarousel" role="button" data-slide="next">
+			<span class="carousel-control-next-icon"></span>
+	</a>
+</div>
+<script>
+	$('#myCarousel').on('slide.bs.carousel', function (e) {
+			let slide_position = e.to;
+			if(slide_position == 3) {
+					$('#btn-next-page').show();
+			}
+	});
+</script>

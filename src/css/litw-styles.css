@@ -689,3 +689,7 @@ a:active {
 	max-width: 99%;
 	height: 98%
 }
+
+ol .active {
+	background-color: #003b4e;
+}

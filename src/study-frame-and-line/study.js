@@ -69,8 +69,12 @@ module.exports = (function(exports) {
 				name: "practice",
 				type: "display-slide",
 				template: practiceTemplate,
+				template_data: {
+					task_order: 1,
+					task_type: "absolute",
+				},
 				display_element: $("#practice"),
-				display_next_button: true,
+				display_next_button: false,
 			},
 			COMMENTS: {
 				type: "display-slide",

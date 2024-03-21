@@ -1,9 +1,3 @@
-<!-- Template for instructions page -->
-<div id="resources" style="display: none;">
-    <img id="sky-image" src="img/sky.jpg">
-    <img id="sky-image1" src="img/sky1.jpg">
-    <img id="sky-image2" src="img/sky2.jpg">
-</div>
 <div id="practice-start">
     <h2 class="text-center bolded-blue" data-i18n="litw-study-practice"></h2>
     <h3 id="instructions-one" class="text-center data-i18n=" data-i18n="litw-practice-p1"></h3>
@@ -13,6 +7,9 @@
 </div>
 <div id="practice-instructions">
     <h5 id="instructions-two" class="text-center data-i18n=" style="visibility: hidden;" data-i18n="litw-practice-p2-{{task_type}}"></h5>
+</div>
+<div style="display:flex; justify-content: center;">
+    <canvas id='prompt_canvas'></canvas>
 </div>
 <canvas id='prompt_canvas'></canvas>
 <div id="response_div" style="display: none">
@@ -28,13 +25,6 @@
 </div>
 
 <script type="text/javascript">
-    var trial = {
-        promptBoxSize: 210,
-        promptLineLength: 70,
-        responseBoxSize: 300,
-        answers: []
-    }
-
     function startPractice() {
         let startButton = document.getElementById("startButton");
         startButton.style.display = "none";
@@ -45,7 +35,14 @@
 
         // Trying to learn about canvases
         const canvas1 = document.getElementById("prompt_canvas");
-        const context = canvas1.getContext("2d");
-        context.fillRect(10, 10, 300, 100);
+        canvas1.width = 600;
+        canvas1.height = 600;
+        const ctx = canvas1.getContext("2d");
+        ctx.strokeRect(200, 50, 200, 200);
+
+        ctx.beginPath(); // Start a new path
+        ctx.moveTo(300, 50);
+        ctx.lineTo(300, 100);
+        ctx.stroke(); // Render the path
     }
 </script>

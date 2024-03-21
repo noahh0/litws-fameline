@@ -74,7 +74,7 @@ module.exports = (function(exports) {
 					task_type: "absolute",
 				},
 				display_element: $("#practice"),
-				display_next_button: false,
+				display_next_button: true,
 			},
 			COMMENTS: {
 				type: "display-slide",

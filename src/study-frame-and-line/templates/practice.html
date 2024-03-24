@@ -65,12 +65,8 @@
                         drawLine(lastY, lastY + 5);
                         lastY = lastY + 5;
                     } else if (e.keyCode == 38) {
-                        ctx.moveTo(300, lastY);
-                        ctx.beginPath();
-                        lastY -= moveAmount;
-                        ctx.lineTo(300, lastY);
-                        ctx.stroke(); // Render the path
-                        console.log(lastY)
+                        ctx.clearRect(290, lastY, 25, 5);
+                        lastY = lastY - 5;
                     }
                 }
 

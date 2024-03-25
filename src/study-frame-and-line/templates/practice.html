@@ -8,6 +8,8 @@
 <div id="practice-instructions">
     <h5 id="instructions-two" class="text-center data-i18n=" style="visibility: hidden;" data-i18n="litw-practice-p2-{{task_type}}"></h5>
     <h5 id="instructions-three" class="text-center data-i18n=" style="visibility: hidden;" data-i18n="litw-practice-p3-{{task_type}}"></h5>
+    <h5 id="instructions-four" class="text-center data-i18n=" style="visibility: hidden;" data-i18n="litw-practice-p4"></h5>
+    <h5 id="instructions-five" class="text-center data-i18n=" style="visibility: hidden;" data-i18n="litw-practice-p5"></h5>
 </div>
 <div style="display:flex; justify-content: center;">
     <canvas id='prompt_canvas'></canvas>
@@ -53,6 +55,10 @@
                 practiceInstructions.removeChild(instructionsTwo);
                 let instructionsThree = document.getElementById("instructions-three");
                 instructionsThree.style.visibility = "visible";
+                let instructionsFour = document.getElementById("instructions-four");
+                instructionsFour.style.visibility = "visible";
+                let instructionsFive = document.getElementById("instructions-five");
+                instructionsFive.style.visibility = "visible";
 
                 ctx.strokeRect(250, 50, 100, 100);
 

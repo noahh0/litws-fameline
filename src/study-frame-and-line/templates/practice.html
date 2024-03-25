@@ -38,7 +38,7 @@
 
         drawLine(50, 100);
 
-        let lastY = 50;
+        let lastY = 49;
 
         let count = 5;
         const timer = setInterval(function() {
@@ -58,15 +58,20 @@
 
                 ctx.fillStyle = "black";
 
-                let moveAmount = 5;
+                let moveAmount = 2;
 
                 document.onkeydown = function(e) {
                     if (e.keyCode == 40) {
-                        drawLine(lastY, lastY + 5);
-                        lastY = lastY + 5;
+                        if (lastY != 147) {
+                            lastY = lastY + 2;
+                            drawLine(lastY, lastY + 2);
+                        }
+
                     } else if (e.keyCode == 38) {
-                        ctx.clearRect(290, lastY, 25, 5);
-                        lastY = lastY - 5;
+                        if (lastY != 49) {
+                            ctx.clearRect(298, lastY, 5, 2);
+                            lastY = lastY - 2;
+                        }
                     }
                 }
 

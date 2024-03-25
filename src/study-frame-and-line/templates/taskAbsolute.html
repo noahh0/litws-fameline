@@ -1,29 +1,76 @@
-<h5 id="instructions-four" class="text-center  bolded-blue data-i18n=">Trial: </h5>
+<h5 id="progress-bar" class="text-center  bolded-blue data-i18n="></h5>
 <div style="display:flex; justify-content: center;">
   <canvas id='prompt_canvas'></canvas>
 </div>
 
 <script>
-
   let trialNum = 1;
 
   let squareSizes = [100, 125, 150, 175, 200, 225, 250, 275, 300, 325, 350, 375, 400, 425, 450, 475, 500, 525, 550, 575, 600];
   let lineFractions = [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 0.25, 0.75, 0.33, 0.66];
+  let absoluteTrialResults = [];
 
   window.onload = initTrial();
 
   function initTrial() {
-    let canvas1 = document.getElementById("prompt_canvas");
-    canvas1.width = 800;
-    canvas1.height = 700;
-    const ctx = canvas1.getContext("2d");
-    let randomDimension = squareSizes[Math.floor(Math.random() * 21)];
-    let randomLineLength = lineFractions[Math.floor(Math.random() * 13)];
-    console.log(randomDimension)
-    console.log(randomLineLength)
-    ctx.strokeRect((canvas1.width - randomDimension) / 2, 50, randomDimension, randomDimension);
+      window.addEventListener("keydown", function(e) {
+            // space and arrow keys
+            if([32, 37, 38, 39, 40].indexOf(e.keyCode) > -1) {
+                e.preventDefault();
+            }
+        }, false);
+    //while (trialNum < 6) {
+      let progressBar = document.getElementById("progress-bar");
+      progressBar.textContent = "Trial: " + trialNum + "/6";
+      let canvas1 = document.getElementById("prompt_canvas");
+      canvas1.width = 800;
+      canvas1.height = 700;
+      const ctx = canvas1.getContext("2d");
+      let randomDimension = squareSizes[Math.floor(Math.random() * 21)];
+      let randomLineLength = lineFractions[Math.floor(Math.random() * 13)];
+      console.log(randomDimension)
+      console.log(randomLineLength)
+      ctx.strokeRect((canvas1.width - randomDimension) / 2, 50, randomDimension, randomDimension);
+      drawLine(((canvas1.width - randomDimension) / 2) + randomDimension / 2, 50, 50 + Math.floor(randomLineLength * randomDimension));
 
-    drawLine(((canvas1.width - randomDimension) / 2) + randomDimension / 2, 50, 50 + Math.floor(randomLineLength * randomDimension));
+      lastY = 49;
+
+      let count = 5;
+        const timer = setInterval(function() {
+            count--;
+            console.log(count);
+            if (count === 0) {
+                clearInterval(timer);
+                ctx.clearRect(0, 0, canvas1.width, canvas1.height);
+
+                let index = squareSizes.indexOf(randomDimension);
+                let randomDimension2 = squareSizes[Math.floor(Math.random() * (21 - index)) + index];
+
+                ctx.strokeRect((canvas1.width - randomDimension2) / 2, 50, randomDimension2, randomDimension2);
+
+                ctx.fillStyle = "black";
+
+                let moveAmount = 2;
+
+                document.onkeydown = function(e) {
+                    if (e.keyCode == 40) {
+                        if (lastY < (49 + randomDimension2) - 2) {
+                            lastY = lastY + 2;
+                            drawLine(((canvas1.width - randomDimension2) / 2) + randomDimension2 / 2, lastY, lastY + 2);
+                        }
+
+                    } else if (e.keyCode == 38) {
+                        if (lastY != 49) {
+                            ctx.clearRect((((canvas1.width - randomDimension2) / 2) + randomDimension2 / 2) - 2, lastY, 5, 2);
+                            lastY = lastY - 2;
+                        }
+                    }
+                }
+
+            }
+        }, 1000);
+
+    //}
   }
 
 

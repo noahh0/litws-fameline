@@ -18,6 +18,7 @@ var irbTemplate = require("../templates/irb.html");
 var demographicsTemplate = require("../templates/demographics.html");
 var instructionsTemplate = require("/templates/instructions.html");
 var practiceTemplate = require("/templates/practice.html");
+var taskAbsoluteTemplate = require("/templates/taskAbsolute.html");
 var loadingTemplate = require("../templates/loading.html");
 var resultsTemplate = require("../templates/results.html");
 var resultsFooter = require("../templates/results-footer.html");
@@ -76,6 +77,13 @@ module.exports = (function(exports) {
 				display_element: $("#practice"),
 				display_next_button: true,
 			},
+			TASK_ABSOLUTE: {
+				name: "task_absolute",
+				type: "display-slide",
+				template: taskAbsoluteTemplate,
+				display_element: $("#task-abs"),
+				display_next_button: false,
+			},
 			COMMENTS: {
 				type: "display-slide",
 				template: commentsTemplate,
@@ -105,6 +113,7 @@ module.exports = (function(exports) {
 		timeline.push(params.slides.DEMOGRAPHICS);*/
 		timeline.push(params.slides.INSTRUCTIONS);
 		timeline.push(params.slides.PRACTICE);
+		timeline.push(params.slides.TASK_ABSOLUTE);
 		timeline.push(params.slides.COMMENTS);
 		timeline.push(params.slides.RESULTS);
 	}

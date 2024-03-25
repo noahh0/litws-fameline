@@ -6,17 +6,28 @@
     </div>
 </div>
 <div id="practice-instructions">
-    <h5 id="instructions-two" class="text-center data-i18n=" style="visibility: hidden;" data-i18n="litw-practice-p2-{{task_type}}"></h5>
-    <h5 id="instructions-three" class="text-center data-i18n=" style="visibility: hidden;" data-i18n="litw-practice-p3-{{task_type}}"></h5>
-    <h5 id="instructions-four" class="text-center data-i18n=" style="visibility: hidden;" data-i18n="litw-practice-p4"></h5>
-    <h5 id="instructions-five" class="text-center data-i18n=" style="visibility: hidden;" data-i18n="litw-practice-p5"></h5>
+    <h5 id="instructions-two" class="text-center data-i18n=" style="display: none;" data-i18n="litw-practice-p2-{{task_type}}"></h5>
+    <h5 id="instructions-three" class="text-center data-i18n=" style="display: none;" data-i18n="litw-practice-p3-{{task_type}}"></h5>
+    <h5 id="instructions-four" class="text-center data-i18n=" style="display: none;" data-i18n="litw-practice-p4"></h5>
+    <h5 id="instructions-five" class="text-center data-i18n=" style="display: none;" data-i18n="litw-practice-p5"></h5>
+</div>
+<div>
+    <h3 id="results-one" class="text-center bolded-blue" style="display: none;" data-i18n="litw-practice-p6"></h3>
+    <h4 id="results-two" class="text-center data-i18n=" style="display: none;" data-i18n="litw-practice-result-p1"></h4>
+    <h6 id="results-three" class="text-center data-i18n=" style="display: none;" data-i18n="litw-practice-result-p2"></h5>
+    <h6 id="results-four" class="text-center data-i18n=" style="display: none;" data-i18n="litw-practice-result-p3"></h5>
 </div>
 <div style="display:flex; justify-content: center;">
     <canvas id='prompt_canvas'></canvas>
 </div>
-<canvas id='prompt_canvas'></canvas>
+<div style=" display: flex; justify-content: center;">
+    <button id="redoButton" class="btn btn-primary" style="visibility: hidden;  margin-top: 30px; margin-right: 15px;" onclick="rerunPractice()" data-i18n="litw-study-redo-practice"></button>
+    <button id="doneButton" class="btn btn-primary" style="visibility: hidden; margin-top: 30px; margin-left: 15px;" onclick="finishPractice()" data-i18n="litw-study-finish-practice"></button>
+</div>
 
 <script type="text/javascript">
+    let lastY;
+
     function startPractice() {
         window.addEventListener("keydown", function(e) {
             // space and arrow keys
@@ -29,7 +40,7 @@
         let instructionsOne = document.getElementById("instructions-one");
         instructionsOne.style.display = "none";
         let instructionsTwo = document.getElementById("instructions-two");
-        instructionsTwo.style.visibility = "visible";
+        instructionsTwo.style.display = "block";
 
         // Trying to learn about canvases
         let canvas1 = document.getElementById("prompt_canvas");
@@ -40,7 +51,7 @@
 
         drawLine(50, 100);
 
-        let lastY = 49;
+        lastY = 49;
 
         let count = 5;
         const timer = setInterval(function() {
@@ -52,13 +63,17 @@
 
                 let practiceInstructions = document.getElementById("practice-instructions");
                 let instructionsTwo = document.getElementById("instructions-two");
-                practiceInstructions.removeChild(instructionsTwo);
+                instructionsTwo.style.display = "none";
                 let instructionsThree = document.getElementById("instructions-three");
-                instructionsThree.style.visibility = "visible";
+                instructionsThree.style.display = "block";
                 let instructionsFour = document.getElementById("instructions-four");
-                instructionsFour.style.visibility = "visible";
+                instructionsFour.style.display = "block";
                 let instructionsFive = document.getElementById("instructions-five");
-                instructionsFive.style.visibility = "visible";
+                instructionsFive.style.display = "block";
+                let redoButton = document.getElementById("redoButton");
+                let doneButton = document.getElementById("doneButton");
+                redoButton.style.visibility = "visible";
+                doneButton.style.visibility = "visible";
 
                 ctx.strokeRect(250, 50, 100, 100);
 
@@ -92,5 +107,55 @@
         ctx.moveTo(300, y1);
         ctx.lineTo(300, y2);
         ctx.stroke(); // Render the path
+    }
+
+    function rerunPractice() {
+        document.onkeydown = function () {};
+        let canvas1 = document.getElementById("prompt_canvas");
+        canvas1.width = 600;
+        canvas1.height = 300;
+        const ctx = canvas1.getContext("2d");
+        ctx.clearRect(0, 0, canvas1.width, canvas1.height);
+        let instructionsThree = document.getElementById("instructions-three");
+        instructionsThree.style.display = "none";
+        let instructionsFour = document.getElementById("instructions-four");
+        instructionsFour.style.display = "none";
+        let instructionsFive = document.getElementById("instructions-five");
+        instructionsFive.style.display = "none";
+        let redoButton = document.getElementById("redoButton");
+        let doneButton = document.getElementById("doneButton");
+        redoButton.style.visibility = "hidden";
+        doneButton.style.visibility = "hidden";
+        let instructionsOne = document.getElementById("instructions-one");
+        instructionsOne.style.display = "block";
+        let startButton = document.getElementById("startButton");
+        startButton.style.display = "block";
+    }
+
+    function finishPractice() {
+        document.onkeydown = function () {};
+        let canvas1 = document.getElementById("prompt_canvas");
+        canvas1.width = 600;
+        canvas1.height = 300;
+        const ctx = canvas1.getContext("2d");
+        ctx.clearRect(0, 0, canvas1.width, canvas1.height);
+        let instructionsThree = document.getElementById("instructions-three");
+        instructionsThree.style.display = "none";
+        let instructionsFour = document.getElementById("instructions-four");
+        instructionsFour.style.display = "none";
+        let instructionsFive = document.getElementById("instructions-five");
+        instructionsFive.style.display = "none";
+
+        let resultsOne = document.getElementById("results-one");
+        resultsOne.style.display = "block";
+        let resultsTwo = document.getElementById("results-two");
+        resultsTwo.style.display = "block";
+        let resultsThree = document.getElementById("results-three");
+        resultsThree.style.display = "block";
+        let resultsFour = document.getElementById("results-four");
+        resultsFour.style.display = "block";
+
+        let resultPercentage = ((lastY - 49) / 50) * 100;
+        resultsTwo.textContent = resultsTwo.textContent + " " + Math.abs(100, resultPercentage) + "%";
     }
 </script>

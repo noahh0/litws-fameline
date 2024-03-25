@@ -1,26 +1,36 @@
-<div id="practice-start">
-    <h2 class="text-center bolded-blue" data-i18n="litw-study-practice"></h2>
-    <h3 id="instructions-one" class="text-center data-i18n=" data-i18n="litw-practice-p1"></h3>
-    <div style=" display: flex; justify-content: center; align-items: center;">
-    <button id="startButton" class="btn btn-primary" type="submit" onclick="startPractice()" style="margin-top: 20px;"   data-i18n="litw-study-start-practice"></button>
+
+<div id="instructions-container-one">
+    <div id="practice-start">
+        <h2 class="text-center bolded-blue" data-i18n="litw-study-practice"></h2>
+        <h3 id="instructions-one" class="text-center data-i18n=" data-i18n="litw-practice-p1"></h3>
+        <div style=" display: flex; justify-content: center; align-items: center;">
+        <button id="startButton" class="btn btn-primary" type="submit" onclick="startPractice()" style="margin-top: 20px;"   data-i18n="litw-study-start-practice"></button>
+        </div>
+    </div>
+    <div id="practice-instructions">
+        <h5 id="instructions-two" class="text-center data-i18n=" style="display: none;" data-i18n="litw-practice-p2-{{task_type}}"></h5>
+        <h5 id="instructions-three" class="text-center data-i18n=" style="display: none;" data-i18n="litw-practice-p3-{{task_type}}"></h5>
+        <h5 id="instructions-four" class="text-center data-i18n=" style="display: none;" data-i18n="litw-practice-p4"></h5>
+        <h5 id="instructions-five" class="text-center data-i18n=" style="display: none;" data-i18n="litw-practice-p5"></h5>
+    </div>
+    <div>
+        <h3 id="results-one" class="text-center bolded-blue" style="display: none;" data-i18n="litw-practice-p6"></h3>
+        <h4 id="results-two" class="text-center data-i18n=" style="display: none;" data-i18n="litw-practice-result-p1"></h4>
+        <h6 id="results-three" class="text-center data-i18n=" style="display: none;" data-i18n="litw-practice-result-p2"></h5>
+        <h6 id="results-four" class="text-center data-i18n=" style="display: none;" data-i18n="litw-practice-result-p3"></h5>
     </div>
 </div>
-<div id="practice-instructions">
-    <h5 id="instructions-two" class="text-center data-i18n=" style="display: none;" data-i18n="litw-practice-p2-{{task_type}}"></h5>
-    <h5 id="instructions-three" class="text-center data-i18n=" style="display: none;" data-i18n="litw-practice-p3-{{task_type}}"></h5>
-    <h5 id="instructions-four" class="text-center data-i18n=" style="display: none;" data-i18n="litw-practice-p4"></h5>
-    <h5 id="instructions-five" class="text-center data-i18n=" style="display: none;" data-i18n="litw-practice-p5"></h5>
-</div>
+
 <div>
-    <h3 id="results-one" class="text-center bolded-blue" style="display: none;" data-i18n="litw-practice-p6"></h3>
-    <h4 id="results-two" class="text-center data-i18n=" style="display: none;" data-i18n="litw-practice-result-p1"></h4>
-    <h6 id="results-three" class="text-center data-i18n=" style="display: none;" data-i18n="litw-practice-result-p2"></h5>
-    <h6 id="results-four" class="text-center data-i18n=" style="display: none;" data-i18n="litw-practice-result-p3"></h5>
+    <h2 id="practice-done-one" class="text-center bolded-blue" style="display: none;" data-i18n="litw-study-done-practice"></h2>
+    <h4 id="practice-done-two" class="text-center data-i18n=" style="display: none;" data-i18n="litw-study-p1"></h4>
+    <h6 id="practice-done-three" class="text-center data-i18n=" style="display: none;" data-i18n="litw-study-p2"></h5>
 </div>
+
 <div style="display:flex; justify-content: center;">
     <canvas id='prompt_canvas'></canvas>
 </div>
-<div style=" display: flex; justify-content: center;">
+<div id="button-container" style=" display: flex; justify-content: center;">
     <button id="redoButton" class="btn btn-primary" style="visibility: hidden;  margin-top: 30px; margin-right: 15px;" onclick="rerunPractice()" data-i18n="litw-study-redo-practice"></button>
     <button id="doneButton" class="btn btn-primary" style="visibility: hidden; margin-top: 30px; margin-left: 15px;" onclick="finishPractice()" data-i18n="litw-study-finish-practice"></button>
 </div>
@@ -29,6 +39,8 @@
     let lastY;
 
     function startPractice() {
+        let resultsTwo = document.getElementById("results-two");
+        resultsTwo.textContent = "You answer is off by:";
         window.addEventListener("keydown", function(e) {
             // space and arrow keys
             if([32, 37, 38, 39, 40].indexOf(e.keyCode) > -1) {
@@ -49,7 +61,7 @@
         const ctx = canvas1.getContext("2d");
         ctx.strokeRect(200, 50, 200, 200);
 
-        drawLine(50, 100);
+        drawLine(300, 50, 100);
 
         lastY = 49;
 
@@ -85,7 +97,7 @@
                     if (e.keyCode == 40) {
                         if (lastY != 147) {
                             lastY = lastY + 2;
-                            drawLine(lastY, lastY + 2);
+                            drawLine(300, lastY, lastY + 2);
                         }
 
                     } else if (e.keyCode == 38) {
@@ -100,16 +112,20 @@
         }, 1000);
     }
 
-    function drawLine(y1, y2) {
+    function drawLine(x, y1, y2) {
         let canvas1 = document.getElementById("prompt_canvas");
         const ctx = canvas1.getContext("2d");
         ctx.beginPath(); // Start a new path
-        ctx.moveTo(300, y1);
-        ctx.lineTo(300, y2);
+        ctx.moveTo(x, y1);
+        ctx.lineTo(x, y2);
         ctx.stroke(); // Render the path
     }
 
     function rerunPractice() {
+
+        let doneButton = document.getElementById("doneButton");
+        doneButton.removeEventListener("click", showPracticeSummary);
+        doneButton.addEventListener("click", finishPractice);
         document.onkeydown = function () {};
         let canvas1 = document.getElementById("prompt_canvas");
         canvas1.width = 600;
@@ -123,16 +139,32 @@
         let instructionsFive = document.getElementById("instructions-five");
         instructionsFive.style.display = "none";
         let redoButton = document.getElementById("redoButton");
-        let doneButton = document.getElementById("doneButton");
         redoButton.style.visibility = "hidden";
         doneButton.style.visibility = "hidden";
         let instructionsOne = document.getElementById("instructions-one");
         instructionsOne.style.display = "block";
         let startButton = document.getElementById("startButton");
         startButton.style.display = "block";
+
+        let resultsOne = document.getElementById("results-one");
+        resultsOne.style.display = "none";
+        let resultsTwo = document.getElementById("results-two");
+        resultsTwo.style.display = "none";
+        let resultsThree = document.getElementById("results-three");
+        resultsThree.style.display = "none";
+        let resultsFour = document.getElementById("results-four");
+        resultsFour.style.display = "none";
+
+        let practiceDoneOne = document.getElementById("practice-done-one");
+        practiceDoneOne.style.display = "none";
+        let practiceDoneTwo = document.getElementById("practice-done-two");
+        practiceDoneTwo.style.display = "none";
+        let practiceDoneThree = document.getElementById("practice-done-three");
+        practiceDoneThree.style.display = "none";
     }
 
     function finishPractice() {
+        let doneButton = document.getElementById("doneButton");
         document.onkeydown = function () {};
         let canvas1 = document.getElementById("prompt_canvas");
         canvas1.width = 600;
@@ -155,7 +187,60 @@
         let resultsFour = document.getElementById("results-four");
         resultsFour.style.display = "block";
 
+        console.log(lastY);
         let resultPercentage = ((lastY - 49) / 50) * 100;
-        resultsTwo.textContent = resultsTwo.textContent + " " + Math.abs(100, resultPercentage) + "%";
+
+        resultsTwo.textContent = "You answer is off by: " + Math.abs(100 - resultPercentage) + "%";
+        doneButton.removeAttribute("onclick");
+        doneButton.addEventListener("click", showPracticeSummary);
+
+        ctx.strokeRect(100, 50, 200, 200);
+
+        drawLine(200, 50, 100);
+
+        ctx.strokeRect(350, 50, 100, 100);
+
+        drawLine(400, 50, lastY);
+
+    }
+
+    function showPracticeSummary() {
+        let canvas1 = document.getElementById("prompt_canvas");
+        canvas1.width = 600;
+        canvas1.height = 300;
+        const ctx = canvas1.getContext("2d");
+        ctx.clearRect(0, 0, canvas1.width, canvas1.height);
+
+        let practiceDoneOne = document.getElementById("practice-done-one");
+        practiceDoneOne.style.display = "block";
+        let practiceDoneTwo = document.getElementById("practice-done-two");
+        practiceDoneTwo.style.display = "block";
+        let practiceDoneThree = document.getElementById("practice-done-three");
+        practiceDoneThree.style.display = "block";
+
+        let instructionsThree = document.getElementById("instructions-three");
+        instructionsThree.style.display = "none";
+        let instructionsFour = document.getElementById("instructions-four");
+        instructionsFour.style.display = "none";
+        let instructionsFive = document.getElementById("instructions-five");
+        instructionsFive.style.display = "none";
+
+        let resultsOne = document.getElementById("results-one");
+        resultsOne.style.display = "none";
+        let resultsTwo = document.getElementById("results-two");
+        resultsTwo.style.display = "none";
+        let resultsThree = document.getElementById("results-three");
+        resultsThree.style.display = "none";
+        let resultsFour = document.getElementById("results-four");
+        resultsFour.style.display = "none";
+
+        let buttonContainer = document.getElementById("button-container");
+
+        while (buttonContainer.hasChildNodes()) {
+            buttonContainer.removeChild(buttonContainer.firstChild);
+        }
+
+        let practiceHeadingContainer = document.getElementById("practice-start");
+        practiceHeadingContainer.removeChild(practiceHeadingContainer.children[0]);
     }
 </script>

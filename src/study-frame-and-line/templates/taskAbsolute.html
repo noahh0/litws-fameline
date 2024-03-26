@@ -48,7 +48,7 @@
                 doneButton.style.visibility = "visible";
                 ctx.clearRect(0, 0, canvas1.width, canvas1.height);
 
-                let index = squareSizes.indexOf(randomDimension);
+                let index = calculateWhichBoxIsClosestToLineSize(randomLineLength * randomDimension);
                 let randomDimension2 = squareSizes[Math.floor(Math.random() * (22 - index)) + index];
 
                 canvas1.height = randomDimension2 + 75;
@@ -75,6 +75,16 @@
 
             }
         }, 1000);
+  }
+
+  function calculateWhichBoxIsClosestToLineSize(minBoxSize) {
+    let index = 0;
+    while (minBoxSize > squareSizes[index]) {
+      if(minBoxSize > squareSizes[index]) {
+        index++
+      }
+    }
+    return index;
   }
 
   function incrementTrial() {

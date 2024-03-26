@@ -1,0 +1,135 @@
+<h5 id="progress-bar" class="text-center  bolded-blue data-i18n="></h5>
+<div style="display:flex; justify-content: center;">
+  <canvas id='prompt_canvas'></canvas>
+</div>
+
+<div id="button-container" style=" display: flex; justify-content: center;">
+  <button id="doneButton" class="btn btn-primary" style="visibility: hidden; margin-top: 30px; margin-left: 15px;" onclick="incrementTrial()" data-i18n="litw-study-finish-practice"></button>
+</div>
+
+<script>
+  trialNum = 1;
+  randomDimension;
+  randomLineLength;
+  randomDimension2;
+  let relAvgPercent;
+  let originalFraction;
+
+  squareSizes = [75, 100, 125, 150, 175, 200, 225, 250, 275, 300, 325, 350, 375, 400, 425, 450, 475, 500, 525, 550, 575, 600];
+  lineFractions = [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 0.25, 0.75, 0.33, 0.66];
+  let relativeTrialResults = [];
+
+  window.onload = initTrial();
+
+  function initTrial() {
+      window.addEventListener("keydown", function(e) {
+            // space and arrow keys
+            if([32, 37, 38, 39, 40].indexOf(e.keyCode) > -1) {
+                e.preventDefault();
+            }
+        }, false);
+      let progressBar = document.getElementById("progress-bar");
+      progressBar.textContent = "Trial: " + trialNum + "/5";
+      let canvas1 = document.getElementById("prompt_canvas");
+      canvas1.width = 800;
+      canvas1.height = 700;
+      const ctx = canvas1.getContext("2d");
+      randomDimension = squareSizes[Math.floor(Math.random() * 22)];
+      randomLineLength = lineFractions[Math.floor(Math.random() * 13)];
+      console.log(randomDimension)
+      console.log(randomLineLength)
+      ctx.strokeRect((canvas1.width - randomDimension) / 2, 50, randomDimension, randomDimension);
+      drawLine(((canvas1.width - randomDimension) / 2) + randomDimension / 2, 50, 50 + Math.floor(randomLineLength * randomDimension));
+      originalFraction = (randomLineLength * randomDimension) / randomDimension;
+      lastY = 49;
+
+      let count = 5;
+        const timer = setInterval(function() {
+            count--;
+            console.log(count);
+            if (count === 0) {
+                clearInterval(timer);
+                let doneButton = document.getElementById("doneButton");
+                doneButton.style.visibility = "visible";
+                ctx.clearRect(0, 0, canvas1.width, canvas1.height);
+
+                randomDimension2 = squareSizes[Math.floor(Math.random() * 22)];
+
+                canvas1.height = randomDimension2 + 75;
+                ctx.strokeRect((canvas1.width - randomDimension2) / 2, 50, randomDimension2, randomDimension2);
+
+                ctx.fillStyle = "black";
+
+                let moveAmount = 2;
+
+                document.onkeydown = function(e) {
+                    if (e.keyCode == 40) {
+                        if (lastY < (49 + randomDimension2) - 2) {
+                            lastY = lastY + 2;
+                            drawLine(((canvas1.width - randomDimension2) / 2) + randomDimension2 / 2, lastY, lastY + 2);
+                        }
+
+                    } else if (e.keyCode == 38) {
+                        if (lastY != 49) {
+                            ctx.clearRect((((canvas1.width - randomDimension2) / 2) + randomDimension2 / 2) - 2, lastY, 5, 2);
+                            lastY = lastY - 2;
+                        }
+                    }
+                }
+
+            }
+        }, 1000);
+  }
+
+  function incrementTrial() {
+    let userFraction = (lastY - 49) / randomDimension2;
+    let resultPercentage = (userFraction / originalFraction) * 100;
+    relativeTrialResults.push(Math.abs(100 - resultPercentage));
+    let doneButton = document.getElementById("doneButton");
+    doneButton.style.visibility = "hidden";
+    trialNum++;
+    let count = 1;
+      const timer = setInterval(function() {
+          count--;
+          if (count === 0) {
+            if (trialNum < 6) {
+              initTrial();
+            } else {
+              endRelTrials();
+            }
+
+          }
+      }, 1000);
+
+  }
+
+  function drawLine(x, y1, y2) {
+        let canvas1 = document.getElementById("prompt_canvas");
+        const ctx = canvas1.getContext("2d");
+        ctx.beginPath(); // Start a new path
+        ctx.moveTo(x, y1);
+        ctx.lineTo(x, y2);
+        ctx.stroke(); // Render the path
+    }
+
+  function endRelTrials() {
+    document.onkeydown = function () {};
+    relAvgPercent = calculateRelAvgPercent();
+    viewNextButton();
+    console.log(absAvgPercent);
+  }
+
+  function calculateRelAvgPercent() {
+    let sum = 0;
+    for (let index = 0; index < relativeTrialResults.length; index++) {
+      sum = sum + relativeTrialResults[index];
+    }
+    return sum / relativeTrialResults.length;
+  }
+
+  function viewNextButton() {
+    $('#btn-next-page').attr('style', 'display:block;');
+    $('#btn-next-page')[0].scrollIntoView();
+  }
+
+</script>

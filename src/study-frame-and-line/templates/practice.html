@@ -37,6 +37,7 @@
 
 <script type="text/javascript">
     let lastY;
+    let taskType;
 
     function startPractice() {
         let resultsTwo = document.getElementById("results-two");
@@ -53,6 +54,7 @@
         instructionsOne.style.display = "none";
         let instructionsTwo = document.getElementById("instructions-two");
         instructionsTwo.style.display = "block";
+        taskType = instructionsTwo.textContent.includes("ABSOLUTE");
 
         // Trying to learn about canvases
         let canvas1 = document.getElementById("prompt_canvas");
@@ -186,8 +188,14 @@
         let resultsFour = document.getElementById("results-four");
         resultsFour.style.display = "block";
 
-        console.log(lastY);
-        let resultPercentage = ((lastY - 49) / 50) * 100;
+        let resultPercentage;
+        if (taskType) {
+            resultPercentage = ((lastY - 49) / 50) * 100;
+        } else {
+            let originalFraction = 0.25;
+            let userFraction = (lastY - 49) / 100; // why is result percentage not showing up?
+            resultPercentage = (userFraction / originalFraction) * 100;
+        }
 
         resultsTwo.textContent = "You answer is off by: " + Math.abs(100 - resultPercentage) + "%";
         doneButton.removeAttribute("onclick");

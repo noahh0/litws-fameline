@@ -19,6 +19,7 @@ var demographicsTemplate = require("../templates/demographics.html");
 var instructionsTemplate = require("/templates/instructions.html");
 var practiceTemplate = require("/templates/practice.html");
 var taskAbsoluteTemplate = require("/templates/taskAbsolute.html");
+var taskRelativeTemplate = require("/templates/taskRelative.html");
 var loadingTemplate = require("../templates/loading.html");
 var resultsTemplate = require("../templates/results.html");
 var resultsFooter = require("../templates/results-footer.html");
@@ -95,6 +96,24 @@ module.exports = (function(exports) {
 				display_element: $("#instructions"),
 				display_next_button: true,
 			},
+			PRACTICE2: {
+				name: "practice",
+				type: "display-slide",
+				template: practiceTemplate,
+				template_data: {
+					task_order: 2,
+					task_type: "relative",
+				},
+				display_element: $("#practice"),
+				display_next_button: true,
+			},
+			TASK_RELATIVE: {
+				name: "task_relative",
+				type: "display-slide",
+				template: taskRelativeTemplate,
+				display_element: $("#task-rel"),
+				display_next_button: false,
+			},
 			COMMENTS: {
 				type: "display-slide",
 				template: commentsTemplate,
@@ -126,6 +145,8 @@ module.exports = (function(exports) {
 		timeline.push(params.slides.PRACTICE);
 		timeline.push(params.slides.TASK_ABSOLUTE);
 		timeline.push(params.slides.INSTRUCTIONS2);
+		timeline.push(params.slides.PRACTICE2);
+		timeline.push(params.slides.TASK_RELATIVE);
 		timeline.push(params.slides.COMMENTS);
 		timeline.push(params.slides.RESULTS);
 	}

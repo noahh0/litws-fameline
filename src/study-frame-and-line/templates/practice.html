@@ -2,9 +2,9 @@
 <div id="instructions-container-one">
     <div id="practice-start">
         <h2 class="text-center bolded-blue" data-i18n="litw-study-practice"></h2>
-        <h3 id="instructions-one" class="text-center data-i18n=" data-i18n="litw-practice-p1"></h3>
+        <h3 id="instructions-one" class="text-center data-i18n=" style="margin-top: 20px;" data-i18n="litw-practice-p1"></h3>
         <div style=" display: flex; justify-content: center; align-items: center;">
-        <button id="startButton" class="btn btn-primary" type="submit" onclick="startPractice()" style="margin-top: 20px;"   data-i18n="litw-study-start-practice"></button>
+        <button id="startButton" class="btn btn-primary" type="submit" onclick="startPractice()" style="margin-top: 120px;"   data-i18n="litw-study-start-practice"></button>
         </div>
     </div>
     <div id="practice-instructions">
@@ -68,7 +68,6 @@
         let count = 5;
         const timer = setInterval(function() {
             count--;
-            console.log(count);
             if (count === 0) {
                 clearInterval(timer);
                 ctx.clearRect(0, 0, canvas1.width, canvas1.height);

@@ -9,6 +9,10 @@
 
 <script>
   let trialNum = 1;
+  let randomDimension;
+  let randomLineLength;
+  let randomDimension2;
+  let absAvgPercent;
 
   let squareSizes = [75, 100, 125, 150, 175, 200, 225, 250, 275, 300, 325, 350, 375, 400, 425, 450, 475, 500, 525, 550, 575, 600];
   let lineFractions = [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 0.25, 0.75, 0.33, 0.66];
@@ -29,8 +33,8 @@
       canvas1.width = 800;
       canvas1.height = 700;
       const ctx = canvas1.getContext("2d");
-      let randomDimension = squareSizes[Math.floor(Math.random() * 22)];
-      let randomLineLength = lineFractions[Math.floor(Math.random() * 13)];
+      randomDimension = squareSizes[Math.floor(Math.random() * 22)];
+      randomLineLength = lineFractions[Math.floor(Math.random() * 13)];
       console.log(randomDimension)
       console.log(randomLineLength)
       ctx.strokeRect((canvas1.width - randomDimension) / 2, 50, randomDimension, randomDimension);
@@ -49,7 +53,7 @@
                 ctx.clearRect(0, 0, canvas1.width, canvas1.height);
 
                 let index = calculateWhichBoxIsClosestToLineSize(randomLineLength * randomDimension);
-                let randomDimension2 = squareSizes[Math.floor(Math.random() * (22 - index)) + index];
+                randomDimension2 = squareSizes[Math.floor(Math.random() * (22 - index)) + index];
 
                 canvas1.height = randomDimension2 + 75;
                 ctx.strokeRect((canvas1.width - randomDimension2) / 2, 50, randomDimension2, randomDimension2);
@@ -88,22 +92,23 @@
   }
 
   function incrementTrial() {
-      let doneButton = document.getElementById("doneButton");
-      doneButton.style.visibility = "hidden";
-      trialNum++;
-      let count = 1;
-        const timer = setInterval(function() {
-            count--;
-            console.log(count);
-            if (count === 0) {
-              if (trialNum < 6) {
-                initTrial();
-              } else {
-                endAbsTrials();
-              }
-
+    let resultPercentage = ((lastY - 49) / (Math.floor(randomLineLength * randomDimension))) * 100;
+    absoluteTrialResults.push(Math.abs(100 - resultPercentage));
+    let doneButton = document.getElementById("doneButton");
+    doneButton.style.visibility = "hidden";
+    trialNum++;
+    let count = 1;
+      const timer = setInterval(function() {
+          count--;
+          if (count === 0) {
+            if (trialNum < 6) {
+              initTrial();
+            } else {
+              endAbsTrials();
             }
-        }, 1000);
+
+          }
+      }, 1000);
 
   }
 
@@ -118,7 +123,17 @@
 
   function endAbsTrials() {
     document.onkeydown = function () {};
+    absAvgPercent = calculateAbsAvgPercent();
     viewNextButton();
+    console.log(absAvgPercent);
+  }
+
+  function calculateAbsAvgPercent() {
+    let sum = 0;
+    for (let index = 0; index < absoluteTrialResults.length; index++) {
+      sum = sum + absoluteTrialResults[index];
+    }
+    return sum / absoluteTrialResults.length;
   }
 
   function viewNextButton() {

@@ -3,10 +3,14 @@
   <canvas id='prompt_canvas'></canvas>
 </div>
 
+<div id="button-container" style=" display: flex; justify-content: center;">
+  <button id="doneButton" class="btn btn-primary" style="visibility: hidden; margin-top: 30px; margin-left: 15px;" onclick="incrementTrial()" data-i18n="litw-study-finish-practice"></button>
+</div>
+
 <script>
   let trialNum = 1;
 
-  let squareSizes = [100, 125, 150, 175, 200, 225, 250, 275, 300, 325, 350, 375, 400, 425, 450, 475, 500, 525, 550, 575, 600];
+  let squareSizes = [75, 100, 125, 150, 175, 200, 225, 250, 275, 300, 325, 350, 375, 400, 425, 450, 475, 500, 525, 550, 575, 600];
   let lineFractions = [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 0.25, 0.75, 0.33, 0.66];
   let absoluteTrialResults = [];
 
@@ -19,14 +23,13 @@
                 e.preventDefault();
             }
         }, false);
-    //while (trialNum < 6) {
       let progressBar = document.getElementById("progress-bar");
-      progressBar.textContent = "Trial: " + trialNum + "/6";
+      progressBar.textContent = "Trial: " + trialNum + "/5";
       let canvas1 = document.getElementById("prompt_canvas");
       canvas1.width = 800;
       canvas1.height = 700;
       const ctx = canvas1.getContext("2d");
-      let randomDimension = squareSizes[Math.floor(Math.random() * 21)];
+      let randomDimension = squareSizes[Math.floor(Math.random() * 22)];
       let randomLineLength = lineFractions[Math.floor(Math.random() * 13)];
       console.log(randomDimension)
       console.log(randomLineLength)
@@ -41,11 +44,14 @@
             console.log(count);
             if (count === 0) {
                 clearInterval(timer);
+                let doneButton = document.getElementById("doneButton");
+                doneButton.style.visibility = "visible";
                 ctx.clearRect(0, 0, canvas1.width, canvas1.height);
 
                 let index = squareSizes.indexOf(randomDimension);
-                let randomDimension2 = squareSizes[Math.floor(Math.random() * (21 - index)) + index];
+                let randomDimension2 = squareSizes[Math.floor(Math.random() * (22 - index)) + index];
 
+                canvas1.height = randomDimension2 + 75;
                 ctx.strokeRect((canvas1.width - randomDimension2) / 2, 50, randomDimension2, randomDimension2);
 
                 ctx.fillStyle = "black";
@@ -69,10 +75,27 @@
 
             }
         }, 1000);
-
-    //}
   }
 
+  function incrementTrial() {
+      let doneButton = document.getElementById("doneButton");
+      doneButton.style.visibility = "hidden";
+      trialNum++;
+      let count = 1;
+        const timer = setInterval(function() {
+            count--;
+            console.log(count);
+            if (count === 0) {
+              if (trialNum < 6) {
+                initTrial();
+              } else {
+                endAbsTrials();
+              }
+
+            }
+        }, 1000);
+
+  }
 
   function drawLine(x, y1, y2) {
         let canvas1 = document.getElementById("prompt_canvas");
@@ -82,5 +105,15 @@
         ctx.lineTo(x, y2);
         ctx.stroke(); // Render the path
     }
+
+  function endAbsTrials() {
+    document.onkeydown = function () {};
+    viewNextButton();
+  }
+
+  function viewNextButton() {
+    $('#btn-next-page').attr('style', 'display:block;');
+    $('#btn-next-page')[0].scrollIntoView();
+  }
 
 </script>

@@ -21,7 +21,7 @@ var practiceTemplate = require("/templates/practice.html");
 var taskAbsoluteTemplate = require("/templates/taskAbsolute.html");
 var taskRelativeTemplate = require("/templates/taskRelative.html");
 var loadingTemplate = require("../templates/loading.html");
-var resultsTemplate = require("../templates/results.html");
+var resultsTemplate = require("/templates/results.html");
 var resultsFooter = require("../templates/results-footer.html");
 var commentsTemplate = require("../templates/comments.html");
 require("../js/litw/jspsych-display-info");

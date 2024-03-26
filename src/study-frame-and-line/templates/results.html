@@ -1,0 +1,39 @@
+<!-- Template for the results page -->
+<h3 class="bolded-blue" style="text-align: center" data-i18n="litw-results-header"></h3>
+
+<h4 id="better-abs" class="text-center" style="display: none;" data-i18n="litw-results-header2-absolute"></h4>
+<h4 id="better-rel" class="text-center" style="display: none;" data-i18n="litw-results-header2-relative"></h4>
+
+<h5 class="bolded-blue text-center" style="margin-top: 40px;" data-i18n="litw-results-details"></h5>
+<h6 id="rel" class="text-center" style="margin-top: 20px;"></h6>
+<h6 id="abs" class="text-center" style="margin-top: 10px;"></h6>
+
+<h5 class="bolded-blue text-center" style="margin-top: 40px;" data-i18n="litw-results-explanation"></h5>
+<h6 class="text-center" style="margin-top: 20px;" data-i18n="litw-results-explanation-analytic"></h6>
+<h6 class="text-center" style="margin-top: 10px;" data-i18n="litw-results-explanation-holistic"></h6>
+
+<br>
+<div id="results-footer"></div>
+
+<script type="text/javascript">
+    let shownHeader;
+
+    window.onload = calcResults();
+
+    function calcResults() {
+        let relResult = document.getElementById("rel");
+        console.log(relAvgPercent)
+        console.log(absAvgPercent)
+        relResult.textContent = "Your relative lines were off by: " + relAvgPercent + "%";
+        let absResult = document.getElementById("abs");
+        absResult.textContent = "Meanwhile, your absolute lines were off by: " + absAvgPercent + "%";
+        if (absAvgPercent < relAvgPercent) {
+            shownHeader = document.getElementById("better-abs");
+        } else {
+            shownHeader = document.getElementById("better-rel");
+
+        }
+        shownHeader.style.display = "block";
+    }
+
+</script>

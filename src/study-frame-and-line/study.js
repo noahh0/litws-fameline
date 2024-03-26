@@ -84,6 +84,17 @@ module.exports = (function(exports) {
 				display_element: $("#task-abs"),
 				display_next_button: false,
 			},
+			INSTRUCTIONS2: {
+				name: "instructions",
+				type: "display-slide",
+				template: instructionsTemplate,
+				template_data: {
+					task_order: 2,
+					task_type: "relative",
+				},
+				display_element: $("#instructions"),
+				display_next_button: true,
+			},
 			COMMENTS: {
 				type: "display-slide",
 				template: commentsTemplate,
@@ -114,6 +125,7 @@ module.exports = (function(exports) {
 		timeline.push(params.slides.INSTRUCTIONS);
 		timeline.push(params.slides.PRACTICE);
 		timeline.push(params.slides.TASK_ABSOLUTE);
+		timeline.push(params.slides.INSTRUCTIONS2);
 		timeline.push(params.slides.COMMENTS);
 		timeline.push(params.slides.RESULTS);
 	}

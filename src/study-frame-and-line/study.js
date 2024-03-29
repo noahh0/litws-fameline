@@ -55,7 +55,7 @@ module.exports = (function(exports) {
 					var dem_data = $('#demographicsForm').alpaca().getValue();
 					LITW.data.submitDemographics(dem_data);
 				}
-			},*/
+			},
 			INSTRUCTIONS: {
 				name: "instructions",
 				type: "display-slide",
@@ -127,7 +127,7 @@ module.exports = (function(exports) {
 						});
 					}
 				}
-			},
+			},*/
 			RESULTS: {
 				type: "call-function",
 				func: function(){
@@ -140,14 +140,14 @@ module.exports = (function(exports) {
 	function configureStudy() {
 		/*timeline.push(params.slides.INTRODUCTION);
 		timeline.push(params.slides.INFORMED_CONSENT);
-		timeline.push(params.slides.DEMOGRAPHICS);*/
+		timeline.push(params.slides.DEMOGRAPHICS);
 		timeline.push(params.slides.INSTRUCTIONS);
 		timeline.push(params.slides.PRACTICE);
 		timeline.push(params.slides.TASK_ABSOLUTE);
 		timeline.push(params.slides.INSTRUCTIONS2);
 		timeline.push(params.slides.PRACTICE2);
 		timeline.push(params.slides.TASK_RELATIVE);
-		timeline.push(params.slides.COMMENTS);
+		timeline.push(params.slides.COMMENTS);*/
 		timeline.push(params.slides.RESULTS);
 	}
 

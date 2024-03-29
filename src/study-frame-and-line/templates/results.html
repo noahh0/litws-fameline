@@ -19,19 +19,17 @@
     <div id="graphic" class="h-100 d-flex align-items-center justify-content-center"></div>
 </div>
 
-<h5 class="bolded-blue text-center" style="margin-top: 40px;" data-i18n="litw-results-details"></h5>
-<h6 id="rel" class="text-center" style="margin-top: 20px;"></h6>
-<h6 id="abs" class="text-center" style="margin-top: 10px;"></h6>
+<div id="results-explain" class="container border border-3 p-4" style="width: 90%">
 
-<h5 class="bolded-blue text-center" style="margin-top: 40px;" data-i18n="litw-results-explanation"></h5>
-<h6 class="text-center" style="margin-top: 20px;" data-i18n="litw-results-explanation-analytic"></h6>
-<h6 class="text-center" style="margin-top: 10px;" data-i18n="litw-results-explanation-holistic"></h6>
+    <h5 class="bolded-blue text-center" data-i18n="litw-results-details"></h5>
+    <h6 id="rel" class="text-center" style="margin-top: 5px;"></h6>
+    <h6 id="abs" class="text-center" style="margin-top: 10px;"></h6>
 
+    <h5 class="bolded-blue text-center" style="margin-top: 40px;" data-i18n="litw-results-explanation"></h5>
+    <h6 class="text-center" style="margin-top: 20px;" data-i18n="litw-results-explanation-analytic"></h6>
+    <h6 class="text-center" style="margin-top: 10px;" data-i18n="litw-results-explanation-holistic"></h6>
 
-
-
-
-
+</div>
 
 <br>
 <div id="results-footer"></div>
@@ -44,23 +42,17 @@
 
     $(document).ready(function() {
         LITW.results.drawGraphic('graphic');
-        let participantScore = document.getElementById('participant_score').dataset.score;
-        let national_scores = ['Ukraine', 'USA', 'UK', 'Japan', 'Pakistan'];
-        for (let country of national_scores) {
-            let nation_score = LITW.study.params.tight_loose[country];
-            if(Math.abs(participantScore-nation_score)>1.5) {
-                LITW.results.drawMark(nation_score, country)
-            }
-        }
-        LITW.results.drawMark(participantScore, $.i18n('study-tl-results-you-mark'), true);
+
+        LITW.results.drawMark((relAvgPercent/100) * 15, "Relative");
+        LITW.results.drawMark((absAvgPercent/100) * 15, "Absolute");
     });
 
     function calcResults() {
-        let relAvgPercent = 80;
-        let absAvgPercent = 90;
         let relResult = document.getElementById("rel");
         console.log(relAvgPercent)
         console.log(absAvgPercent)
+        relAvgPercent = Math.round(relAvgPercent * 10) / 10;
+        absAvgPercent = Math.round(absAvgPercent * 10) / 10
         relResult.textContent = "Your relative lines were off by: " + relAvgPercent + "%";
         let absResult = document.getElementById("abs");
         absResult.textContent = "Meanwhile, your absolute lines were off by: " + absAvgPercent + "%";

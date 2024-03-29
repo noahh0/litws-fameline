@@ -32,7 +32,7 @@ module.exports = (function(exports) {
 	params = {
 		preLoad: ["../img/btn-next.png","../img/btn-next-active.png","../img/ajax-loader.gif"],
 		slides: {
-			/*INTRODUCTION: {
+			INTRODUCTION: {
 				name: "introduction",
 				type: "display-slide",
 				template: introTemplate,
@@ -127,7 +127,7 @@ module.exports = (function(exports) {
 						});
 					}
 				}
-			},*/
+			},
 			RESULTS: {
 				type: "call-function",
 				func: function(){
@@ -138,7 +138,7 @@ module.exports = (function(exports) {
 	};
 
 	function configureStudy() {
-		/*timeline.push(params.slides.INTRODUCTION);
+		timeline.push(params.slides.INTRODUCTION);
 		timeline.push(params.slides.INFORMED_CONSENT);
 		timeline.push(params.slides.DEMOGRAPHICS);
 		timeline.push(params.slides.INSTRUCTIONS);
@@ -147,7 +147,7 @@ module.exports = (function(exports) {
 		timeline.push(params.slides.INSTRUCTIONS2);
 		timeline.push(params.slides.PRACTICE2);
 		timeline.push(params.slides.TASK_RELATIVE);
-		timeline.push(params.slides.COMMENTS);*/
+		timeline.push(params.slides.COMMENTS);
 		timeline.push(params.slides.RESULTS);
 	}
 

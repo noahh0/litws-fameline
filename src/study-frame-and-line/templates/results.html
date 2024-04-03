@@ -1,9 +1,7 @@
 <!-- Template for the results page -->
 <h3 class="bolded-blue" style="text-align: center" data-i18n="litw-results-header"></h3>
-
 <h4 id="better-abs" class="text-center" style="display: none;" data-i18n="litw-results-header2-absolute"></h4>
 <h4 id="better-rel" class="text-center" style="display: none;" data-i18n="litw-results-header2-relative"></h4>
-
 <br>
 {{#if data.code}}
 <h5 style="text-align: center">
@@ -13,14 +11,11 @@
 <br>
 {{/if}}
 <br>
-
 <div id="results-main" class="container center-content">
     <div id="participant_score" data-score="{{ data.score }}"></div>
     <div id="graphic" class="h-100 d-flex align-items-center justify-content-center"></div>
 </div>
-
 <div id="results-explain" class="container border border-3 p-4" style="width: 90%">
-
     <h5 class="bolded-blue text-center" data-i18n="litw-results-details"></h5>
     <h6 id="rel" class="text-center" style="margin-top: 5px;"></h6>
     <h6 id="abs" class="text-center" style="margin-top: 10px;"></h6>
@@ -28,7 +23,6 @@
     <h5 class="bolded-blue text-center" style="margin-top: 40px;" data-i18n="litw-results-explanation"></h5>
     <h6 class="text-center" style="margin-top: 20px;" data-i18n="litw-results-explanation-analytic"></h6>
     <h6 class="text-center" style="margin-top: 10px;" data-i18n="litw-results-explanation-holistic"></h6>
-
 </div>
 
 <br>
@@ -36,13 +30,19 @@
 
 <script type="text/javascript">
     let shownHeader;
+    let absAvgPercent;
+    let relAvgPercent;
 
     window.onload = calcResults();
 
-
     $(document).ready(function() {
+        relAvgPercent = LITW.study.params.resultPercentages.relAvgPercent;
+        absAvgPercent = LITW.study.params.resultPercentages.absAvgPercent;
         LITW.results.drawGraphic('graphic');
-        if (Math.abs(relAvgPercent - absAvgPercent) < 10) {
+        if (relAvgPercent == absAvgPercent) {
+            LITW.results.drawMark((relAvgPercent/100) * 15, "Rel & Abs");
+        }
+        else if (Math.abs(relAvgPercent - absAvgPercent) < 10) {
             if (relAvgPercent >= absAvgPercent) {
                 let newRelAvgPercent =  relAvgPercent + 10;
                 LITW.results.drawMark((Math.min(100, newRelAvgPercent)/100) * 15, "Relative");
@@ -63,11 +63,13 @@
     });
 
     function calcResults() {
+        relAvgPercent = LITW.study.params.resultPercentages.relAvgPercent;
+        absAvgPercent = LITW.study.params.resultPercentages.absAvgPercent;
         let relResult = document.getElementById("rel");
         console.log(relAvgPercent)
         console.log(absAvgPercent)
-        relAvgPercent = Math.round(relAvgPercent * 10) / 10;
-        absAvgPercent = Math.round(absAvgPercent * 10) / 10
+        absAvgPercent = Math.round(absAvgPercent * 10) / 10;
+        relAvgPercent = Math.round(relAvgPercent * 10) / 10
         relResult.textContent = "Your relative lines were off by: " + relAvgPercent + "%";
         let absResult = document.getElementById("abs");
         absResult.textContent = "Meanwhile, your absolute lines were off by: " + absAvgPercent + "%";

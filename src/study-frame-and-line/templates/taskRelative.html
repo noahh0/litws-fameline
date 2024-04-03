@@ -12,19 +12,16 @@
   randomDimension;
   randomLineLength;
   randomDimension2;
-  let relAvgPercent;
   let originalFraction;
-  let relativeTrialResults = [];
 
   window.onload = initTrial();
 
   function initTrial() {
       window.addEventListener("keydown", function(e) {
-            // space and arrow keys
-            if([32, 37, 38, 39, 40].indexOf(e.keyCode) > -1) {
-                e.preventDefault();
-            }
-        }, false);
+        if([32, 37, 38, 39, 40].indexOf(e.keyCode) > -1) {
+          e.preventDefault();
+        }
+      }, false);
       let progressBar = document.getElementById("progress-bar");
       progressBar.textContent = "Trial: " + trialNum + "/5";
       let canvas1 = document.getElementById("prompt_canvas");
@@ -38,91 +35,71 @@
       drawLine(((canvas1.width - randomDimension) / 2) + randomDimension / 2, 50, 50 + randomLineLength);
       originalFraction = randomLineLength / randomDimension;
       lastY = 49;
-
       document.onkeydown = function () {};
       let count = 5;
-        const timer = setInterval(function() {
-            count--;
-            console.log(count);
-            if (count === 0) {
-                clearInterval(timer);
-                let doneButton = document.getElementById("doneButton");
-                doneButton.style.visibility = "visible";
-                ctx.clearRect(0, 0, canvas1.width, canvas1.height);
-
-                randomDimension2 = randomTrial.responseBoxSize;
-
-                canvas1.height = randomDimension2 + 75;
-                ctx.strokeRect((canvas1.width - randomDimension2) / 2, 50, randomDimension2, randomDimension2);
-
-                ctx.fillStyle = "black";
-
-                let moveAmount = 2;
-                lastY = 49;
-                document.onkeydown = function(e) {
-                    if (e.keyCode == 40) {
-                        if (lastY < (49 + randomDimension2) - 2) {
-                            lastY = lastY + 2;
-                            drawLine(((canvas1.width - randomDimension2) / 2) + randomDimension2 / 2, lastY, lastY + 2);
-                        }
-
-                    } else if (e.keyCode == 38) {
-                        if (lastY != 49) {
-                            ctx.clearRect((((canvas1.width - randomDimension2) / 2) + randomDimension2 / 2) - 2, lastY, 5, 2);
-                            lastY = lastY - 2;
-                        }
-                    }
-                }
-
+      const timer = setInterval(function() {
+        count--;
+        console.log(count);
+        if (count === 0) {
+          clearInterval(timer);
+          let doneButton = document.getElementById("doneButton");
+          doneButton.style.visibility = "visible";
+          ctx.clearRect(0, 0, canvas1.width, canvas1.height);
+          randomDimension2 = randomTrial.responseBoxSize;
+          canvas1.height = randomDimension2 + 75;
+          ctx.strokeRect((canvas1.width - randomDimension2) / 2, 50, randomDimension2, randomDimension2);
+          ctx.fillStyle = "black";
+          let moveAmount = 2;
+          lastY = 49;
+          document.onkeydown = function(e) {
+            if (e.keyCode == 40) {
+              if (lastY < (49 + randomDimension2) - 2) {
+                lastY = lastY + 2;
+                drawLine(((canvas1.width - randomDimension2) / 2) + randomDimension2 / 2, lastY, lastY + 2);
+              }
+            } else if (e.keyCode == 38) {
+              if (lastY != 49) {
+                ctx.clearRect((((canvas1.width - randomDimension2) / 2) + randomDimension2 / 2) - 2, lastY, 5, 2);
+                lastY = lastY - 2;
+              }
             }
-        }, 1000);
+          }
+        }
+      }, 1000);
   }
 
   function incrementTrial() {
     let userFraction = (lastY - 49) / randomDimension2;
     let resultPercentage = (userFraction / originalFraction) * 100;
-    relativeTrialResults.push(Math.abs(100 - resultPercentage));
+    LITW.study.params.results.relative.push(Math.abs(100 - resultPercentage));
     let doneButton = document.getElementById("doneButton");
     doneButton.style.visibility = "hidden";
     trialNum++;
     let count = 1;
-      const timer = setInterval(function() {
-          count--;
-          if (count === 0) {
-            if (trialNum < 6) {
-              initTrial();
-            } else {
-              endRelTrials();
-            }
-
-          }
-      }, 1000);
-
+    const timer = setInterval(function() {
+      count--;
+      if (count === 0) {
+        if (trialNum < 6) {
+          initTrial();
+        } else {
+          endRelTrials();
+        }
+      }
+    }, 1000);
   }
 
   function drawLine(x, y1, y2) {
-        let canvas1 = document.getElementById("prompt_canvas");
-        const ctx = canvas1.getContext("2d");
-        ctx.beginPath(); // Start a new path
-        ctx.moveTo(x, y1);
-        ctx.lineTo(x, y2);
-        ctx.stroke(); // Render the path
-    }
+    let canvas1 = document.getElementById("prompt_canvas");
+    const ctx = canvas1.getContext("2d");
+    ctx.beginPath(); // Start a new path
+    ctx.moveTo(x, y1);
+    ctx.lineTo(x, y2);
+    ctx.stroke(); // Render the path
+  }
 
   function endRelTrials() {
     document.onkeydown = function () {};
-    relAvgPercent = calculateRelAvgPercent();
     viewNextButton();
-    console.log(absAvgPercent);
-    LITW.study.params.results.relative = relativeTrialResults;
-  }
-
-  function calculateRelAvgPercent() {
-    let sum = 0;
-    for (let index = 0; index < relativeTrialResults.length; index++) {
-      sum = sum + relativeTrialResults[index];
-    }
-    return sum / relativeTrialResults.length;
   }
 
   function viewNextButton() {

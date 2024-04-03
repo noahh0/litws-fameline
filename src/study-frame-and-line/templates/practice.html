@@ -1,5 +1,5 @@
-
 <div id="instructions-container-one">
+    <!-- Practice starting page -->
     <div id="practice-start">
         <h2 class="text-center bolded-blue" data-i18n="litw-study-practice"></h2>
         <h3 id="instructions-one" class="text-center data-i18n=" style="margin-top: 20px;" data-i18n="litw-practice-p1"></h3>
@@ -7,12 +7,14 @@
         <button id="startButton" class="btn btn-primary" type="submit" onclick="startPractice()" style="margin-top: 120px;"   data-i18n="litw-study-start-practice"></button>
         </div>
     </div>
+    <!-- Practice instructions page -->
     <div id="practice-instructions">
         <h5 id="instructions-two" class="text-center data-i18n=" style="display: none;" data-i18n="litw-practice-p2-{{task_type}}"></h5>
         <h5 id="instructions-three" class="text-center data-i18n=" style="display: none;" data-i18n="litw-practice-p3-{{task_type}}"></h5>
         <h5 id="instructions-four" class="text-center data-i18n=" style="display: none;" data-i18n="litw-practice-p4"></h5>
         <h5 id="instructions-five" class="text-center data-i18n=" style="display: none;" data-i18n="litw-practice-p5"></h5>
     </div>
+    <!-- Practice results page -->
     <div>
         <h3 id="results-one" class="text-center bolded-blue" style="display: none;" data-i18n="litw-practice-p6"></h3>
         <h4 id="results-two" class="text-center data-i18n=" style="display: none;" data-i18n="litw-practice-result-p1"></h4>
@@ -20,13 +22,13 @@
         <h6 id="results-four" class="text-center data-i18n=" style="display: none;" data-i18n="litw-practice-result-p3"></h5>
     </div>
 </div>
-
+<!-- Practice results summary page -->
 <div>
     <h2 id="practice-done-one" class="text-center bolded-blue" style="display: none;" data-i18n="litw-study-done-practice"></h2>
     <h4 id="practice-done-two" class="text-center data-i18n=" style="display: none;" data-i18n="litw-study-p1"></h4>
     <h6 id="practice-done-three" class="text-center data-i18n=" style="display: none;" data-i18n="litw-study-p2"></h5>
 </div>
-
+<!-- Practice trial content -->
 <div style="display:flex; justify-content: center;">
     <canvas id='prompt_canvas'></canvas>
 </div>
@@ -43,7 +45,6 @@
         let resultsTwo = document.getElementById("results-two");
         resultsTwo.textContent = "You answer is off by:";
         window.addEventListener("keydown", function(e) {
-            // space and arrow keys
             if([32, 37, 38, 39, 40].indexOf(e.keyCode) > -1) {
                 e.preventDefault();
             }
@@ -55,25 +56,19 @@
         let instructionsTwo = document.getElementById("instructions-two");
         instructionsTwo.style.display = "block";
         taskType = instructionsTwo.textContent.includes("ABSOLUTE");
-
-        // Trying to learn about canvases
         let canvas1 = document.getElementById("prompt_canvas");
         canvas1.width = 600;
         canvas1.height = 300;
         const ctx = canvas1.getContext("2d");
         ctx.strokeRect(200, 50, 200, 200);
-
         drawLine(300, 50, 100);
-
         lastY = 49;
-
         let count = 5;
         const timer = setInterval(function() {
             count--;
             if (count === 0) {
                 clearInterval(timer);
                 ctx.clearRect(0, 0, canvas1.width, canvas1.height);
-
                 let practiceInstructions = document.getElementById("practice-instructions");
                 let instructionsTwo = document.getElementById("instructions-two");
                 instructionsTwo.style.display = "none";
@@ -87,20 +82,15 @@
                 let doneButton = document.getElementById("doneButton");
                 redoButton.style.visibility = "visible";
                 doneButton.style.visibility = "visible";
-
                 ctx.strokeRect(250, 50, 100, 100);
-
                 ctx.fillStyle = "black";
-
                 let moveAmount = 2;
-
                 document.onkeydown = function(e) {
                     if (e.keyCode == 40) {
                         if (lastY != 147) {
                             lastY = lastY + 2;
                             drawLine(300, lastY, lastY + 2);
                         }
-
                     } else if (e.keyCode == 38) {
                         if (lastY != 49) {
                             ctx.clearRect(298, lastY, 5, 2);
@@ -108,7 +98,6 @@
                         }
                     }
                 }
-
             }
         }, 1000);
     }
@@ -123,7 +112,6 @@
     }
 
     function rerunPractice() {
-
         let doneButton = document.getElementById("doneButton");
         doneButton.removeEventListener("click", showPracticeSummary);
         doneButton.addEventListener("click", finishPractice);
@@ -146,7 +134,6 @@
         instructionsOne.style.display = "block";
         let startButton = document.getElementById("startButton");
         startButton.style.display = "block";
-
         let resultsOne = document.getElementById("results-one");
         resultsOne.style.display = "none";
         let resultsTwo = document.getElementById("results-two");
@@ -155,7 +142,6 @@
         resultsThree.style.display = "none";
         let resultsFour = document.getElementById("results-four");
         resultsFour.style.display = "none";
-
         let practiceDoneOne = document.getElementById("practice-done-one");
         practiceDoneOne.style.display = "none";
         let practiceDoneTwo = document.getElementById("practice-done-two");
@@ -178,7 +164,6 @@
         instructionsFour.style.display = "none";
         let instructionsFive = document.getElementById("instructions-five");
         instructionsFive.style.display = "none";
-
         let resultsOne = document.getElementById("results-one");
         resultsOne.style.display = "block";
         let resultsTwo = document.getElementById("results-two");
@@ -187,28 +172,21 @@
         resultsThree.style.display = "block";
         let resultsFour = document.getElementById("results-four");
         resultsFour.style.display = "block";
-
         let resultPercentage;
         if (taskType) {
             resultPercentage = ((lastY - 49) / 50) * 100;
         } else {
             let originalFraction = 0.25;
-            let userFraction = (lastY - 49) / 100; // why is result percentage not showing up?
+            let userFraction = (lastY - 49) / 100;
             resultPercentage = (userFraction / originalFraction) * 100;
         }
-
         resultsTwo.textContent = "You answer is off by: " + Math.round(Math.abs(100 - resultPercentage) * 10) / 10 + "%";
         doneButton.removeAttribute("onclick");
         doneButton.addEventListener("click", showPracticeSummary);
-
         ctx.strokeRect(100, 50, 200, 200);
-
         drawLine(200, 50, 100);
-
         ctx.strokeRect(350, 50, 100, 100);
-
         drawLine(400, 50, lastY);
-
     }
 
     function showPracticeSummary() {
@@ -218,21 +196,18 @@
         canvas1.height = 300;
         const ctx = canvas1.getContext("2d");
         ctx.clearRect(0, 0, canvas1.width, canvas1.height);
-
         let practiceDoneOne = document.getElementById("practice-done-one");
         practiceDoneOne.style.display = "block";
         let practiceDoneTwo = document.getElementById("practice-done-two");
         practiceDoneTwo.style.display = "block";
         let practiceDoneThree = document.getElementById("practice-done-three");
         practiceDoneThree.style.display = "block";
-
         let instructionsThree = document.getElementById("instructions-three");
         instructionsThree.style.display = "none";
         let instructionsFour = document.getElementById("instructions-four");
         instructionsFour.style.display = "none";
         let instructionsFive = document.getElementById("instructions-five");
         instructionsFive.style.display = "none";
-
         let resultsOne = document.getElementById("results-one");
         resultsOne.style.display = "none";
         let resultsTwo = document.getElementById("results-two");
@@ -241,13 +216,10 @@
         resultsThree.style.display = "none";
         let resultsFour = document.getElementById("results-four");
         resultsFour.style.display = "none";
-
         let buttonContainer = document.getElementById("button-container");
-
         while (buttonContainer.hasChildNodes()) {
             buttonContainer.removeChild(buttonContainer.firstChild);
         }
-
         let practiceHeadingContainer = document.getElementById("practice-start");
         practiceHeadingContainer.removeChild(practiceHeadingContainer.children[0]);
     }

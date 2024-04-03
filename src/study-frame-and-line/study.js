@@ -56,6 +56,10 @@ module.exports = (function(exports) {
 			absolute: [],
 			relative: []
 		},
+		resultPercentages: {
+			relAvgPercent: 100,
+			absAvgPercent: 100,
+		},
 		preLoad: ["../img/btn-next.png","../img/btn-next-active.png","../img/ajax-loader.gif"],
 		slides: {
 			/*INTRODUCTION: {
@@ -178,7 +182,16 @@ module.exports = (function(exports) {
 	}
 
 	function calculateResults() {
-		//TODO: Nothing to calculate
+		let sumAbs = 0;
+		let sumRel = 0;
+    for (let index = 0; index < params.results.absolute.length; index++) {
+      sumAbs = sumAbs + params.results.absolute[index];
+    }
+    params.resultPercentages.absAvgPercent = sumAbs / params.results.absolute.length;
+		for (let index2 = 0; index2 < params.results.relative.length; index2++) {
+      sumRel = sumRel + params.results.relative[index2];
+    }
+	  params.resultPercentages.relAvgPercent = sumRel / params.results.relative.length;
 		let results_data = {}
 		showResults(results_data, true)
 	}

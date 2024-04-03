@@ -30,9 +30,35 @@ require("../js/litw/jspsych-display-slide");
 module.exports = (function(exports) {
 	var timeline = [],
 	params = {
+		tasks: [
+			{promptBoxSize:	191.0	, promptLineLength:	21.0	, responseBoxSize:	101.0	},
+			{promptBoxSize:	179.0	, promptLineLength:	31.0	, responseBoxSize:	89.0	},
+			{promptBoxSize:	101.0	, promptLineLength:	21.2	, responseBoxSize:	103.0	},
+			{promptBoxSize:	164.0	, promptLineLength:	41.0	, responseBoxSize:	125.0	},
+			{promptBoxSize:	102.0	, promptLineLength:	29.0	, responseBoxSize:	153.0	},
+			{promptBoxSize:	121.0	, promptLineLength:	38.7	, responseBoxSize:	163.0	},
+			{promptBoxSize:	81.0	, promptLineLength:	30.0	, responseBoxSize:	148.0	},
+			{promptBoxSize:	127.0	, promptLineLength:	53.0	, responseBoxSize:	127.0	},
+			{promptBoxSize:	200.0	, promptLineLength:	92.0	, responseBoxSize:	84.0	},
+			{promptBoxSize:	116.0	, promptLineLength:	56.8	, responseBoxSize:	189.0	},
+			{promptBoxSize:	94.0	, promptLineLength:	49.8	, responseBoxSize:	180.0	},
+			{promptBoxSize:	153.0	, promptLineLength:	87.0	, responseBoxSize:	102.0	},
+			{promptBoxSize:	149.0	, promptLineLength:	92.4	, responseBoxSize:	188.0	},
+			{promptBoxSize:	135.0	, promptLineLength:	90.5	, responseBoxSize:	155.0	},
+			{promptBoxSize:	89.0	, promptLineLength:	62.0	, responseBoxSize:	179.0	},
+			{promptBoxSize:	141.0	, promptLineLength:	104.3	, responseBoxSize:	116.0	},
+			{promptBoxSize:	184.0	, promptLineLength:	145.4	, responseBoxSize:	109.0	},
+			{promptBoxSize:	110.0	, promptLineLength:	90.2	, responseBoxSize:	189.0	},
+			{promptBoxSize:	159.0	, promptLineLength:	136.7	, responseBoxSize:	145.0	},
+			{promptBoxSize:	170.0	, promptLineLength:	151.3	, responseBoxSize:	121.0	}
+		],
+		results: {
+			absolute: [],
+			relative: []
+		},
 		preLoad: ["../img/btn-next.png","../img/btn-next-active.png","../img/ajax-loader.gif"],
 		slides: {
-			INTRODUCTION: {
+			/*INTRODUCTION: {
 				name: "introduction",
 				type: "display-slide",
 				template: introTemplate,
@@ -77,7 +103,7 @@ module.exports = (function(exports) {
 				},
 				display_element: $("#practice"),
 				display_next_button: true,
-			},
+			},*/
 			TASK_ABSOLUTE: {
 				name: "task_absolute",
 				type: "display-slide",
@@ -138,11 +164,11 @@ module.exports = (function(exports) {
 	};
 
 	function configureStudy() {
-		timeline.push(params.slides.INTRODUCTION);
+		/*timeline.push(params.slides.INTRODUCTION);
 		timeline.push(params.slides.INFORMED_CONSENT);
 		timeline.push(params.slides.DEMOGRAPHICS);
 		timeline.push(params.slides.INSTRUCTIONS);
-		timeline.push(params.slides.PRACTICE);
+		timeline.push(params.slides.PRACTICE);*/
 		timeline.push(params.slides.TASK_ABSOLUTE);
 		timeline.push(params.slides.INSTRUCTIONS2);
 		timeline.push(params.slides.PRACTICE2);

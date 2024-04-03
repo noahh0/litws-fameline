@@ -197,7 +197,7 @@
             resultPercentage = (userFraction / originalFraction) * 100;
         }
 
-        resultsTwo.textContent = "You answer is off by: " + Math.abs(100 - resultPercentage) + "%";
+        resultsTwo.textContent = "You answer is off by: " + Math.round(Math.abs(100 - resultPercentage) * 10) / 10 + "%";
         doneButton.removeAttribute("onclick");
         doneButton.addEventListener("click", showPracticeSummary);
 

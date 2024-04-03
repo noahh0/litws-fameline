@@ -4,7 +4,7 @@
 </div>
 
 <div id="button-container" style=" display: flex; justify-content: center;">
-  <button id="doneButton" class="btn btn-primary" style="visibility: hidden; margin-top: 30px; margin-left: 15px;" onclick="incrementTrial()" data-i18n="litw-study-finish-practice"></button>
+  <button id="doneButton" class="btn btn-primary" style="visibility: hidden; margin-top: 30px;" onclick="incrementTrial()" data-i18n="litw-study-finish-practice"></button>
 </div>
 
 <script>
@@ -13,9 +13,6 @@
   let randomLineLength;
   let randomDimension2;
   let absAvgPercent;
-
-  let squareSizes = [75, 100, 125, 150, 175, 200, 225, 250, 275, 300, 325, 350, 375, 400, 425, 450, 475, 500, 525, 550, 575, 600];
-  let lineFractions = [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 0.25, 0.75, 0.33, 0.66];
   let absoluteTrialResults = [];
 
   window.onload = initTrial();
@@ -33,15 +30,15 @@
       canvas1.width = 800;
       canvas1.height = 700;
       const ctx = canvas1.getContext("2d");
-      randomDimension = squareSizes[Math.floor(Math.random() * 22)];
-      randomLineLength = lineFractions[Math.floor(Math.random() * 13)];
-      console.log(randomDimension)
-      console.log(randomLineLength)
+      randomTrial =  LITW.study.params.tasks[Math.floor(Math.random() * 20)]
+      randomDimension =  randomTrial.promptBoxSize;
+      randomLineLength = randomTrial.promptLineLength;
       ctx.strokeRect((canvas1.width - randomDimension) / 2, 50, randomDimension, randomDimension);
-      drawLine(((canvas1.width - randomDimension) / 2) + randomDimension / 2, 50, 50 + Math.floor(randomLineLength * randomDimension));
+      drawLine(((canvas1.width - randomDimension) / 2) + randomDimension / 2, 50, 50 + randomLineLength);
 
       lastY = 49;
 
+      document.onkeydown = function () {};
       let count = 5;
         const timer = setInterval(function() {
             count--;
@@ -52,8 +49,7 @@
                 doneButton.style.visibility = "visible";
                 ctx.clearRect(0, 0, canvas1.width, canvas1.height);
 
-                let index = calculateWhichBoxIsClosestToLineSize(randomLineLength * randomDimension);
-                randomDimension2 = squareSizes[Math.floor(Math.random() * (22 - index)) + index];
+                randomDimension2 = randomTrial.responseBoxSize;
 
                 canvas1.height = randomDimension2 + 75;
                 ctx.strokeRect((canvas1.width - randomDimension2) / 2, 50, randomDimension2, randomDimension2);
@@ -61,7 +57,7 @@
                 ctx.fillStyle = "black";
 
                 let moveAmount = 2;
-
+                lastY = 49;
                 document.onkeydown = function(e) {
                     if (e.keyCode == 40) {
                         if (lastY < (49 + randomDimension2) - 2) {
@@ -81,18 +77,8 @@
         }, 1000);
   }
 
-  function calculateWhichBoxIsClosestToLineSize(minBoxSize) {
-    let index = 0;
-    while (minBoxSize > squareSizes[index]) {
-      if(minBoxSize > squareSizes[index]) {
-        index++
-      }
-    }
-    return index;
-  }
-
   function incrementTrial() {
-    let resultPercentage = ((lastY - 49) / (Math.floor(randomLineLength * randomDimension))) * 100;
+    let resultPercentage = ((lastY - 49) / (randomLineLength)) * 100;
     absoluteTrialResults.push(Math.abs(100 - resultPercentage));
     let doneButton = document.getElementById("doneButton");
     doneButton.style.visibility = "hidden";
@@ -126,6 +112,7 @@
     absAvgPercent = calculateAbsAvgPercent();
     viewNextButton();
     console.log(absAvgPercent);
+    LITW.study.params.results.absolute = absoluteTrialResults;
   }
 
   function calculateAbsAvgPercent() {

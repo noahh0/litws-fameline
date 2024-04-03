@@ -102,7 +102,7 @@ module.exports = (function(exports) {
 					task_type: "absolute",
 				},
 				display_element: $("#practice"),
-				display_next_button: true,
+				display_next_button: false,
 			},*/
 			TASK_ABSOLUTE: {
 				name: "task_absolute",
@@ -131,7 +131,7 @@ module.exports = (function(exports) {
 					task_type: "relative",
 				},
 				display_element: $("#practice"),
-				display_next_button: true,
+				display_next_button: false,
 			},
 			TASK_RELATIVE: {
 				name: "task_relative",

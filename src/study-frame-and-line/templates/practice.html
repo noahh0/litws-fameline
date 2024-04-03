@@ -212,6 +212,7 @@
     }
 
     function showPracticeSummary() {
+        viewNextButton();
         let canvas1 = document.getElementById("prompt_canvas");
         canvas1.width = 600;
         canvas1.height = 300;
@@ -249,5 +250,10 @@
 
         let practiceHeadingContainer = document.getElementById("practice-start");
         practiceHeadingContainer.removeChild(practiceHeadingContainer.children[0]);
+    }
+
+    function viewNextButton() {
+        $('#btn-next-page').attr('style', 'display:block;');
+        $('#btn-next-page')[0].scrollIntoView();
     }
 </script>

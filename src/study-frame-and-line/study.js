@@ -62,7 +62,7 @@ module.exports = (function(exports) {
 		},
 		preLoad: ["../img/btn-next.png","../img/btn-next-active.png","../img/ajax-loader.gif"],
 		slides: {
-			/*INTRODUCTION: {
+			INTRODUCTION: {
 				name: "introduction",
 				type: "display-slide",
 				template: introTemplate,
@@ -107,7 +107,7 @@ module.exports = (function(exports) {
 				},
 				display_element: $("#practice"),
 				display_next_button: false,
-			},*/
+			},
 			TASK_ABSOLUTE: {
 				name: "task_absolute",
 				type: "display-slide",
@@ -168,11 +168,11 @@ module.exports = (function(exports) {
 	};
 
 	function configureStudy() {
-		/*timeline.push(params.slides.INTRODUCTION);
+		timeline.push(params.slides.INTRODUCTION);
 		timeline.push(params.slides.INFORMED_CONSENT);
 		timeline.push(params.slides.DEMOGRAPHICS);
 		timeline.push(params.slides.INSTRUCTIONS);
-		timeline.push(params.slides.PRACTICE);*/
+		timeline.push(params.slides.PRACTICE);
 		timeline.push(params.slides.TASK_ABSOLUTE);
 		timeline.push(params.slides.INSTRUCTIONS2);
 		timeline.push(params.slides.PRACTICE2);

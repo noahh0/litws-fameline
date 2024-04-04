@@ -48,12 +48,16 @@
                 LITW.results.drawMark((Math.min(100, newRelAvgPercent)/100) * 15, "Relative");
                 if (newRelAvgPercent >= 100) {
                     LITW.results.drawMark(((absAvgPercent - 10)/100) * 15, "Absolute");
+                } else {
+                    LITW.results.drawMark((absAvgPercent/100) * 15, "Absolute");
                 }
             } else {
                 let newAbsAvgPercent =  absAvgPercent + 10;
                 LITW.results.drawMark((Math.min(100, newAbsAvgPercent)/100) * 15, "Absolute");
                 if (newAbsAvgPercent >= 100) {
                     LITW.results.drawMark(((relAvgPercent - 10)/100) * 15, "Relative");
+                } else {
+                    LITW.results.drawMark((relAvgPercent/100) * 15, "Relative");
                 }
             }
         } else {

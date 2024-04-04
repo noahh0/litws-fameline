@@ -1,6 +1,8 @@
 <h5 id="progress-bar" class="text-center  bolded-blue data-i18n="></h5>
 <div style="display:flex; justify-content: center;">
+  <span id="upBtn" class="bolded-blue" style="visibility: hidden; font-size: 100px; margin-top: 75px;">&#8593;</span>
   <canvas id='prompt_canvas'></canvas>
+  <span id="downBtn" class="bolded-blue" style="visibility: hidden; font-size: 100px; margin-top: 75px;">&#8595;</span>
 </div>
 
 <div id="button-container" style=" display: flex; justify-content: center;">
@@ -25,15 +27,18 @@
       let progressBar = document.getElementById("progress-bar");
       progressBar.textContent = "Trial: " + trialNum + "/5";
       let canvas1 = document.getElementById("prompt_canvas");
-      canvas1.width = 800;
-      canvas1.height = 700;
+      if (window.innerWidth < 700) {
+        canvas1.width = 250;
+      } else {
+        canvas1.width = 600;
+      }
+      canvas1.height = 255;
       const ctx = canvas1.getContext("2d");
       randomTrial =  LITW.study.params.tasks[Math.floor(Math.random() * 20)]
       randomDimension =  randomTrial.promptBoxSize;
       randomLineLength = randomTrial.promptLineLength;
       ctx.strokeRect((canvas1.width - randomDimension) / 2, 50, randomDimension, randomDimension);
       drawLine(((canvas1.width - randomDimension) / 2) + randomDimension / 2, 50, 50 + randomLineLength);
-      lastY = 49;
       document.onkeydown = function () {};
       let count = 5;
       const timer = setInterval(function() {
@@ -43,35 +48,56 @@
           clearInterval(timer);
           let doneButton = document.getElementById("doneButton");
           doneButton.style.visibility = "visible";
+          let upBtn = document.getElementById("upBtn");
+          let downBtn = document.getElementById("downBtn");
+          upBtn.style.visibility = "visible";
+          downBtn.style.visibility = "visible";
           ctx.clearRect(0, 0, canvas1.width, canvas1.height);
           randomDimension2 = randomTrial.responseBoxSize;
           canvas1.height = randomDimension2 + 75;
           ctx.strokeRect((canvas1.width - randomDimension2) / 2, 50, randomDimension2, randomDimension2);
           ctx.fillStyle = "black";
           let moveAmount = 2;
-          lastY = 49;
+          lastY = 50;
+          upBtn.addEventListener("click", upSelected);
+          downBtn.addEventListener("click", downSelected);
           document.onkeydown = function(e) {
             if (e.keyCode == 40) {
-              if (lastY < (49 + randomDimension2) - 2) {
-                lastY = lastY + 2;
-                drawLine(((canvas1.width - randomDimension2) / 2) + randomDimension2 / 2, lastY, lastY + 2);
-              }
+              downSelected();
             } else if (e.keyCode == 38) {
-              if (lastY != 49) {
-                ctx.clearRect((((canvas1.width - randomDimension2) / 2) + randomDimension2 / 2) - 2, lastY, 5, 2);
-                lastY = lastY - 2;
-              }
+              upSelected();
             }
           }
         }
     }, 1000);
   }
 
+  function downSelected () {
+    let canvas1 = document.getElementById("prompt_canvas");
+    if (lastY < (50 + randomDimension2) - 2) {
+      lastY = lastY + 1;
+      drawLine(((canvas1.width - randomDimension2) / 2) + randomDimension2 / 2, lastY, lastY + 1);
+    }
+  }
+
+    function upSelected () {
+      let canvas1 = document.getElementById("prompt_canvas");
+      const ctx = canvas1.getContext("2d");
+      if (lastY != 50) {
+        ctx.clearRect((((canvas1.width - randomDimension2) / 2) + randomDimension2 / 2) - 2, lastY, 5, 1);
+        lastY = lastY - 1;
+      }
+   }
+
   function incrementTrial() {
-    let resultPercentage = ((lastY - 49) / (randomLineLength)) * 100;
+    let resultPercentage = ((lastY - 50) / (randomLineLength)) * 100;
     LITW.study.params.results.absolute.push(Math.abs(100 - resultPercentage));
     let doneButton = document.getElementById("doneButton");
     doneButton.style.visibility = "hidden";
+    let upBtn = document.getElementById("upBtn");
+    let downBtn = document.getElementById("downBtn");
+    upBtn.style.visibility = "hidden";
+    downBtn.style.visibility = "hidden";
     trialNum++;
     let count = 1;
     const timer = setInterval(function() {

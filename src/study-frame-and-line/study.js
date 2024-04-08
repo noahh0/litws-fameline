@@ -13,6 +13,7 @@
 window.$ = window.jQuery = require("jquery");
 require("bootstrap");
 require("jquery-ui-bundle");
+var _ = require('lodash');
 var introTemplate = require("../templates/introduction.html");
 var irbTemplate = require("../templates/irb.html");
 var demographicsTemplate = require("../templates/demographics.html");
@@ -30,6 +31,9 @@ require("../js/litw/jspsych-display-slide");
 module.exports = (function(exports) {
 	var timeline = [],
 	params = {
+		preLoad: ["../img/btn-next.png","../img/btn-next-active.png","../img/ajax-loader.gif"],
+		study_id: "TO_BE_ADDED_IF_USING_LITW_INFRA",
+		study_recommendation: [],
 		tasks: [
 			{promptBoxSize:	191.0	, promptLineLength:	21.0	, responseBoxSize:	101.0	},
 			{promptBoxSize:	179.0	, promptLineLength:	31.0	, responseBoxSize:	89.0	},
@@ -53,14 +57,9 @@ module.exports = (function(exports) {
 			{promptBoxSize:	170.0	, promptLineLength:	151.3	, responseBoxSize:	121.0	}
 		],
 		results: {
-			absolute: [],
-			relative: []
+			absolute: [3,5,10,4,5], //dummy data for test scenarios
+			relative: [0,0,0,0,0]   //should be correcly filled up by the experiment!
 		},
-		resultPercentages: {
-			relAvgPercent: 100,
-			absAvgPercent: 100,
-		},
-		preLoad: ["../img/btn-next.png","../img/btn-next-active.png","../img/ajax-loader.gif"],
 		slides: {
 			INTRODUCTION: {
 				name: "introduction",
@@ -168,32 +167,30 @@ module.exports = (function(exports) {
 	};
 
 	function configureStudy() {
-		timeline.push(params.slides.INTRODUCTION);
-		timeline.push(params.slides.INFORMED_CONSENT);
-		timeline.push(params.slides.DEMOGRAPHICS);
-		timeline.push(params.slides.INSTRUCTIONS);
-		timeline.push(params.slides.PRACTICE);
-		timeline.push(params.slides.TASK_ABSOLUTE);
-		timeline.push(params.slides.INSTRUCTIONS2);
-		timeline.push(params.slides.PRACTICE2);
-		timeline.push(params.slides.TASK_RELATIVE);
+		// timeline.push(params.slides.INTRODUCTION);
+		// timeline.push(params.slides.INFORMED_CONSENT);
+		// timeline.push(params.slides.DEMOGRAPHICS);
+		// timeline.push(params.slides.INSTRUCTIONS);
+		// timeline.push(params.slides.PRACTICE);
+		// timeline.push(params.slides.TASK_ABSOLUTE);
+		// timeline.push(params.slides.INSTRUCTIONS2);
+		// timeline.push(params.slides.PRACTICE2);
+		// timeline.push(params.slides.TASK_RELATIVE);
 		timeline.push(params.slides.COMMENTS);
 		timeline.push(params.slides.RESULTS);
 	}
 
 	function calculateResults() {
-		let sumAbs = 0;
-		let sumRel = 0;
-    for (let index = 0; index < params.results.absolute.length; index++) {
-      sumAbs = sumAbs + params.results.absolute[index];
-    }
-    params.resultPercentages.absAvgPercent = sumAbs / params.results.absolute.length;
-		for (let index2 = 0; index2 < params.results.relative.length; index2++) {
-      sumRel = sumRel + params.results.relative[index2];
-    }
-	  params.resultPercentages.relAvgPercent = sumRel / params.results.relative.length;
-		let results_data = {}
-		showResults(results_data, true)
+		let results_data = {
+			relative: _.mean(params.results.relative),
+			absolute: _.mean(params.results.absolute),
+			message: $.i18n('study-fl-results-header2-absolute')
+		}
+		if(results_data.relative < results_data.absolute) {
+			results_data.message = $.i18n('study-fl-results-header2-relative');
+		}
+		//TODO: We need a message for when the relative and absolute error are the same!
+		showResults(results_data, true);
 	}
 
 	function showResults(results = {}, showFooter = false) {
@@ -209,22 +206,10 @@ module.exports = (function(exports) {
 		if(showFooter) {
 			$("#results-footer").html(resultsFooter(
 				{
-					//TODO fix this before launching!
-					share_url: "https://labinthewild.org/studies/covid-dilemmas/index.php",
+					share_url: window.location.href,
 					share_title: $.i18n('litw-irb-header'),
 					share_text: $.i18n('litw-template-title'),
-					more_litw_studies: [{
-						study_url: "https://reading.labinthewild.org/",
-						study_logo: "http://labinthewild.org/images/reading-assessment.jpg",
-						study_slogan: $.i18n('litw-more-study1-slogan'),
-						study_description: $.i18n('litw-more-study1-description'),
-					},
-					{
-						study_url: "https://litw-sci-scomm.azurewebsites.net/LITW/consent",
-						study_logo: "http://labinthewild.org/images/sci-comm-img.png",
-						study_slogan: $.i18n('litw-more-study2-slogan'),
-						study_description: $.i18n('litw-more-study2-description'),
-					}]
+					more_litw_studies: params.study_recommendation
 				}
 			));
 		}
@@ -249,6 +234,10 @@ module.exports = (function(exports) {
 		if( Object.keys(params.URL).length > 0 ) {
 			LITW.data.submitData(params.URL,'litw:paramsURL');
 		}
+		// populate study recommendation
+		LITW.engage.getStudiesRecommendation(2, (studies_list) => {
+			params.study_recommendation = studies_list;
+		});
 		// initiate pages timeline
 		jsPsych.init({
 		  timeline: timeline

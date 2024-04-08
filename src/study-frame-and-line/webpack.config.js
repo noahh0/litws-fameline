@@ -4,7 +4,7 @@ var config = {
   entry: path.join(__dirname, "study.js"),
   output: {
     path: path.join(__dirname, "js"),
-    filename: "bundle-model.min.js"
+    filename: "study-bundle.min.js"
   },
   module: {
     rules: [

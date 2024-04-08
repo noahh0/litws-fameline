@@ -1,9 +1,9 @@
 /*************************************************************
  * jspsych-display-info.js
- * 
+ *
  * A jsPsych plugin that displays information, such as
  * instructions or break pages.
- * 
+ *
  * Last modified: January 28, 2017
  *
  * © Copyright 2017 LabintheWild
@@ -11,16 +11,16 @@
  * the code, contact us at info@labinthewild.org
  *************************************************************/
 
-var instructionsTemplate = require("../../templates/instructions.html");
-var preTrialBreakTemplate = require("../../templates/preTrialBreak.html");
-var midTrialBreakTemplate = require("../../templates/midTrialBreak.html");
+var instructionsTemplate = require("../../study-frame-and-line/templates/instructions.html");
+var preTrialBreakTemplate = require("../../study-frame-and-line/templates/preTrialBreak.html");
+var midTrialBreakTemplate = require("../../study-frame-and-line/templates/midTrialBreak.html");
 
 module.exports = jsPsych.plugins["display-info"] = (function() {
 
   var plugin = {};
 
   plugin.trial = function(display_element, trial) {
-    
+
     if (trial.name === "instructions") {
       $("#instructions").html(instructionsTemplate({
         content: trial.content,
@@ -31,7 +31,7 @@ module.exports = jsPsych.plugins["display-info"] = (function() {
         display_element.empty();
         jsPsych.finishTrial();
       });
-      
+
       LITW.utils.showSlide("instructions");
     } else if (trial.name === "preTrialBreak") {
       $("#break").html(preTrialBreakTemplate({

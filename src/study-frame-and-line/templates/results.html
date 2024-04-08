@@ -1,0 +1,161 @@
+<!-- Template for the results page -->
+<h3 class="bolded-blue" style="text-align: center" data-i18n="litw-results-header"></h3>
+<h4 id="better-abs" class="text-center" style="display: none;" data-i18n="litw-results-header2-absolute"></h4>
+<h4 id="better-rel" class="text-center" style="display: none;" data-i18n="litw-results-header2-relative"></h4>
+<br>
+{{#if data.code}}
+<h5 style="text-align: center">
+    <span data-i18n="litw-results-code"></span>
+    <span>{{ data.code }}</span>
+</h5>
+<br>
+{{/if}}
+<br>
+<div id="results-main" class="container center-content">
+    <div id="participant_score" data-score="{{ data.score }}"></div>
+    <div id="graphic" class="h-100 d-flex align-items-center justify-content-center"></div>
+</div>
+<div id="results-explain" class="container border border-3 p-4" style="width: 90%">
+    <h5 class="bolded-blue text-center" data-i18n="litw-results-details"></h5>
+    <h6 id="rel" class="text-center" style="margin-top: 5px;"></h6>
+    <h6 id="abs" class="text-center" style="margin-top: 10px;"></h6>
+
+    <h5 class="bolded-blue text-center" style="margin-top: 40px;" data-i18n="litw-results-explanation"></h5>
+    <h6 class="text-center" style="margin-top: 20px;" data-i18n="litw-results-explanation-analytic"></h6>
+    <h6 class="text-center" style="margin-top: 10px;" data-i18n="litw-results-explanation-holistic"></h6>
+</div>
+
+<br>
+<div id="results-footer"></div>
+
+<script type="text/javascript">
+    let shownHeader;
+    let absAvgPercent;
+    let relAvgPercent;
+
+    window.onload = calcResults();
+
+    $(document).ready(function() {
+        relAvgPercent = LITW.study.params.resultPercentages.relAvgPercent;
+        absAvgPercent = LITW.study.params.resultPercentages.absAvgPercent;
+        LITW.results.drawGraphic('graphic');
+        if (relAvgPercent == absAvgPercent) {
+            LITW.results.drawMark((relAvgPercent/100) * 15, "Rel & Abs");
+        }
+        else if (Math.abs(relAvgPercent - absAvgPercent) < 10) {
+            if (relAvgPercent >= absAvgPercent) {
+                let newRelAvgPercent =  relAvgPercent + 10;
+                LITW.results.drawMark((Math.min(100, newRelAvgPercent)/100) * 15, "Relative");
+                if (newRelAvgPercent >= 100) {
+                    LITW.results.drawMark(((absAvgPercent - 10)/100) * 15, "Absolute");
+                } else {
+                    LITW.results.drawMark((absAvgPercent/100) * 15, "Absolute");
+                }
+            } else {
+                let newAbsAvgPercent =  absAvgPercent + 10;
+                LITW.results.drawMark((Math.min(100, newAbsAvgPercent)/100) * 15, "Absolute");
+                if (newAbsAvgPercent >= 100) {
+                    LITW.results.drawMark(((relAvgPercent - 10)/100) * 15, "Relative");
+                } else {
+                    LITW.results.drawMark((relAvgPercent/100) * 15, "Relative");
+                }
+            }
+        } else {
+            LITW.results.drawMark((relAvgPercent/100) * 15, "Relative");
+            LITW.results.drawMark((absAvgPercent/100) * 15, "Absolute");
+        }
+    });
+
+    function calcResults() {
+        relAvgPercent = LITW.study.params.resultPercentages.relAvgPercent;
+        absAvgPercent = LITW.study.params.resultPercentages.absAvgPercent;
+        let relResult = document.getElementById("rel");
+        console.log(relAvgPercent)
+        console.log(absAvgPercent)
+        absAvgPercent = Math.round(absAvgPercent * 10) / 10;
+        relAvgPercent = Math.round(relAvgPercent * 10) / 10
+        relResult.textContent = "Your relative lines were off by: " + relAvgPercent + "%";
+        let absResult = document.getElementById("abs");
+        absResult.textContent = "Meanwhile, your absolute lines were off by: " + absAvgPercent + "%";
+        if (absAvgPercent < relAvgPercent) {
+            shownHeader = document.getElementById("better-abs");
+        } else {
+            shownHeader = document.getElementById("better-rel");
+
+        }
+        shownHeader.style.display = "block";
+    }
+
+    (function (exports) {
+    const PAGE_CONTENT_WIDTH = document.getElementById('content').offsetWidth;
+    const MAX_GRAPH_WIDTH = 900;
+    const MAX_GRAPH_HEIGHT = 200;
+    const MAX_SCORE = 15;
+    // Declare the chart dimensions and margins.
+    const width = Math.min(PAGE_CONTENT_WIDTH, MAX_GRAPH_WIDTH);
+    const height = MAX_GRAPH_HEIGHT;
+    const barHeight = height/5;
+    const barWidth = width - 100;
+    let svg = null;
+
+    let _calculateMarkX = function (score) {
+        return (25 + (barWidth/MAX_SCORE*score))
+    }
+    let _addMark = function (context){
+        context.moveTo(barHeight/2,barHeight)
+        context.lineTo(0,0)
+        context.lineTo(barHeight, 0)
+        context.closePath()
+        return context
+    }
+
+    let drawMark = function(score, legend, fill= false) {
+        let mark = svg.append("g");
+        let fill_color = !fill ? "none" : "black";
+        mark.append("path")
+            .style("stroke", "black")
+            .style("fill", fill_color)
+            .attr('d', _addMark(d3.path()))
+        mark.append("text")
+            .attr('x', barHeight/2)
+            .attr('y', -5)
+            .attr('text-anchor', 'middle')
+            .attr('font-size', '1.5em')
+            .text(legend)
+        mark.attr('transform', `translate(${_calculateMarkX(score)}, ${height/2-(3/2*barHeight)})`)
+    }
+    let draw = function(divID) {
+        // Create the SVG container.
+        svg = d3.select(`#${divID}`)
+            .append("svg")
+            .attr("width", width)
+            .attr("height", height);
+
+        // Add bar
+        let bar = svg.append("g");
+        bar.append("rect")
+            .attr('x', 50)
+            .attr('y', 0)
+            .attr('width', barWidth)
+            .attr('height', barHeight)
+            .attr('stroke', 'black')
+            .attr('fill', '#6A9341')
+        bar.append("text")
+            .attr('x', 0)
+            .attr('y', barHeight*2)
+            .text("0% Avg Error")
+        bar.append("text")
+            .attr('x', width)
+            .attr('y', barHeight*2)
+            .attr('text-anchor', 'end')
+            .text("100% Avg Error")
+        bar.attr('transform', `translate(${0}, ${height/2-(barHeight/2)})`);
+    }
+
+    exports.results = {};
+    exports.results.drawGraphic = draw;
+    exports.results.drawMark = drawMark;
+
+})( window.LITW = window.LITW || {} );
+
+</script>

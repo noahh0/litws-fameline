@@ -1,0 +1,136 @@
+<h5 id="progress-bar" class="text-center  bolded-blue data-i18n="></h5>
+<div style="display:flex; justify-content: center;">
+  <span id="upBtn" class="bolded-blue" style="visibility: hidden; font-size: 100px; margin-top: 75px;">&#8593;</span>
+  <canvas id='prompt_canvas'></canvas>
+  <span id="downBtn" class="bolded-blue" style="visibility: hidden; font-size: 100px; margin-top: 75px;">&#8595;</span>
+</div>
+
+<div id="button-container" style=" display: flex; justify-content: center;">
+  <button id="doneButton" class="btn btn-primary" style="visibility: hidden; margin-top: 30px;" onclick="incrementTrial()" data-i18n="litw-study-finish-practice"></button>
+</div>
+
+<script>
+  trialNum = 1;
+  randomDimension;
+  randomLineLength;
+  randomDimension2;
+  let originalFraction;
+
+  window.onload = initTrial();
+
+  function initTrial() {
+      window.addEventListener("keydown", function(e) {
+        if([32, 37, 38, 39, 40].indexOf(e.keyCode) > -1) {
+          e.preventDefault();
+        }
+      }, false);
+      let progressBar = document.getElementById("progress-bar");
+      progressBar.textContent = "Trial: " + trialNum + "/5";
+      let canvas1 = document.getElementById("prompt_canvas");
+      if (window.innerWidth < 700) {
+        canvas1.width = 250;
+      } else {
+        canvas1.width = 600;
+      }
+      canvas1.height = 255;
+      const ctx = canvas1.getContext("2d");
+      randomTrial =  LITW.study.params.tasks[Math.floor(Math.random() * 20)]
+      randomDimension =  randomTrial.promptBoxSize;
+      randomLineLength = randomTrial.promptLineLength;
+      ctx.strokeRect((canvas1.width - randomDimension) / 2, 50, randomDimension, randomDimension);
+      drawLine(((canvas1.width - randomDimension) / 2) + randomDimension / 2, 50, 50 + randomLineLength);
+      originalFraction = randomLineLength / randomDimension;
+      document.onkeydown = function () {};
+      let count = 5;
+      const timer = setInterval(function() {
+        count--;
+        console.log(count);
+        if (count === 0) {
+          clearInterval(timer);
+          let doneButton = document.getElementById("doneButton");
+          doneButton.style.visibility = "visible";
+          let upBtn = document.getElementById("upBtn");
+          let downBtn = document.getElementById("downBtn");
+          upBtn.style.visibility = "visible";
+          downBtn.style.visibility = "visible";
+          ctx.clearRect(0, 0, canvas1.width, canvas1.height);
+          randomDimension2 = randomTrial.responseBoxSize;
+          canvas1.height = randomDimension2 + 75;
+          ctx.strokeRect((canvas1.width - randomDimension2) / 2, 50, randomDimension2, randomDimension2);
+          ctx.fillStyle = "black";
+          let moveAmount = 2;
+          lastY = 50;
+          upBtn.addEventListener("click", upSelected);
+          downBtn.addEventListener("click", downSelected);
+          document.onkeydown = function(e) {
+            if (e.keyCode == 40) {
+              downSelected();
+            } else if (e.keyCode == 38) {
+              upSelected();
+            }
+          }
+        }
+      }, 1000);
+  }
+
+  function downSelected () {
+    let canvas1 = document.getElementById("prompt_canvas");
+    if (lastY < (50 + randomDimension2) - 2) {
+      lastY = lastY + 1;
+      drawLine(((canvas1.width - randomDimension2) / 2) + randomDimension2 / 2, lastY, lastY + 1);
+    }
+  }
+
+    function upSelected () {
+      let canvas1 = document.getElementById("prompt_canvas");
+      const ctx = canvas1.getContext("2d");
+      if (lastY != 50) {
+        ctx.clearRect((((canvas1.width - randomDimension2) / 2) + randomDimension2 / 2) - 2, lastY, 5, 1);
+        lastY = lastY - 1;
+      }
+   }
+
+  function incrementTrial() {
+    let userFraction = (lastY - 50) / randomDimension2;
+    let resultPercentage = (userFraction / originalFraction) * 100;
+    LITW.study.params.results.relative.push(Math.abs(100 - resultPercentage));
+    let doneButton = document.getElementById("doneButton");
+    doneButton.style.visibility = "hidden";
+    let upBtn = document.getElementById("upBtn");
+    let downBtn = document.getElementById("downBtn");
+    upBtn.style.visibility = "hidden";
+    downBtn.style.visibility = "hidden";
+    trialNum++;
+    let count = 1;
+    const timer = setInterval(function() {
+      count--;
+      if (count === 0) {
+        if (trialNum < 6) {
+          initTrial();
+        } else {
+          endRelTrials();
+        }
+      }
+    }, 1000);
+  }
+
+  function drawLine(x, y1, y2) {
+    let canvas1 = document.getElementById("prompt_canvas");
+    const ctx = canvas1.getContext("2d");
+    ctx.beginPath(); // Start a new path
+    ctx.moveTo(x, y1);
+    ctx.lineTo(x, y2);
+    ctx.stroke(); // Render the path
+  }
+
+  function endRelTrials() {
+    document.onkeydown = function () {};
+    viewNextButton();
+  }
+
+  function viewNextButton() {
+    $('#btn-next-page').attr('style', 'display:block;');
+    $('#btn-next-page')[0].scrollIntoView();
+  }
+
+</script>

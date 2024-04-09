@@ -1,0 +1,140 @@
+<h5 id="progress-bar" class="text-center  bolded-blue data-i18n="></h5>
+<div id="task_type" data-type="{{ config.task_type }}"></div>
+<div style="display:flex; justify-content: center;">
+    <span id="upBtn" class="bolded-blue" style="visibility: hidden; font-size: 100px; margin-top: 75px;">&#8593;</span>
+    <canvas id='prompt_canvas'></canvas>
+    <span id="downBtn" class="bolded-blue" style="visibility: hidden; font-size: 100px; margin-top: 75px;">&#8595;</span>
+</div>
+
+<div id="button-container" style=" display: flex; justify-content: center;">
+    <button id="doneButton" class="btn btn-primary" style="visibility: hidden; margin-top: 30px;"
+            onclick="incrementTrial()" data-i18n="litw-study-finish-practice"></button>
+</div>
+
+<script>
+    const CANVAS = document.getElementById("prompt_canvas");
+    const TASK_TYPE = document.getElementById("task_type").dataset.type;
+    const TIME_TO_PROMPT = 5000;
+    const TOTAL_TRIALS = 5;
+    const TRIALS = LITW.study.params.tasks.sort(() => 0.5 - Math.random()).slice(0, TOTAL_TRIALS);
+    const LINE_START_Y = 50; //TODO: Double check this... shouldn't it be calculated based on Canvas?
+    const LINE_INCREMENT = 1; //TODO: WE likely want to tune this up as some boxes are too large?
+    let currentTrial = 1;
+    let currentBoxSize = 0;
+    let currentLineLength = 0;
+
+    // TODO: refactor the deprecated "keyCode"
+    // TODO: what is this really doing? Maybe add that to a clarifying function
+    function setupWindow() {
+        window.addEventListener("keydown", function (e) {
+            // space and arrow keys
+            if ([32, 37, 38, 39, 40].indexOf(e.keyCode) > -1) {
+                e.preventDefault();
+            }
+        }, false);
+        let upBtn = document.getElementById("upBtn");
+        let downBtn = document.getElementById("downBtn");
+        upBtn.addEventListener("click", upSelected);
+        downBtn.addEventListener("click", downSelected);
+        document.onkeydown = function (e) {
+            if (e.keyCode == 40) {
+                downSelected();
+            } else if (e.keyCode == 38) {
+                upSelected();
+            }
+        }
+        //TODO: I believe this can be improved by using some already sized element on the screen?
+        if (window.innerWidth < 700) {
+            CANVAS.width = 250;
+        } else {
+            CANVAS.width = 600;
+        }
+        CANVAS.height = 255;
+
+    }
+
+    function initTrial() {
+        console.log(`TASK_TYPE: ${TASK_TYPE}`);
+        let progressBar = document.getElementById("progress-bar");
+        progressBar.textContent = `${$.i18n('study-fl-progress-trial')}: ${currentTrial}/${TOTAL_TRIALS}`;
+        currentLineLength = TRIALS[currentTrial-1].promptLineLength;
+        currentBoxSize = TRIALS[currentTrial-1].promptBoxSize;
+        redrawCanvas(currentBoxSize, currentLineLength);
+        setTimeout(function () {
+            currentBoxSize = TRIALS[currentTrial-1].responseBoxSize;
+            currentLineLength = 0;
+            redrawCanvas(currentBoxSize, currentLineLength);
+
+            let doneButton = document.getElementById("doneButton");
+            doneButton.style.visibility = "visible";
+            let upBtn = document.getElementById("upBtn");
+            let downBtn = document.getElementById("downBtn");
+            upBtn.style.visibility = "visible";
+            downBtn.style.visibility = "visible";
+        }, TIME_TO_PROMPT);
+    }
+
+    function redrawCanvas(boxSize, lineLength) {
+        const ctx = CANVAS.getContext("2d");
+        ctx.clearRect(0, 0, CANVAS.width, CANVAS.height);
+        let canvasCenter = CANVAS.width/2;
+        ctx.fillStyle = "black";
+        ctx.strokeRect((canvasCenter-(boxSize/2)), LINE_START_Y, boxSize, boxSize);
+        ctx.beginPath();
+        ctx.moveTo(canvasCenter, LINE_START_Y);
+        ctx.lineTo(canvasCenter, LINE_START_Y + lineLength);
+        ctx.stroke();
+    }
+
+    function downSelected() {
+        let newLineLength = currentLineLength + LINE_INCREMENT;
+        if (newLineLength <= TRIALS[currentTrial-1].responseBoxSize) {
+            currentLineLength = newLineLength;
+            redrawCanvas(currentBoxSize, currentLineLength);
+        }
+    }
+
+    function upSelected() {
+        let newLineLength = currentLineLength - LINE_INCREMENT;
+        if (newLineLength >= 0) {
+            currentLineLength = newLineLength;
+            redrawCanvas(currentBoxSize, currentLineLength);
+        }
+    }
+
+    function incrementTrial() {
+        saveTrialResponse(currentTrial++, currentLineLength);
+        currentLineLength = 0;
+        currentBoxSize = 0;
+        redrawCanvas(0, 0);
+
+        let doneButton = document.getElementById("doneButton");
+        doneButton.style.visibility = "hidden";
+        let upBtn = document.getElementById("upBtn");
+        let downBtn = document.getElementById("downBtn");
+        upBtn.style.visibility = "hidden";
+        downBtn.style.visibility = "hidden";
+        if (currentTrial <= TOTAL_TRIALS) {
+            initTrial();
+        } else {
+            endTrials();
+        }
+    }
+
+    function saveTrialResponse(trialNumber, lineLength) {
+        TRIALS[trialNumber-1].response = lineLength;
+    }
+
+    function endTrials() {
+        LITW.study.params.results[TASK_TYPE] = JSON.parse(JSON.stringify(TRIALS));
+        document.onkeydown = function () {};
+        $('#btn-next-page').click();
+    }
+
+
+    $(document).ready(() => {
+        setupWindow();
+        initTrial();
+    });
+
+</script>

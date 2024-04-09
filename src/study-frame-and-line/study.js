@@ -19,8 +19,7 @@ var irbTemplate = require("../templates/irb.html");
 var demographicsTemplate = require("../templates/demographics.html");
 var instructionsTemplate = require("/templates/instructions.html");
 var practiceTemplate = require("/templates/practice.html");
-var taskAbsoluteTemplate = require("/templates/taskAbsolute.html");
-var taskRelativeTemplate = require("/templates/taskRelative.html");
+var flTaskTemplate = require("/templates/fl-task.html");
 var loadingTemplate = require("../templates/loading.html");
 var resultsTemplate = require("/templates/results.html");
 var resultsFooter = require("../templates/results-footer.html");
@@ -57,8 +56,8 @@ module.exports = (function(exports) {
 			{promptBoxSize:	170.0	, promptLineLength:	151.3	, responseBoxSize:	121.0	}
 		],
 		results: {
-			absolute: [3,5,10,4,5], //dummy data for test scenarios
-			relative: [0,0,0,0,0]   //should be correcly filled up by the experiment!
+			absolute: {},
+			relative: {}
 		},
 		slides: {
 			INTRODUCTION: {
@@ -110,9 +109,20 @@ module.exports = (function(exports) {
 			TASK_ABSOLUTE: {
 				name: "task_absolute",
 				type: "display-slide",
-				template: taskAbsoluteTemplate,
+				template: flTaskTemplate,
+				template_data: {
+					config: {
+						task_type: 'absolute'
+					}
+				},
 				display_element: $("#task-abs"),
 				display_next_button: false,
+				finish: function(){
+					var absolute = {
+						absolute: params.results.absolute
+					};
+					LITW.data.submitStudyData(absolute);
+				}
 			},
 			INSTRUCTIONS2: {
 				name: "instructions",
@@ -139,7 +149,12 @@ module.exports = (function(exports) {
 			TASK_RELATIVE: {
 				name: "task_relative",
 				type: "display-slide",
-				template: taskRelativeTemplate,
+				template: flTaskTemplate,
+				template_data: {
+					config: {
+						task_type: 'relative'
+					}
+				},
 				display_element: $("#task-rel"),
 				display_next_button: false,
 			},
@@ -170,14 +185,26 @@ module.exports = (function(exports) {
 		// timeline.push(params.slides.INTRODUCTION);
 		// timeline.push(params.slides.INFORMED_CONSENT);
 		// timeline.push(params.slides.DEMOGRAPHICS);
+		let relative_first = Math.random()<0.5;
+		LITW.data.submitStudyConfig({
+			relative_first: relative_first
+		});
+
+		if (relative_first) {
+			// timeline.push(params.slides.INSTRUCTIONS2);
+			// timeline.push(params.slides.PRACTICE2);
+			// timeline.push(params.slides.TASK_RELATIVE);
+		}
 		// timeline.push(params.slides.INSTRUCTIONS);
 		// timeline.push(params.slides.PRACTICE);
-		// timeline.push(params.slides.TASK_ABSOLUTE);
-		// timeline.push(params.slides.INSTRUCTIONS2);
-		// timeline.push(params.slides.PRACTICE2);
-		// timeline.push(params.slides.TASK_RELATIVE);
-		timeline.push(params.slides.COMMENTS);
-		timeline.push(params.slides.RESULTS);
+		timeline.push(params.slides.TASK_ABSOLUTE);
+		if(!relative_first) {
+			// timeline.push(params.slides.INSTRUCTIONS2);
+			// timeline.push(params.slides.PRACTICE2);
+			// timeline.push(params.slides.TASK_RELATIVE);
+		}
+		// timeline.push(params.slides.COMMENTS);
+		// timeline.push(params.slides.RESULTS);
 	}
 
 	function calculateResults() {

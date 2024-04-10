@@ -56,8 +56,8 @@ module.exports = (function(exports) {
 			{promptBoxSize:	170.0	, promptLineLength:	151.3	, responseBoxSize:	121.0	}
 		],
 		results: {
-			absolute: {},
-			relative: {}
+			absolute: [],
+			relative: []
 		},
 		slides: {
 			INTRODUCTION: {
@@ -118,10 +118,10 @@ module.exports = (function(exports) {
 				display_element: $("#task-abs"),
 				display_next_button: false,
 				finish: function(){
-					var absolute = {
+					calculateTrialError('absolute');
+					LITW.data.submitStudyData({
 						absolute: params.results.absolute
-					};
-					LITW.data.submitStudyData(absolute);
+					});
 				}
 			},
 			INSTRUCTIONS2: {
@@ -157,6 +157,13 @@ module.exports = (function(exports) {
 				},
 				display_element: $("#task-rel"),
 				display_next_button: false,
+				finish: function(){
+					calculateTrialError('relative');
+					LITW.data.submitStudyData({
+						relative: params.results.relative
+					});
+				}
+
 			},
 			COMMENTS: {
 				type: "display-slide",
@@ -190,27 +197,49 @@ module.exports = (function(exports) {
 			relative_first: relative_first
 		});
 
-		if (relative_first) {
-			// timeline.push(params.slides.INSTRUCTIONS2);
-			// timeline.push(params.slides.PRACTICE2);
-			// timeline.push(params.slides.TASK_RELATIVE);
-		}
+		// if (relative_first) {
+		// 	timeline.push(params.slides.INSTRUCTIONS2);
+		// 	timeline.push(params.slides.PRACTICE2);
+		// 	timeline.push(params.slides.TASK_RELATIVE);
+		// }
 		// timeline.push(params.slides.INSTRUCTIONS);
 		// timeline.push(params.slides.PRACTICE);
-		timeline.push(params.slides.TASK_ABSOLUTE);
-		if(!relative_first) {
-			// timeline.push(params.slides.INSTRUCTIONS2);
-			// timeline.push(params.slides.PRACTICE2);
-			// timeline.push(params.slides.TASK_RELATIVE);
-		}
+		// timeline.push(params.slides.TASK_ABSOLUTE);
+		// if(!relative_first) {
+		// 	timeline.push(params.slides.INSTRUCTIONS2);
+		// 	timeline.push(params.slides.PRACTICE2);
+		// 	timeline.push(params.slides.TASK_RELATIVE);
+		// }
 		// timeline.push(params.slides.COMMENTS);
-		// timeline.push(params.slides.RESULTS);
+		timeline.push(params.slides.RESULTS);
+	}
+
+	function calculateTrialError(trial_type='absolute') {
+		let trials = params.results[trial_type];
+		for (let trial of trials) {
+			let correct_response = trial.promptLineLength
+			if(trial_type==='relative') {
+				correct_response = Math.floor(trial.responseBoxSize * trial.promptLineLength/trial.promptBoxSize)
+			}
+			trial.error_abs = Math.floor(Math.abs(correct_response-trial.response));
+			trial.error_perc = trial.error_abs === 0 ? 0 : Math.floor(correct_response/trial.error_abs);
+		}
 	}
 
 	function calculateResults() {
+		//CREATING DUMMY DATA FOR TESTING
+		if(Object.keys(params.results.absolute).length === 0) {
+			params.results.absolute = [{promptBoxSize:164,promptLineLength:41,responseBoxSize:125,response:36},{promptBoxSize:101,promptLineLength:21.2,responseBoxSize:103,response:21},{promptBoxSize:184,promptLineLength:145.4,responseBoxSize:109,response:109},{promptBoxSize:179,promptLineLength:31,responseBoxSize:89,response:21},{promptBoxSize:89,promptLineLength:62,responseBoxSize:179,response:58}]
+			calculateTrialError('absolute');
+		}
+		if(Object.keys(params.results.relative).length === 0) {
+			params.results.relative = [{promptBoxSize:164,promptLineLength:41,responseBoxSize:125,response:36},{promptBoxSize:101,promptLineLength:21.2,responseBoxSize:103,response:21},{promptBoxSize:184,promptLineLength:145.4,responseBoxSize:109,response:109},{promptBoxSize:179,promptLineLength:31,responseBoxSize:89,response:21},{promptBoxSize:89,promptLineLength:62,responseBoxSize:179,response:58}]
+			calculateTrialError('relative');
+		}
+		
 		let results_data = {
-			relative: _.mean(params.results.relative),
-			absolute: _.mean(params.results.absolute),
+			relative: _.meanBy(params.results.relative, (trial) => {return trial.error_perc}),
+			absolute: _.meanBy(params.results.absolute, (trial) => {return trial.error_perc}),
 			message: $.i18n('study-fl-results-header2-absolute')
 		}
 		if(results_data.relative < results_data.absolute) {

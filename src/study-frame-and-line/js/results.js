@@ -2,7 +2,7 @@
     const PAGE_CONTENT_WIDTH = document.getElementById('content').offsetWidth;
     const MAX_GRAPH_WIDTH = 900;
     const MAX_GRAPH_HEIGHT = 400;
-    const MAX_SCORE = 15;
+    const MAX_SCORE = 100;
     // Declare the chart dimensions and margins.
     const width = Math.min(PAGE_CONTENT_WIDTH, MAX_GRAPH_WIDTH);
     const height = MAX_GRAPH_HEIGHT;

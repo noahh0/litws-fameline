@@ -8,125 +8,55 @@
 
 <div id="button-container" style=" display: flex; justify-content: center;">
     <button id="doneButton" class="btn btn-primary" style="visibility: hidden; margin-top: 30px;"
-            onclick="incrementTrial()" data-i18n="litw-study-finish-practice"></button>
+            onclick="finishTrial()" data-i18n="study-fl-btn-done"></button>
 </div>
 
 <script>
-    const CANVAS = document.getElementById("prompt_canvas");
-    const TASK_TYPE = document.getElementById("task_type").dataset.type;
-    const TIME_TO_PROMPT = 5000;
-    const TOTAL_TRIALS = 5;
-    const TRIALS = LITW.study.params.tasks.sort(() => 0.5 - Math.random()).slice(0, TOTAL_TRIALS);
-    const LINE_START_Y = 50; //TODO: Double check this... shouldn't it be calculated based on Canvas?
-    const LINE_INCREMENT = 1; //TODO: WE likely want to tune this up as some boxes are too large?
-    let currentTrial = 1;
-    let currentBoxSize = 0;
-    let currentLineLength = 0;
+    let task_type = document.getElementById("task_type").dataset.type;
+    let TRIALS_RESPONSES = [];
 
-    // TODO: refactor the deprecated "keyCode"
-    // TODO: what is this really doing? Maybe add that to a clarifying function
     function setupWindow() {
-        window.addEventListener("keydown", function (e) {
-            // space and arrow keys
-            if ([32, 37, 38, 39, 40].indexOf(e.keyCode) > -1) {
-                e.preventDefault();
+        let random_trials = LITW.study.params.tasks.sort(() => 0.5 - Math.random())
+                                                   .slice(0, LITW.study.params.task_qtd);
+        let canvas_width = (window.innerWidth < 700) ? 300 : 600;
+        let canvas_height = 300;
+        LITW.study.frameline.setup_canvas(random_trials, "prompt_canvas", canvas_width, canvas_height, "downBtn", "upBtn");
+    }
+
+    function initNextTrial() {
+        let trialStarted = LITW.study.frameline.start_next_trial(prompt_show_time=5000,
+            prompt_callback= ()=>{
+                document.getElementById("progress-bar").textContent =
+                    `${$.i18n('study-fl-progress-trial')} (${task_type}):
+                    ${LITW.study.frameline.get_current_trial_number()} /
+                    ${LITW.study.frameline.get_total_trials_number()}`;
+            },
+            response_callback= ()=>{
+                document.getElementById("doneButton").style.visibility = "visible";
+                document.getElementById("upBtn").style.visibility = "visible";
+                document.getElementById("downBtn").style.visibility = "visible";
             }
-        }, false);
-        let upBtn = document.getElementById("upBtn");
-        let downBtn = document.getElementById("downBtn");
-        upBtn.addEventListener("click", upSelected);
-        downBtn.addEventListener("click", downSelected);
-        document.onkeydown = function (e) {
-            if (e.keyCode == 40) {
-                downSelected();
-            } else if (e.keyCode == 38) {
-                upSelected();
-            }
+        )
+        if(!trialStarted) {
+            finishExperiment();
         }
-        //TODO: I believe this can be improved by using some already sized element on the screen?
-        if (window.innerWidth < 700) {
-            CANVAS.width = 250;
+    }
+
+    function finishTrial() {
+        let finished_trial = LITW.study.frameline.finish_current_trial(task_type);
+        if(finished_trial) {
+            document.getElementById("doneButton").style.visibility = "hidden";
+            document.getElementById("upBtn").style.visibility = "hidden";
+            document.getElementById("downBtn").style.visibility = "hidden";
+            TRIALS_RESPONSES.push(finished_trial);
+            initNextTrial();
         } else {
-            CANVAS.width = 600;
-        }
-        CANVAS.height = 255;
-
-    }
-
-    function initTrial() {
-        console.log(`TASK_TYPE: ${TASK_TYPE}`);
-        let progressBar = document.getElementById("progress-bar");
-        progressBar.textContent = `${$.i18n('study-fl-progress-trial')}: ${currentTrial}/${TOTAL_TRIALS}`;
-        currentLineLength = TRIALS[currentTrial-1].promptLineLength;
-        currentBoxSize = TRIALS[currentTrial-1].promptBoxSize;
-        redrawCanvas(currentBoxSize, currentLineLength);
-        setTimeout(function () {
-            currentBoxSize = TRIALS[currentTrial-1].responseBoxSize;
-            currentLineLength = 0;
-            redrawCanvas(currentBoxSize, currentLineLength);
-
-            let doneButton = document.getElementById("doneButton");
-            doneButton.style.visibility = "visible";
-            let upBtn = document.getElementById("upBtn");
-            let downBtn = document.getElementById("downBtn");
-            upBtn.style.visibility = "visible";
-            downBtn.style.visibility = "visible";
-        }, TIME_TO_PROMPT);
-    }
-
-    function redrawCanvas(boxSize, lineLength) {
-        const ctx = CANVAS.getContext("2d");
-        ctx.clearRect(0, 0, CANVAS.width, CANVAS.height);
-        let canvasCenter = CANVAS.width/2;
-        ctx.fillStyle = "black";
-        ctx.strokeRect((canvasCenter-(boxSize/2)), LINE_START_Y, boxSize, boxSize);
-        ctx.beginPath();
-        ctx.moveTo(canvasCenter, LINE_START_Y);
-        ctx.lineTo(canvasCenter, LINE_START_Y + lineLength);
-        ctx.stroke();
-    }
-
-    function downSelected() {
-        let newLineLength = currentLineLength + LINE_INCREMENT;
-        if (newLineLength <= TRIALS[currentTrial-1].responseBoxSize) {
-            currentLineLength = newLineLength;
-            redrawCanvas(currentBoxSize, currentLineLength);
+            finishExperiment();
         }
     }
 
-    function upSelected() {
-        let newLineLength = currentLineLength - LINE_INCREMENT;
-        if (newLineLength >= 0) {
-            currentLineLength = newLineLength;
-            redrawCanvas(currentBoxSize, currentLineLength);
-        }
-    }
-
-    function incrementTrial() {
-        saveTrialResponse(currentTrial++, currentLineLength);
-        currentLineLength = 0;
-        currentBoxSize = 0;
-        redrawCanvas(0, 0);
-
-        let doneButton = document.getElementById("doneButton");
-        doneButton.style.visibility = "hidden";
-        let upBtn = document.getElementById("upBtn");
-        let downBtn = document.getElementById("downBtn");
-        upBtn.style.visibility = "hidden";
-        downBtn.style.visibility = "hidden";
-        if (currentTrial <= TOTAL_TRIALS) {
-            initTrial();
-        } else {
-            endTrials();
-        }
-    }
-
-    function saveTrialResponse(trialNumber, lineLength) {
-        TRIALS[trialNumber-1].response = lineLength;
-    }
-
-    function endTrials() {
-        LITW.study.params.results[TASK_TYPE] = JSON.parse(JSON.stringify(TRIALS));
+    function finishExperiment() {
+        LITW.study.params.results[task_type] = TRIALS_RESPONSES;
         document.onkeydown = function () {};
         $('#btn-next-page').click();
     }
@@ -134,7 +64,7 @@
 
     $(document).ready(() => {
         setupWindow();
-        initTrial();
+        initNextTrial();
     });
 
 </script>

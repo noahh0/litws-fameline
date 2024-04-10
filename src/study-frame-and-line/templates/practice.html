@@ -1,277 +1,110 @@
 <div id="instructions-container-one">
+    <h2 id="practice-title" class="text-center bolded-blue" data-i18n="litw-study-practice"></h2>
+    <div id="task_type" data-type="{{ task_type }}"></div>
     <!-- Practice starting page -->
     <div id="practice-start">
-        <h2 class="text-center bolded-blue" data-i18n="litw-study-practice"></h2>
         <h3 id="instructions-one" class="text-center data-i18n=" style="margin-top: 20px;" data-i18n="litw-practice-p1"></h3>
         <div style=" display: flex; justify-content: center; align-items: center;">
-        <button id="startButton" class="btn btn-primary" type="submit" onclick="startPractice()" style="margin-top: 120px;"   data-i18n="litw-study-start-practice"></button>
+            <button id="startButton" class="btn btn-primary" type="submit" onclick="startPractice()" style="margin-top: 120px;"   data-i18n="study-fl-practice-start"></button>
         </div>
     </div>
     <!-- Practice instructions page -->
-    <div id="practice-instructions">
-        <h5 id="instructions-two" class="text-center data-i18n=" style="display: none;" data-i18n="litw-practice-p2-{{task_type}}"></h5>
-        <h5 id="instructions-three" class="text-center data-i18n=" style="display: none;" data-i18n="litw-practice-p3-{{task_type}}"></h5>
-        <h5 id="instructions-four" class="text-center data-i18n=" style="display: none;" data-i18n="litw-practice-p4"></h5>
-        <h5 id="instructions-five" class="text-center data-i18n=" style="display: none;" data-i18n="litw-practice-p5"></h5>
+    <div id="practice-instructions-look" style="display: none;">
+        <h5 id="instructions-two" class="text-center data-i18n=" data-i18n="litw-practice-p2-{{task_type}}"></h5>
+    </div>
+    <div id="practice-instructions-respond" style="display: none;">
+        <h5 id="instructions-three" class="text-center data-i18n=" data-i18n="litw-practice-p3-{{task_type}}"></h5>
+        <h5 id="instructions-four" class="text-center data-i18n=" data-i18n="litw-practice-p4"></h5>
+        <h5 id="instructions-five" class="text-center data-i18n=" data-i18n="litw-practice-p5"></h5>
     </div>
     <!-- Practice results page -->
-    <div>
-        <h3 id="results-one" class="text-center bolded-blue" style="display: none;" data-i18n="litw-practice-p6"></h3>
-        <h4 id="results-two" class="text-center data-i18n=" style="display: none;" data-i18n="litw-practice-result-p1"></h4>
-        <h6 id="results-three" class="text-center data-i18n=" style="display: none;" data-i18n="litw-practice-result-p2"></h5>
-        <h6 id="results-four" class="text-center data-i18n=" style="display: none;" data-i18n="litw-practice-result-p3"></h5>
+    <div id="results" style="display: none;">
+        <h3 id="results-one" class="text-center bolded-blue" data-i18n="litw-practice-p6"></h3>
+        <h4 id="results-two" class="text-center data-i18n=" data-i18n="litw-practice-result-p1"></h4>
+        <h6 id="results-three" class="text-center data-i18n=" data-i18n="litw-practice-result-p2"></h6>
+        <h6 id="results-four" class="text-center data-i18n=" data-i18n="litw-practice-result-p3"></h6>
     </div>
 </div>
 <!-- Practice results summary page -->
-<div>
-    <h2 id="practice-done-one" class="text-center bolded-blue" style="display: none;" data-i18n="litw-study-done-practice"></h2>
-    <h4 id="practice-done-two" class="text-center data-i18n=" style="display: none;" data-i18n="litw-study-p1"></h4>
-    <h6 id="practice-done-three" class="text-center data-i18n=" style="display: none;" data-i18n="litw-study-p2"></h5>
+<div id="practice-done" style="display: none;">
+    <h4 id="practice-done-two" class="text-center data-i18n=" data-i18n="study-fl-practice-done-p1"></h4>
+    <h6 id="practice-done-three" class="text-center data-i18n=" data-i18n="study-fl-practice-done-p2"></h6>
 </div>
 <!-- Practice trial content -->
-<div style="display:flex; justify-content: center;">
+<div id="drawing-area" style="display:flex; justify-content: center;">
     <span id="upBtn" class="bolded-blue" style="visibility: hidden; font-size: 100px; margin-top: 70px;">&#8593;</span>
     <canvas id='prompt_canvas'></canvas>
     <span id="downBtn" class="bolded-blue" style="visibility: hidden; font-size: 100px; margin-top: 70px;">&#8595;</span>
 </div>
 <div id="button-container" style=" display: flex; justify-content: center;">
-    <button id="redoButton" class="btn btn-primary" style="visibility: hidden;  margin-top: 30px; margin-right: 15px;" onclick="rerunPractice()" data-i18n="litw-study-redo-practice"></button>
-    <button id="doneButton" class="btn btn-primary" style="visibility: hidden; margin-top: 30px; margin-left: 15px;" onclick="finishPractice()" data-i18n="litw-study-finish-practice"></button>
+    <button id="redoButton" class="btn btn-primary" style="visibility: hidden;  margin-top: 30px; margin-right: 15px;" onclick="rerunPractice()" data-i18n="study-fl-practice-btn-redo"></button>
+    <button id="doneButton" class="btn btn-primary" style="visibility: hidden; margin-top: 30px; margin-left: 15px;" onclick="doneResponding()" data-i18n="study-fl-btn-done"></button>
+    <button id="finishButton" class="btn btn-primary" style="visibility: hidden; margin-top: 30px; margin-left: 15px;" onclick="finishPractice()" data-i18n="study-fl-practice-btn-finish"></button>
 </div>
 
 <script type="text/javascript">
-    let lastY;
-    let taskType;
+    let TRIAL = [{promptBoxSize: 150, promptLineLength: 50, responseBoxSize: 100}];
+
+    function setupWindow() {
+        let canvas_width = (window.innerWidth < 700) ? 300 : 600;
+        let canvas_height = 300;
+        LITW.study.frameline.setup_canvas(TRIAL, "prompt_canvas", canvas_width, canvas_height, "downBtn", "upBtn");
+    }
 
     function startPractice() {
-        let resultsTwo = document.getElementById("results-two");
-        resultsTwo.textContent = "You answer is off by:";
-        window.addEventListener("keydown", function(e) {
-            if([32, 37, 38, 39, 40].indexOf(e.keyCode) > -1) {
-                e.preventDefault();
+        LITW.study.frameline.start_next_trial(prompt_show_time=5000,
+            prompt_callback= ()=>{
+                document.getElementById("practice-start").style.display = "none";
+                document.getElementById("practice-instructions-look").style.display = "block";
+            },
+            response_callback= ()=>{
+                document.getElementById("practice-instructions-look").style.display = "none";
+                document.getElementById("practice-instructions-respond").style.display = "block";
+                document.getElementById("doneButton").style.visibility = "visible";
+                document.getElementById("upBtn").style.visibility = "visible";
+                document.getElementById("downBtn").style.visibility = "visible";
             }
-        }, false);
-        let startButton = document.getElementById("startButton");
-        startButton.style.display = "none";
-        let instructionsOne = document.getElementById("instructions-one");
-        instructionsOne.style.display = "none";
-        let instructionsTwo = document.getElementById("instructions-two");
-        instructionsTwo.style.display = "block";
-        taskType = instructionsTwo.textContent.includes("ABSOLUTE");
-        let canvas1 = document.getElementById("prompt_canvas");
-        if (window.innerWidth < 700) {
-            canvas1.width = 250;
-        } else {
-            canvas1.width = 600;
-        }
-        canvas1.height = 255;
-        const ctx = canvas1.getContext("2d");
-        ctx.strokeRect((canvas1.width - 200) / 2, 50, 200, 200);
-        drawLine(canvas1.width / 2, 50, 100);
-        lastY = 49;
-        let count = 5;
-        const timer = setInterval(function() {
-            count--;
-            if (count === 0) {
-                clearInterval(timer);
-                ctx.clearRect(0, 0, canvas1.width, canvas1.height);
-                let practiceInstructions = document.getElementById("practice-instructions");
-                let instructionsTwo = document.getElementById("instructions-two");
-                instructionsTwo.style.display = "none";
-                let instructionsThree = document.getElementById("instructions-three");
-                instructionsThree.style.display = "block";
-                let instructionsFour = document.getElementById("instructions-four");
-                instructionsFour.style.display = "block";
-                let instructionsFive = document.getElementById("instructions-five");
-                instructionsFive.style.display = "block";
-                let redoButton = document.getElementById("redoButton");
-                let doneButton = document.getElementById("doneButton");
-                redoButton.style.visibility = "visible";
-                doneButton.style.visibility = "visible";
-                let upBtn = document.getElementById("upBtn");
-                let downBtn = document.getElementById("downBtn");
-                upBtn.style.visibility = "visible";
-                downBtn.style.visibility = "visible";
-                upBtn.addEventListener("click", upSelected);
-                downBtn.addEventListener("click", downSelected);
-                ctx.strokeRect((canvas1.width - 100) / 2, 50, 100, 100);
-                ctx.fillStyle = "black";
-                document.onkeydown = function(e) {
-                    if (e.keyCode == 40) {
-                        downSelected();
-                    } else if (e.keyCode == 38) {
-                        upSelected();
-                    }
-                }
-            }
-        }, 1000);
-    }
-
-    function downSelected () {
-        let canvas1 = document.getElementById("prompt_canvas");
-        if (lastY != 147) {
-            lastY = lastY + 2;
-            drawLine(canvas1.width / 2, lastY, lastY + 2);
-        }
-    }
-
-    function upSelected () {
-        let canvas1 = document.getElementById("prompt_canvas");
-        const ctx = canvas1.getContext("2d");
-        if (lastY != 49) {
-            ctx.clearRect((canvas1.width / 2) - 2, lastY, 5, 2);
-            lastY = lastY - 2;
-        }
-    }
-
-    function drawLine(x, y1, y2) {
-        let canvas1 = document.getElementById("prompt_canvas");
-        const ctx = canvas1.getContext("2d");
-        ctx.beginPath(); // Start a new path
-        ctx.moveTo(x, y1);
-        ctx.lineTo(x, y2);
-        ctx.stroke(); // Render the path
+        );
     }
 
     function rerunPractice() {
-        let doneButton = document.getElementById("doneButton");
-        doneButton.removeEventListener("click", showPracticeSummary);
-        doneButton.addEventListener("click", finishPractice);
-        document.onkeydown = function () {};
-        let canvas1 = document.getElementById("prompt_canvas");
-        if (window.innerWidth < 700) {
-            canvas1.width = 250;
+        document.getElementById("redoButton").style.visibility = "hidden";
+        document.getElementById("finishButton").style.visibility = "hidden";
+        document.getElementById("results").style.display = "none";
+        setupWindow();
+        startPractice();
+    }
+
+    function doneResponding() {
+        let trial_type = document.getElementById("task_type").dataset.type;
+        let trial_result = LITW.study.frameline.finish_current_trial(trial_type);
+        if (trial_result) {
+            LITW.study.frameline.draw_trial_result(trial_result);
         } else {
-            canvas1.width = 600;
+            console.error("FrameLine module could not finish the trial correctly.");
         }
-        canvas1.height = 255;
-        const ctx = canvas1.getContext("2d");
-        ctx.clearRect(0, 0, canvas1.width, canvas1.height);
-        let instructionsThree = document.getElementById("instructions-three");
-        instructionsThree.style.display = "none";
-        let instructionsFour = document.getElementById("instructions-four");
-        instructionsFour.style.display = "none";
-        let instructionsFive = document.getElementById("instructions-five");
-        instructionsFive.style.display = "none";
-        let redoButton = document.getElementById("redoButton");
-        redoButton.style.visibility = "hidden";
-        doneButton.style.visibility = "hidden";
-        let upBtn = document.getElementById("upBtn");
-        let downBtn = document.getElementById("downBtn");
-        upBtn.style.visibility = "hidden";
-        downBtn.style.visibility = "hidden";
-        upBtn.removeEventListener("click", upSelected(canvas1.width));
-        downBtn.removeEventListener("click", downSelected(canvas1.width));
-        let instructionsOne = document.getElementById("instructions-one");
-        instructionsOne.style.display = "block";
-        let startButton = document.getElementById("startButton");
-        startButton.style.display = "block";
-        let resultsOne = document.getElementById("results-one");
-        resultsOne.style.display = "none";
-        let resultsTwo = document.getElementById("results-two");
-        resultsTwo.style.display = "none";
-        let resultsThree = document.getElementById("results-three");
-        resultsThree.style.display = "none";
-        let resultsFour = document.getElementById("results-four");
-        resultsFour.style.display = "none";
-        let practiceDoneOne = document.getElementById("practice-done-one");
-        practiceDoneOne.style.display = "none";
-        let practiceDoneTwo = document.getElementById("practice-done-two");
-        practiceDoneTwo.style.display = "none";
-        let practiceDoneThree = document.getElementById("practice-done-three");
-        practiceDoneThree.style.display = "none";
+        document.getElementById("upBtn").style.visibility = "hidden";
+        document.getElementById("downBtn").style.visibility = "hidden";
+        document.getElementById("practice-instructions-respond").style.visibility = "hidden";
+        document.getElementById("results-two").textContent = `${$.i18n('study-fl-practice-results')}:
+                                                              ${trial_result.error_perc}%`;
+        document.getElementById("results").style.display = "block";
+
+        document.getElementById("doneButton").style.visibility = "hidden";
+        document.getElementById("redoButton").style.visibility = "visible";
+        document.getElementById("finishButton").style.visibility = "visible";
     }
 
     function finishPractice() {
-        let doneButton = document.getElementById("doneButton");
-        document.onkeydown = function () {};
-        let canvas1 = document.getElementById("prompt_canvas");
-        canvas1.width = 600;
-        canvas1.height = 255;
-        const ctx = canvas1.getContext("2d");
-        ctx.clearRect(0, 0, canvas1.width, canvas1.height);
-        let upBtn = document.getElementById("upBtn");
-        let downBtn = document.getElementById("downBtn");
-        upBtn.style.visibility = "hidden";
-        downBtn.style.visibility = "hidden";
-        upBtn.removeEventListener("click", upSelected(canvas1.width));
-        downBtn.removeEventListener("click", downSelected(canvas1.width));
-        let instructionsThree = document.getElementById("instructions-three");
-        instructionsThree.style.display = "none";
-        let instructionsFour = document.getElementById("instructions-four");
-        instructionsFour.style.display = "none";
-        let instructionsFive = document.getElementById("instructions-five");
-        instructionsFive.style.display = "none";
-        let resultsOne = document.getElementById("results-one");
-        resultsOne.style.display = "block";
-        let resultsTwo = document.getElementById("results-two");
-        resultsTwo.style.display = "block";
-        let resultsThree = document.getElementById("results-three");
-        resultsThree.style.display = "block";
-        let resultsFour = document.getElementById("results-four");
-        resultsFour.style.display = "block";
-        let resultPercentage;
-        if (taskType) {
-            resultPercentage = ((lastY - 49) / 50) * 100;
-        } else {
-            let originalFraction = 0.25;
-            let userFraction = (lastY - 49) / 100;
-            resultPercentage = (userFraction / originalFraction) * 100;
-        }
-        resultsTwo.textContent = "You answer is off by: " + Math.round(Math.abs(100 - resultPercentage) * 10) / 10 + "%";
-        doneButton.removeAttribute("onclick");
-        doneButton.addEventListener("click", showPracticeSummary);
-        if (window.innerWidth > 700) {
-            ctx.strokeRect(100, 50, 200, 200);
-            drawLine(200, 50, 100);
-            ctx.strokeRect(350, 50, 100, 100);
-            drawLine(400, 50, lastY);
-        } else {
-            ctx.strokeRect(135, 50, 200, 200);
-            drawLine(235, 50, 100);
-            ctx.strokeRect(355, 50, 100, 100);
-            drawLine(405, 50, lastY);
-        }
-
+        document.getElementById("practice-title").innerText = $.i18n("study-fl-practice-done");
+        document.getElementById("drawing-area").style.display = "none";
+        document.getElementById("results").style.display = "none";
+        document.getElementById("button-container").style.display = "none";
+        document.getElementById("btn-next-page").style.display = "block";
+        document.getElementById("practice-done").style.display = "block";
     }
 
-    function showPracticeSummary() {
-        viewNextButton();
-        let canvas1 = document.getElementById("prompt_canvas");
-        canvas1.width = 600;
-        canvas1.height = 300;
-        const ctx = canvas1.getContext("2d");
-        ctx.clearRect(0, 0, canvas1.width, canvas1.height);
-        let practiceDoneOne = document.getElementById("practice-done-one");
-        practiceDoneOne.style.display = "block";
-        let practiceDoneTwo = document.getElementById("practice-done-two");
-        practiceDoneTwo.style.display = "block";
-        let practiceDoneThree = document.getElementById("practice-done-three");
-        practiceDoneThree.style.display = "block";
-        let instructionsThree = document.getElementById("instructions-three");
-        instructionsThree.style.display = "none";
-        let instructionsFour = document.getElementById("instructions-four");
-        instructionsFour.style.display = "none";
-        let instructionsFive = document.getElementById("instructions-five");
-        instructionsFive.style.display = "none";
-        let resultsOne = document.getElementById("results-one");
-        resultsOne.style.display = "none";
-        let resultsTwo = document.getElementById("results-two");
-        resultsTwo.style.display = "none";
-        let resultsThree = document.getElementById("results-three");
-        resultsThree.style.display = "none";
-        let resultsFour = document.getElementById("results-four");
-        resultsFour.style.display = "none";
-        let buttonContainer = document.getElementById("button-container");
-        while (buttonContainer.hasChildNodes()) {
-            buttonContainer.removeChild(buttonContainer.firstChild);
-        }
-        let practiceHeadingContainer = document.getElementById("practice-start");
-        practiceHeadingContainer.removeChild(practiceHeadingContainer.children[0]);
-    }
-
-    function viewNextButton() {
-        $('#btn-next-page').attr('style', 'display:block;');
-        $('#btn-next-page')[0].scrollIntoView();
-    }
+    $(document).ready(() => {
+        setupWindow();
+    });
 </script>

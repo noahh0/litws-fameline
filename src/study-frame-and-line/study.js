@@ -27,6 +27,8 @@ var commentsTemplate = require("../templates/comments.html");
 require("../js/litw/jspsych-display-info");
 require("../js/litw/jspsych-display-slide");
 
+import * as frameline from "./js/fl-mechanics.mjs";
+
 module.exports = (function(exports) {
 	var timeline = [],
 	params = {
@@ -55,6 +57,7 @@ module.exports = (function(exports) {
 			{promptBoxSize:	159.0	, promptLineLength:	136.7	, responseBoxSize:	145.0	},
 			{promptBoxSize:	170.0	, promptLineLength:	151.3	, responseBoxSize:	121.0	}
 		],
+		task_qtd: 2,
 		results: {
 			absolute: [],
 			relative: []
@@ -84,24 +87,24 @@ module.exports = (function(exports) {
 					LITW.data.submitDemographics(dem_data);
 				}
 			},
-			INSTRUCTIONS: {
+			INSTRUCTIONS1: {
 				name: "instructions",
 				type: "display-slide",
 				template: instructionsTemplate,
 				template_data: {
 					task_order: 1,
-					task_type: "absolute",
+					task_type: "",
 				},
 				display_element: $("#instructions"),
 				display_next_button: true,
 			},
-			PRACTICE: {
+			PRACTICE1: {
 				name: "practice",
 				type: "display-slide",
 				template: practiceTemplate,
 				template_data: {
 					task_order: 1,
-					task_type: "absolute",
+					task_type: "",
 				},
 				display_element: $("#practice"),
 				display_next_button: false,
@@ -118,7 +121,6 @@ module.exports = (function(exports) {
 				display_element: $("#task-abs"),
 				display_next_button: false,
 				finish: function(){
-					calculateTrialError('absolute');
 					LITW.data.submitStudyData({
 						absolute: params.results.absolute
 					});
@@ -130,7 +132,7 @@ module.exports = (function(exports) {
 				template: instructionsTemplate,
 				template_data: {
 					task_order: 2,
-					task_type: "relative",
+					task_type: "",
 				},
 				display_element: $("#instructions"),
 				display_next_button: true,
@@ -141,7 +143,7 @@ module.exports = (function(exports) {
 				template: practiceTemplate,
 				template_data: {
 					task_order: 2,
-					task_type: "relative",
+					task_type: "",
 				},
 				display_element: $("#practice"),
 				display_next_button: false,
@@ -158,7 +160,6 @@ module.exports = (function(exports) {
 				display_element: $("#task-rel"),
 				display_next_button: false,
 				finish: function(){
-					calculateTrialError('relative');
 					LITW.data.submitStudyData({
 						relative: params.results.relative
 					});
@@ -198,43 +199,54 @@ module.exports = (function(exports) {
 		});
 
 		// if (relative_first) {
+		// 	params.slides.INSTRUCTIONS1.template_data.task_type = "relative";
+		// 	params.slides.PRACTICE1.template_data.task_type = "relative";
+		// 	params.slides.INSTRUCTIONS2.template_data.task_type = "absolute";
+		// 	params.slides.PRACTICE2.template_data.task_type = "absolute";
+		// 	timeline.push(params.slides.INSTRUCTIONS1);
+		// 	timeline.push(params.slides.PRACTICE1);
+		// 	timeline.push(params.slides.TASK_RELATIVE);
+		// 	timeline.push(params.slides.INSTRUCTIONS2);
+		// 	timeline.push(params.slides.PRACTICE2);
+		// 	timeline.push(params.slides.TASK_ABSOLUTE);
+		// } else {
+		// 	params.slides.INSTRUCTIONS1.template_data.task_type = "absolute";
+		// 	params.slides.PRACTICE1.template_data.task_type = "absolute";
+		// 	params.slides.INSTRUCTIONS2.template_data.task_type = "relative";
+		// 	params.slides.PRACTICE2.template_data.task_type = "relative";
+		// 	timeline.push(params.slides.INSTRUCTIONS1);
+		// 	timeline.push(params.slides.PRACTICE1);
+		// 	timeline.push(params.slides.TASK_ABSOLUTE);
 		// 	timeline.push(params.slides.INSTRUCTIONS2);
 		// 	timeline.push(params.slides.PRACTICE2);
 		// 	timeline.push(params.slides.TASK_RELATIVE);
 		// }
-		// timeline.push(params.slides.INSTRUCTIONS);
-		// timeline.push(params.slides.PRACTICE);
-		// timeline.push(params.slides.TASK_ABSOLUTE);
-		// if(!relative_first) {
-		// 	timeline.push(params.slides.INSTRUCTIONS2);
-		// 	timeline.push(params.slides.PRACTICE2);
-		// 	timeline.push(params.slides.TASK_RELATIVE);
-		// }
+		params.slides.PRACTICE1.template_data.task_type = "relative";
+		timeline.push(params.slides.PRACTICE1);
+		timeline.push(params.slides.TASK_RELATIVE);
 		// timeline.push(params.slides.COMMENTS);
 		timeline.push(params.slides.RESULTS);
-	}
-
-	function calculateTrialError(trial_type='absolute') {
-		let trials = params.results[trial_type];
-		for (let trial of trials) {
-			let correct_response = trial.promptLineLength
-			if(trial_type==='relative') {
-				correct_response = Math.floor(trial.responseBoxSize * trial.promptLineLength/trial.promptBoxSize)
-			}
-			trial.error_abs = Math.floor(Math.abs(correct_response-trial.response));
-			trial.error_perc = trial.error_abs === 0 ? 0 : Math.floor(correct_response/trial.error_abs);
-		}
 	}
 
 	function calculateResults() {
 		//CREATING DUMMY DATA FOR TESTING
 		if(Object.keys(params.results.absolute).length === 0) {
-			params.results.absolute = [{promptBoxSize:164,promptLineLength:41,responseBoxSize:125,response:36},{promptBoxSize:101,promptLineLength:21.2,responseBoxSize:103,response:21},{promptBoxSize:184,promptLineLength:145.4,responseBoxSize:109,response:109},{promptBoxSize:179,promptLineLength:31,responseBoxSize:89,response:21},{promptBoxSize:89,promptLineLength:62,responseBoxSize:179,response:58}]
-			calculateTrialError('absolute');
+			params.results.absolute = [
+				{promptBoxSize:164,promptLineLength:41,responseBoxSize:125,response:36,error_abs:5,error_perc:12},
+				{promptBoxSize:101,promptLineLength:21.2,responseBoxSize:103,response:21,error_abs:0,error_perc:0},
+				{promptBoxSize:184,promptLineLength:145.4,responseBoxSize:109,response:109,error_abs:36,error_perc:24},
+				{promptBoxSize:179,promptLineLength:31,responseBoxSize:89,response:21,error_abs:10,error_perc:32},
+				{promptBoxSize:89,promptLineLength:62,responseBoxSize:179,response:58,error_abs:4,error_perc:6}
+			]
 		}
 		if(Object.keys(params.results.relative).length === 0) {
-			params.results.relative = [{promptBoxSize:164,promptLineLength:41,responseBoxSize:125,response:36},{promptBoxSize:101,promptLineLength:21.2,responseBoxSize:103,response:21},{promptBoxSize:184,promptLineLength:145.4,responseBoxSize:109,response:109},{promptBoxSize:179,promptLineLength:31,responseBoxSize:89,response:21},{promptBoxSize:89,promptLineLength:62,responseBoxSize:179,response:58}]
-			calculateTrialError('relative');
+			params.results.relative = [
+				{promptBoxSize:164,promptLineLength:41,responseBoxSize:125,response:36,error_abs:5,error_perc:16},
+				{promptBoxSize:101,promptLineLength:21.2,responseBoxSize:103,response:21,error_abs:0,error_perc:0},
+				{promptBoxSize:184,promptLineLength:145.4,responseBoxSize:109,response:109,error_abs:23,error_perc:26},
+				{promptBoxSize:179,promptLineLength:31,responseBoxSize:89,response:21,error_abs:6,error_perc:40},
+				{promptBoxSize:89,promptLineLength:62,responseBoxSize:179,response:58,error_abs:66,error_perc:53}
+			]
 		}
 		
 		let results_data = {
@@ -352,6 +364,7 @@ module.exports = (function(exports) {
 		startExperiment();
 	});
 	exports.study = {};
-	exports.study.params = params
+	exports.study.params = params;
+	exports.study.frameline = frameline;
 
 })( window.LITW = window.LITW || {} );

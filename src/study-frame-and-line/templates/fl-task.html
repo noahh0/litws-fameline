@@ -12,8 +12,8 @@
 </div>
 
 <script>
-    let task_type = document.getElementById("task_type").dataset.type;
-    let TRIALS_RESPONSES = [];
+    task_type = document.getElementById("task_type").dataset.type;
+    TRIALS_RESPONSES = [];
 
     function setupWindow() {
         let random_trials = LITW.study.params.tasks.sort(() => 0.5 - Math.random())

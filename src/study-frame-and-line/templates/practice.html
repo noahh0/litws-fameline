@@ -43,12 +43,12 @@
 </div>
 
 <script type="text/javascript">
-    let TRIAL = [{promptBoxSize: 150, promptLineLength: 50, responseBoxSize: 100}];
 
     function setupWindow() {
+        let practice_trial = JSON.parse(JSON.stringify(LITW.study.params.practice_trial));
         let canvas_width = (window.innerWidth < 700) ? 300 : 600;
         let canvas_height = 300;
-        LITW.study.frameline.setup_canvas(TRIAL, "prompt_canvas", canvas_width, canvas_height, "downBtn", "upBtn");
+        LITW.study.frameline.setup_canvas(practice_trial, "prompt_canvas", canvas_width, canvas_height, "downBtn", "upBtn");
     }
 
     function startPractice() {

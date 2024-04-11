@@ -14,7 +14,7 @@ window.$ = window.jQuery = require("jquery");
 require("bootstrap");
 require("jquery-ui-bundle");
 var _ = require('lodash');
-var introTemplate = require("../templates/introduction.html");
+var introTemplate = require("./templates/introduction.html");
 var irbTemplate = require("../templates/irb.html");
 var demographicsTemplate = require("../templates/demographics.html");
 var instructionsTemplate = require("/templates/instructions.html");
@@ -33,7 +33,7 @@ module.exports = (function(exports) {
 	var timeline = [],
 	params = {
 		preLoad: ["../img/btn-next.png","../img/btn-next-active.png","../img/ajax-loader.gif"],
-		study_id: "TO_BE_ADDED_IF_USING_LITW_INFRA",
+		study_id: "e699772e-b179-411e-87bf-df7b5735b50b",
 		study_recommendation: [],
 		tasks: [
 			{promptBoxSize:	191.0	, promptLineLength:	21.0	, responseBoxSize:	101.0	},
@@ -58,6 +58,7 @@ module.exports = (function(exports) {
 			{promptBoxSize:	170.0	, promptLineLength:	151.3	, responseBoxSize:	121.0	}
 		],
 		task_qtd: 2,
+		practice_trial: [{promptBoxSize: 150, promptLineLength: 50, responseBoxSize: 100}],
 		results: {
 			absolute: [],
 			relative: []
@@ -190,7 +191,7 @@ module.exports = (function(exports) {
 	};
 
 	function configureStudy() {
-		// timeline.push(params.slides.INTRODUCTION);
+		timeline.push(params.slides.INTRODUCTION);
 		// timeline.push(params.slides.INFORMED_CONSENT);
 		// timeline.push(params.slides.DEMOGRAPHICS);
 		let relative_first = Math.random()<0.5;
@@ -198,32 +199,32 @@ module.exports = (function(exports) {
 			relative_first: relative_first
 		});
 
-		// if (relative_first) {
-		// 	params.slides.INSTRUCTIONS1.template_data.task_type = "relative";
-		// 	params.slides.PRACTICE1.template_data.task_type = "relative";
-		// 	params.slides.INSTRUCTIONS2.template_data.task_type = "absolute";
-		// 	params.slides.PRACTICE2.template_data.task_type = "absolute";
-		// 	timeline.push(params.slides.INSTRUCTIONS1);
-		// 	timeline.push(params.slides.PRACTICE1);
-		// 	timeline.push(params.slides.TASK_RELATIVE);
-		// 	timeline.push(params.slides.INSTRUCTIONS2);
-		// 	timeline.push(params.slides.PRACTICE2);
-		// 	timeline.push(params.slides.TASK_ABSOLUTE);
-		// } else {
-		// 	params.slides.INSTRUCTIONS1.template_data.task_type = "absolute";
-		// 	params.slides.PRACTICE1.template_data.task_type = "absolute";
-		// 	params.slides.INSTRUCTIONS2.template_data.task_type = "relative";
-		// 	params.slides.PRACTICE2.template_data.task_type = "relative";
-		// 	timeline.push(params.slides.INSTRUCTIONS1);
-		// 	timeline.push(params.slides.PRACTICE1);
-		// 	timeline.push(params.slides.TASK_ABSOLUTE);
-		// 	timeline.push(params.slides.INSTRUCTIONS2);
-		// 	timeline.push(params.slides.PRACTICE2);
-		// 	timeline.push(params.slides.TASK_RELATIVE);
-		// }
-		params.slides.PRACTICE1.template_data.task_type = "relative";
-		timeline.push(params.slides.PRACTICE1);
-		timeline.push(params.slides.TASK_RELATIVE);
+		if (relative_first) {
+			params.slides.INSTRUCTIONS1.template_data.task_type = "relative";
+			params.slides.PRACTICE1.template_data.task_type = "relative";
+			params.slides.INSTRUCTIONS2.template_data.task_type = "absolute";
+			params.slides.PRACTICE2.template_data.task_type = "absolute";
+			timeline.push(params.slides.INSTRUCTIONS1);
+			timeline.push(params.slides.PRACTICE1);
+			timeline.push(params.slides.TASK_RELATIVE);
+			timeline.push(params.slides.INSTRUCTIONS2);
+			timeline.push(params.slides.PRACTICE2);
+			timeline.push(params.slides.TASK_ABSOLUTE);
+		} else {
+			params.slides.INSTRUCTIONS1.template_data.task_type = "absolute";
+			params.slides.PRACTICE1.template_data.task_type = "absolute";
+			params.slides.INSTRUCTIONS2.template_data.task_type = "relative";
+			params.slides.PRACTICE2.template_data.task_type = "relative";
+			timeline.push(params.slides.INSTRUCTIONS1);
+			timeline.push(params.slides.PRACTICE1);
+			timeline.push(params.slides.TASK_ABSOLUTE);
+			timeline.push(params.slides.INSTRUCTIONS2);
+			timeline.push(params.slides.PRACTICE2);
+			timeline.push(params.slides.TASK_RELATIVE);
+		}
+		// params.slides.PRACTICE1.template_data.task_type = "relative";
+		// timeline.push(params.slides.PRACTICE1);
+		// timeline.push(params.slides.TASK_RELATIVE);
 		// timeline.push(params.slides.COMMENTS);
 		timeline.push(params.slides.RESULTS);
 	}

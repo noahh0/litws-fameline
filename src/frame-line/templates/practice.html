@@ -1,34 +1,30 @@
 <div id="instructions-container-one">
-    <h2 id="practice-title" class="text-center bolded-blue" data-i18n="litw-study-practice"></h2>
+    <h3 id="practice-title" class="text-center bolded-blue" data-i18n="study-fl-practice-{{ task_type }}"></h3>
     <div id="task_type" data-type="{{ task_type }}"></div>
     <!-- Practice starting page -->
     <div id="practice-start">
-        <h3 id="instructions-one" class="text-center data-i18n=" style="margin-top: 20px;" data-i18n="litw-practice-p1"></h3>
+        <p id="instructions-one" class="text-center" style="margin-top: 20px;" data-i18n="study-fl-practice-p1"></p>
         <div style=" display: flex; justify-content: center; align-items: center;">
             <button id="startButton" class="btn btn-primary" type="submit" onclick="startPractice()" style="margin-top: 120px;"   data-i18n="study-fl-practice-start"></button>
         </div>
     </div>
     <!-- Practice instructions page -->
     <div id="practice-instructions-look" style="display: none;">
-        <h5 id="instructions-two" class="text-center data-i18n=" data-i18n="litw-practice-p2-{{task_type}}"></h5>
+        <p id="instructions-two" class="text-center" data-i18n="study-fl-practice-p2-{{task_type}}"></p>
     </div>
     <div id="practice-instructions-respond" style="display: none;">
-        <h5 id="instructions-three" class="text-center data-i18n=" data-i18n="litw-practice-p3-{{task_type}}"></h5>
-        <h5 id="instructions-four" class="text-center data-i18n=" data-i18n="litw-practice-p4"></h5>
-        <h5 id="instructions-five" class="text-center data-i18n=" data-i18n="litw-practice-p5"></h5>
+        <p id="instructions-three" class="text-center" data-i18n="study-fl-practice-p3"></p>
     </div>
     <!-- Practice results page -->
     <div id="results" style="display: none;">
-        <h3 id="results-one" class="text-center bolded-blue" data-i18n="litw-practice-p6"></h3>
-        <h4 id="results-two" class="text-center data-i18n=" data-i18n="litw-practice-result-p1"></h4>
-        <h6 id="results-three" class="text-center data-i18n=" data-i18n="litw-practice-result-p2"></h6>
-        <h6 id="results-four" class="text-center data-i18n=" data-i18n="litw-practice-result-p3"></h6>
+        <h4 id="results-one" class="text-center" data-i18n="study-fl-practice-p6"></h4>
+        <h5 id="results-two" class="text-center" data-i18n="study-fl-practice-result-p1"></h5>
     </div>
 </div>
 <!-- Practice results summary page -->
 <div id="practice-done" style="display: none;">
-    <h4 id="practice-done-two" class="text-center data-i18n=" data-i18n="study-fl-practice-done-p1"></h4>
-    <h6 id="practice-done-three" class="text-center data-i18n=" data-i18n="study-fl-practice-done-p2"></h6>
+    <h4 id="practice-done-two" class="text-center" data-i18n="study-fl-practice-done-p1"></h4>
+    <h6 id="practice-done-three" class="text-center" data-i18n="study-fl-practice-done-p2"></h6>
 </div>
 <!-- Practice trial content -->
 <div id="drawing-area" style="display:flex; justify-content: center;">

@@ -191,7 +191,7 @@ module.exports = (function(exports) {
 	};
 
 	function configureStudy() {
-		timeline.push(params.slides.INTRODUCTION);
+		// timeline.push(params.slides.INTRODUCTION);
 		// timeline.push(params.slides.INFORMED_CONSENT);
 		// timeline.push(params.slides.DEMOGRAPHICS);
 		let relative_first = Math.random()<0.5;
@@ -205,22 +205,22 @@ module.exports = (function(exports) {
 			params.slides.INSTRUCTIONS2.template_data.task_type = "absolute";
 			params.slides.PRACTICE2.template_data.task_type = "absolute";
 			timeline.push(params.slides.INSTRUCTIONS1);
-			timeline.push(params.slides.PRACTICE1);
-			timeline.push(params.slides.TASK_RELATIVE);
+			// timeline.push(params.slides.PRACTICE1);
+			// timeline.push(params.slides.TASK_RELATIVE);
 			timeline.push(params.slides.INSTRUCTIONS2);
-			timeline.push(params.slides.PRACTICE2);
-			timeline.push(params.slides.TASK_ABSOLUTE);
+			// timeline.push(params.slides.PRACTICE2);
+			// timeline.push(params.slides.TASK_ABSOLUTE);
 		} else {
 			params.slides.INSTRUCTIONS1.template_data.task_type = "absolute";
 			params.slides.PRACTICE1.template_data.task_type = "absolute";
 			params.slides.INSTRUCTIONS2.template_data.task_type = "relative";
 			params.slides.PRACTICE2.template_data.task_type = "relative";
 			timeline.push(params.slides.INSTRUCTIONS1);
-			timeline.push(params.slides.PRACTICE1);
-			timeline.push(params.slides.TASK_ABSOLUTE);
+			// timeline.push(params.slides.PRACTICE1);
+			// timeline.push(params.slides.TASK_ABSOLUTE);
 			timeline.push(params.slides.INSTRUCTIONS2);
-			timeline.push(params.slides.PRACTICE2);
-			timeline.push(params.slides.TASK_RELATIVE);
+			// timeline.push(params.slides.PRACTICE2);
+			// timeline.push(params.slides.TASK_RELATIVE);
 		}
 		// params.slides.PRACTICE1.template_data.task_type = "relative";
 		// timeline.push(params.slides.PRACTICE1);

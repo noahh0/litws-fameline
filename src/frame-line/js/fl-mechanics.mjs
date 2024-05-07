@@ -1,4 +1,7 @@
 let CANVAS = null;
+let BTN_PLUS = null;
+let BTN_MINUS = null;
+let WAIT_ANIMATION = null;
 const LINE_START_Y = 50; //TODO: Double check this... shouldn't it be calculated based on Canvas?
 const LINE_INCREMENT = 1; //TODO: WE likely want to tune this up as some boxes are too large?
 
@@ -8,8 +11,18 @@ let current_trial = 0;
 let current_box_size = 0;
 let current_line_length = 0;
 
-// TODO: refactor the deprecated "keyCode"
-const setup_canvas = (trials, canvas_html_id, canvas_width, canvas_height, button_plus_id, button_minus_id) => {
+/**
+ *
+ * @param trials A list of trials = {promptBoxSize: IN_PX, promptLineLength: IN_PX, responseBoxSize: IN_PX}
+ * @param canvas_html_id The CANVAS HTML element where the study will be drawn.
+ * @param canvas_width The desired width of the canvas. If NULL, we will use the whole visible area (recommended)!
+ * @param canvas_height The desired height of the canvas. If WIDTH is NULL, this will be ignored.
+ * @param button_plus_id The HTML element that, when clicked, the drawn line will INCREASE in length.
+ * @param button_minus_id The HTML element that, when clicked, the drawn line will DECREASE in length.
+ * @param wait_element_id This element will be shown between prompt and response.
+ * @param random_response_positions Indicate if the response box should be drawn in random parts of the canvas (recommended == true).
+ */
+const setup_canvas = (trials, canvas_html_id, canvas_width, canvas_height, button_plus_id, button_minus_id, wait_element_id, random_response_positions = true) => {
     TRIALS = trials;
     current_trial = 0;
     current_box_size = 0;
@@ -17,27 +30,28 @@ const setup_canvas = (trials, canvas_html_id, canvas_width, canvas_height, butto
     CANVAS = document.getElementById(canvas_html_id);
     CANVAS.width = canvas_width;
     CANVAS.height = canvas_height;
+    BTN_MINUS = document.getElementById(button_minus_id);
+    BTN_PLUS = document.getElementById(button_plus_id);
+    WAIT_ANIMATION = document.getElementById(wait_element_id);
 
-    window.addEventListener("keydown", function (e) {
+    window.addEventListener("keydown", function (event) {
         // space and arrow keys
-        if ([32, 37, 38, 39, 40].indexOf(e.keyCode) > -1) {
-            e.preventDefault();
+        if (event.code in ['ArrowUp', 'ArrowDown', 'Space']) {
+            event.preventDefault();
         }
     }, false);
-    let upBtn = document.getElementById(button_minus_id);
-    let downBtn = document.getElementById(button_plus_id);
-    upBtn.addEventListener("click", up_btn_clicked);
-    downBtn.addEventListener("click", down_btn_clicked);
-    document.onkeydown = function (e) {
-        if (e.keyCode == 40) {
-            down_btn_clicked();
-        } else if (e.keyCode == 38) {
-            up_btn_clicked();
+    BTN_MINUS.addEventListener("mousedown", btn_minus_clicked);
+    BTN_PLUS.addEventListener("mousedown", btn_plus_clicked);
+    document.onkeydown = function (event) {
+        if (event.code === 'ArrowDown') {
+            btn_plus_clicked();
+        } else if (event.code === 'ArrowUp') {
+            btn_minus_clicked();
         }
     }
 }
 
-const down_btn_clicked = () => {
+const btn_plus_clicked = () => {
     let newLineLength = current_line_length + LINE_INCREMENT;
     if (newLineLength <= TRIALS[current_trial-1].responseBoxSize) {
         current_line_length = newLineLength;
@@ -45,7 +59,7 @@ const down_btn_clicked = () => {
     }
 }
 
-const up_btn_clicked = () => {
+const btn_minus_clicked = () => {
     let newLineLength = current_line_length - LINE_INCREMENT;
     if (newLineLength >= 0) {
         current_line_length = newLineLength;
@@ -94,11 +108,22 @@ const start_next_trial = (prompt_show_time=5000, prompt_callback=()=>{}, respons
         current_line_length = TRIALS[current_trial-1].promptLineLength;
         current_box_size = TRIALS[current_trial-1].promptBoxSize;
         redraw_canvas(current_box_size, current_line_length);
-        setTimeout(function () {
-            response_callback();
-            current_box_size = TRIALS[current_trial-1].responseBoxSize;
-            current_line_length = 0;
-            redraw_canvas(current_box_size, current_line_length);
+        setTimeout( () => {
+            CANVAS.style.visibility = 'hidden';
+            BTN_PLUS.style.visibility = 'hidden';
+            BTN_MINUS.style.visibility = 'hidden';
+            WAIT_ANIMATION.style.visibility = 'visible';
+            setTimeout(()=>{
+                response_callback();
+                CANVAS.style.visibility = 'visible';
+                BTN_PLUS.style.visibility = 'visible';
+                BTN_MINUS.style.visibility = 'visible';
+                WAIT_ANIMATION.style.visibility = 'hidden';
+
+                current_box_size = TRIALS[current_trial-1].responseBoxSize;
+                current_line_length = 0;
+                redraw_canvas(current_box_size, current_line_length);
+            }, prompt_show_time)
         }, prompt_show_time);
         return true;
     } else {

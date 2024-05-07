@@ -27,10 +27,13 @@
     <h6 id="practice-done-three" class="text-center" data-i18n="study-fl-practice-done-p2"></h6>
 </div>
 <!-- Practice trial content -->
-<div id="drawing-area" style="display:flex; justify-content: center;">
-    <span id="upBtn" class="bolded-blue" style="visibility: hidden; font-size: 100px; margin-top: 70px;">&#8593;</span>
-    <canvas id='prompt_canvas'></canvas>
-    <span id="downBtn" class="bolded-blue" style="visibility: hidden; font-size: 100px; margin-top: 70px;">&#8595;</span>
+<div id="drawing-area" style="justify-content: center">
+    <div style="display:flex">
+        <span id="upBtn" class="bolded-blue" style="visibility: hidden; font-size: 100px; margin-top: 70px;">&#8593;</span>
+        <canvas id='prompt_canvas'></canvas>
+        <span id="downBtn" class="bolded-blue" style="visibility: hidden; font-size: 100px; margin-top: 70px;">&#8595;</span>
+    </div>
+    <img id="before_loading_response" class="mx-auto d-block" src="../img/ajax-loader.gif" style="visibility: hidden">
 </div>
 <div id="button-container" style=" display: flex; justify-content: center;">
     <button id="redoButton" class="btn btn-primary" style="visibility: hidden;  margin-top: 30px; margin-right: 15px;" onclick="rerunPractice()" data-i18n="study-fl-practice-btn-redo"></button>
@@ -44,7 +47,7 @@
         let practice_trial = JSON.parse(JSON.stringify(LITW.study.params.practice_trial));
         let canvas_width = (window.innerWidth < 700) ? 300 : 600;
         let canvas_height = 300;
-        LITW.study.frameline.setup_canvas(practice_trial, "prompt_canvas", canvas_width, canvas_height, "downBtn", "upBtn");
+        LITW.study.frameline.setup_canvas(practice_trial, "prompt_canvas", canvas_width, canvas_height, "downBtn", "upBtn", "before_loading_response");
     }
 
     function startPractice() {
@@ -57,8 +60,6 @@
                 document.getElementById("practice-instructions-look").style.display = "none";
                 document.getElementById("practice-instructions-respond").style.display = "block";
                 document.getElementById("doneButton").style.visibility = "visible";
-                document.getElementById("upBtn").style.visibility = "visible";
-                document.getElementById("downBtn").style.visibility = "visible";
             }
         );
     }

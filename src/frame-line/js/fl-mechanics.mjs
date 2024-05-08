@@ -3,12 +3,12 @@ let BTN_PLUS = null;
 let BTN_MINUS = null;
 let WAIT_ANIMATION = null;
 let RANDOM_POSITION = true;
-const LINE_START_Y = 50; //TODO: Double check this... shouldn't it be calculated based on Canvas?
+let BOX_PLACING = {X:0 ,Y:0};
 const LINE_INCREMENT = 1; //TODO: WE likely want to tune this up as some boxes are too large?
 
 // TODO: Create object for this?
 let TRIALS = [];
-let current_trial = 0;
+let current_trial_count = 0;
 let current_box_size = 0;
 let current_line_length = 0;
 
@@ -26,7 +26,7 @@ let current_line_length = 0;
 const setup_canvas = (trials, canvas_html_id, canvas_width, canvas_height, button_plus_id, button_minus_id,
                       wait_element_id, random_response_positions = true) => {
     TRIALS = trials;
-    current_trial = 0;
+    current_trial_count = 0;
     current_box_size = 0;
     current_line_length = 0;
     CANVAS = document.getElementById(canvas_html_id);
@@ -56,7 +56,7 @@ const setup_canvas = (trials, canvas_html_id, canvas_width, canvas_height, butto
 
 const btn_plus_clicked = () => {
     let newLineLength = current_line_length + LINE_INCREMENT;
-    if (newLineLength <= TRIALS[current_trial-1].responseBoxSize) {
+    if (newLineLength <= TRIALS[current_trial_count-1].responseBoxSize) {
         current_line_length = newLineLength;
         redraw_canvas(current_box_size, current_line_length);
     }
@@ -70,6 +70,21 @@ const btn_minus_clicked = () => {
     }
 }
 
+const set_box_to_center = () => {
+    BOX_PLACING.X = CANVAS.width/2;
+    BOX_PLACING.Y = CANVAS.height/2;
+}
+
+const set_box_to_random = (box_size) => {
+    let min_val = 0+box_size/2;
+    let max_x = CANVAS.width-box_size/2;
+    let max_y = CANVAS.height-box_size/2;
+    BOX_PLACING.X = Math.floor(Math.random() * (max_x - min_val + 1) + min_val);
+    BOX_PLACING.Y = Math.floor(Math.random() * (max_y - min_val + 1) + min_val);
+}
+
+
+
 const draw_trial_result = (finished_trial) => {
     const ctx = CANVAS.getContext("2d");
     ctx.clearRect(0, 0, CANVAS.width, CANVAS.height);
@@ -80,36 +95,39 @@ const draw_trial_result = (finished_trial) => {
     let boxResponseSize = finished_trial.responseBoxSize;
     ctx.fillStyle = "black";
     //PROMPT
-    ctx.strokeRect((boxPromptCenter-(boxPromptSize/2)), LINE_START_Y, boxPromptSize, boxPromptSize);
+    ctx.strokeRect((boxPromptCenter-(boxPromptSize/2)), BOX_PLACING.Y, boxPromptSize, boxPromptSize);
     ctx.beginPath();
-    ctx.moveTo(boxPromptCenter, LINE_START_Y);
-    ctx.lineTo(boxPromptCenter, LINE_START_Y + finished_trial.promptLineLength);
+    ctx.moveTo(boxPromptCenter, BOX_PLACING.Y);
+    ctx.lineTo(boxPromptCenter, BOX_PLACING.Y + finished_trial.promptLineLength);
     ctx.stroke();
     //RESPONSE
-    ctx.strokeRect((boxResponseCenter-(boxResponseSize/2)), LINE_START_Y, boxResponseSize, boxResponseSize);
+    ctx.strokeRect((boxResponseCenter-(boxResponseSize/2)), BOX_PLACING.Y, boxResponseSize, boxResponseSize);
     ctx.beginPath();
-    ctx.moveTo(boxResponseCenter, LINE_START_Y);
-    ctx.lineTo(boxResponseCenter, LINE_START_Y + finished_trial.response);
+    ctx.moveTo(boxResponseCenter, BOX_PLACING.Y);
+    ctx.lineTo(boxResponseCenter, BOX_PLACING.Y + finished_trial.response);
     ctx.stroke();
 }
 
 const redraw_canvas = (box_size, line_length) => {
+    let box_x = BOX_PLACING.X-(box_size/2);
+    let box_y = BOX_PLACING.Y-(box_size/2);
     const ctx = CANVAS.getContext("2d");
     ctx.clearRect(0, 0, CANVAS.width, CANVAS.height);
-    let canvasCenter = CANVAS.width/2;
     ctx.fillStyle = "black";
-    ctx.strokeRect((canvasCenter-(box_size/2)), LINE_START_Y, box_size, box_size);
+    ctx.strokeRect(box_x, box_y, box_size, box_size);
     ctx.beginPath();
-    ctx.moveTo(canvasCenter, LINE_START_Y);
-    ctx.lineTo(canvasCenter, LINE_START_Y + line_length);
+    ctx.moveTo(BOX_PLACING.X, box_y);
+    ctx.lineTo(BOX_PLACING.X, box_y + line_length);
     ctx.stroke();
 }
 
 const start_next_trial = (prompt_show_time=5000, prompt_callback=()=>{}, response_callback=()=>{}) => {
-    if(++current_trial <= TRIALS.length) {
+    if(++current_trial_count <= TRIALS.length) {
+        let current_trial = TRIALS[current_trial_count-1];
         prompt_callback();
-        current_line_length = TRIALS[current_trial-1].promptLineLength;
-        current_box_size = TRIALS[current_trial-1].promptBoxSize;
+        set_box_to_center();
+        current_line_length = current_trial.promptLineLength;
+        current_box_size = current_trial.promptBoxSize;
         redraw_canvas(current_box_size, current_line_length);
         setTimeout( () => {
             CANVAS.style.visibility = 'hidden';
@@ -118,12 +136,13 @@ const start_next_trial = (prompt_show_time=5000, prompt_callback=()=>{}, respons
             WAIT_ANIMATION.style.visibility = 'visible';
             setTimeout(()=>{
                 response_callback();
+                if(RANDOM_POSITION) set_box_to_random(current_box_size);
                 CANVAS.style.visibility = 'visible';
                 BTN_PLUS.style.visibility = 'visible';
                 BTN_MINUS.style.visibility = 'visible';
                 WAIT_ANIMATION.style.visibility = 'hidden';
 
-                current_box_size = TRIALS[current_trial-1].responseBoxSize;
+                current_box_size = current_trial.responseBoxSize;
                 current_line_length = 0;
                 redraw_canvas(current_box_size, current_line_length);
             }, prompt_show_time)
@@ -135,13 +154,13 @@ const start_next_trial = (prompt_show_time=5000, prompt_callback=()=>{}, respons
 }
 
 const finish_current_trial = (task_type) => {
-    if(current_trial <= TRIALS.length) {
-        TRIALS[current_trial-1].response = current_line_length;
+    if(current_trial_count <= TRIALS.length) {
+        TRIALS[current_trial_count-1].response = current_line_length;
         current_line_length = 0;
         current_box_size = 0;
         redraw_canvas(current_box_size, current_line_length);
         //TODO: remove listeners for every trial???
-        return calculate_error(TRIALS[current_trial-1], task_type);
+        return calculate_error(TRIALS[current_trial_count-1], task_type);
     } else {
         return null;
     }
@@ -159,7 +178,7 @@ const calculate_error = (responded_trial, trial_type='absolute') => {
 }
 
 const get_current_trial_number = () => {
-    return current_trial;
+    return current_trial_count;
 }
 
 const get_total_trials_number = () => {

@@ -33,7 +33,7 @@
         let random_trials = LITW.study.params.tasks.sort(() => 0.5 - Math.random())
                                                    .slice(0, LITW.study.params.task_qtd);
         LITW.study.frameline.setup_canvas(random_trials, "prompt_canvas", window.innerWidth*0.8, window.innerHeight*0.8,
-            "down_btn", "up_btn", "before_loading_response");
+            "down_btn", "up_btn", "before_loading_response", true);
     }
 
     function initNextTrial() {

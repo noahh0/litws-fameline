@@ -11,7 +11,7 @@
 
 // load webpack modules
 window.$ = window.jQuery = require("jquery");
-require("bootstrap");
+window.bootstrap = require("bootstrap");
 require("jquery-ui-bundle");
 var _ = require('lodash');
 var introTemplate = require("./templates/introduction.html");
@@ -206,10 +206,10 @@ module.exports = (function(exports) {
 			params.slides.PRACTICE2.template_data.task_type = "absolute";
 			timeline.push(params.slides.INSTRUCTIONS1);
 			timeline.push(params.slides.PRACTICE1);
-			// timeline.push(params.slides.TASK_RELATIVE);
+			timeline.push(params.slides.TASK_RELATIVE);
 			timeline.push(params.slides.INSTRUCTIONS2);
 			timeline.push(params.slides.PRACTICE2);
-			// timeline.push(params.slides.TASK_ABSOLUTE);
+			timeline.push(params.slides.TASK_ABSOLUTE);
 		} else {
 			params.slides.INSTRUCTIONS1.template_data.task_type = "absolute";
 			params.slides.PRACTICE1.template_data.task_type = "absolute";
@@ -217,10 +217,10 @@ module.exports = (function(exports) {
 			params.slides.PRACTICE2.template_data.task_type = "relative";
 			timeline.push(params.slides.INSTRUCTIONS1);
 			timeline.push(params.slides.PRACTICE1);
-			// timeline.push(params.slides.TASK_ABSOLUTE);
+			timeline.push(params.slides.TASK_ABSOLUTE);
 			timeline.push(params.slides.INSTRUCTIONS2);
 			timeline.push(params.slides.PRACTICE2);
-			// timeline.push(params.slides.TASK_RELATIVE);
+			timeline.push(params.slides.TASK_RELATIVE);
 		}
 		// params.slides.PRACTICE1.template_data.task_type = "relative";
 		// timeline.push(params.slides.PRACTICE1);

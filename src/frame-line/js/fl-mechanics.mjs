@@ -2,6 +2,7 @@ let CANVAS = null;
 let BTN_PLUS = null;
 let BTN_MINUS = null;
 let WAIT_ANIMATION = null;
+let RANDOM_POSITION = true;
 const LINE_START_Y = 50; //TODO: Double check this... shouldn't it be calculated based on Canvas?
 const LINE_INCREMENT = 1; //TODO: WE likely want to tune this up as some boxes are too large?
 
@@ -15,14 +16,15 @@ let current_line_length = 0;
  *
  * @param trials A list of trials = {promptBoxSize: IN_PX, promptLineLength: IN_PX, responseBoxSize: IN_PX}
  * @param canvas_html_id The CANVAS HTML element where the study will be drawn.
- * @param canvas_width The desired width of the canvas. If NULL, we will use the whole visible area (recommended)!
- * @param canvas_height The desired height of the canvas. If WIDTH is NULL, this will be ignored.
+ * @param canvas_width The desired width of the canvas. Best practice is to use fullscreen, except when doings instructions!
+ * @param canvas_height The desired height of the canvas.
  * @param button_plus_id The HTML element that, when clicked, the drawn line will INCREASE in length.
  * @param button_minus_id The HTML element that, when clicked, the drawn line will DECREASE in length.
  * @param wait_element_id This element will be shown between prompt and response.
  * @param random_response_positions Indicate if the response box should be drawn in random parts of the canvas (recommended == true).
  */
-const setup_canvas = (trials, canvas_html_id, canvas_width, canvas_height, button_plus_id, button_minus_id, wait_element_id, random_response_positions = true) => {
+const setup_canvas = (trials, canvas_html_id, canvas_width, canvas_height, button_plus_id, button_minus_id,
+                      wait_element_id, random_response_positions = true) => {
     TRIALS = trials;
     current_trial = 0;
     current_box_size = 0;
@@ -33,15 +35,14 @@ const setup_canvas = (trials, canvas_html_id, canvas_width, canvas_height, butto
     BTN_MINUS = document.getElementById(button_minus_id);
     BTN_PLUS = document.getElementById(button_plus_id);
     WAIT_ANIMATION = document.getElementById(wait_element_id);
+    RANDOM_POSITION = random_response_positions;
 
+    // TODO: NEED TO REMOVE THESE LISTENERS!
     window.addEventListener("keydown", function (event) {
-        // space and arrow keys
         if (event.code in ['ArrowUp', 'ArrowDown', 'Space']) {
             event.preventDefault();
         }
     }, false);
-    BTN_MINUS.addEventListener("mousedown", btn_minus_clicked);
-    BTN_PLUS.addEventListener("mousedown", btn_plus_clicked);
     document.onkeydown = function (event) {
         if (event.code === 'ArrowDown') {
             btn_plus_clicked();
@@ -49,6 +50,8 @@ const setup_canvas = (trials, canvas_html_id, canvas_width, canvas_height, butto
             btn_minus_clicked();
         }
     }
+    BTN_MINUS.addEventListener("mousedown", btn_minus_clicked);
+    BTN_PLUS.addEventListener("mousedown", btn_plus_clicked);
 }
 
 const btn_plus_clicked = () => {

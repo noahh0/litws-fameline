@@ -1,26 +1,39 @@
-<h5 id="progress-bar" class="text-center  bolded-blue data-i18n="></h5>
-<div id="task_type" data-type="{{ config.task_type }}"></div>
-<div style="display:flex; justify-content: center;">
-    <span id="upBtn" class="bolded-blue" style="visibility: hidden; font-size: 100px; margin-top: 75px;">&#8593;</span>
-    <canvas id='prompt_canvas'></canvas>
-    <span id="downBtn" class="bolded-blue" style="visibility: hidden; font-size: 100px; margin-top: 75px;">&#8595;</span>
-</div>
-
-<div id="button-container" style=" display: flex; justify-content: center;">
-    <button id="doneButton" class="btn btn-primary" style="visibility: hidden; margin-top: 30px;"
-            onclick="finishTrial()" data-i18n="study-fl-btn-done"></button>
+<div id="fl_experiment_modal" class="modal" tabindex="-1">
+  <div class="modal-dialog modal-fullscreen">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 id="progress-bar" class="text-center  bolded-blue data-i18n="></h5>
+        <div id="task_type" data-type="{{ config.task_type }}"></div>
+      </div>
+      <div class="modal-body">
+        <div id="drawing-area" style="display:flex; justify-content: center; position: relative">
+            <i id="up_btn" class="bi bi-arrow-up-square display-3" style="visibility: hidden; margin-top: 30%;"></i>
+            <canvas id='prompt_canvas'></canvas>
+            <i id="down_btn" class="bi bi-arrow-down-square display-3" style="visibility: hidden; margin-top: 30%;"></i>
+            <img id="before_loading_response" class="mx-auto d-block" src="../img/ajax-loader.gif"
+                 style="visibility: hidden; position: absolute; top: 50%">
+        </div>
+      </div>
+      <div class="modal-footer">
+        <div id="button-container" style=" display: flex; justify-content: center;">
+            <button id="doneButton" class="btn btn-primary" style="visibility: hidden"
+                    onclick="finishTrial()" data-i18n="study-fl-btn-done"></button>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
 
 <script>
     task_type = document.getElementById("task_type").dataset.type;
     TRIALS_RESPONSES = [];
+    experimentModal = new bootstrap.Modal(document.getElementById('fl_experiment_modal'));
 
     function setupWindow() {
         let random_trials = LITW.study.params.tasks.sort(() => 0.5 - Math.random())
                                                    .slice(0, LITW.study.params.task_qtd);
-        let canvas_width = (window.innerWidth < 700) ? 300 : 600;
-        let canvas_height = 300;
-        LITW.study.frameline.setup_canvas(random_trials, "prompt_canvas", canvas_width, canvas_height, "downBtn", "upBtn");
+        LITW.study.frameline.setup_canvas(random_trials, "prompt_canvas", window.innerWidth*0.8, window.innerHeight*0.8,
+            "down_btn", "up_btn", "before_loading_response");
     }
 
     function initNextTrial() {
@@ -33,8 +46,6 @@
             },
             response_callback= ()=>{
                 document.getElementById("doneButton").style.visibility = "visible";
-                document.getElementById("upBtn").style.visibility = "visible";
-                document.getElementById("downBtn").style.visibility = "visible";
             }
         )
         if(!trialStarted) {
@@ -46,8 +57,8 @@
         let finished_trial = LITW.study.frameline.finish_current_trial(task_type);
         if(finished_trial) {
             document.getElementById("doneButton").style.visibility = "hidden";
-            document.getElementById("upBtn").style.visibility = "hidden";
-            document.getElementById("downBtn").style.visibility = "hidden";
+            document.getElementById("up_btn").style.visibility = "hidden";
+            document.getElementById("down_btn").style.visibility = "hidden";
             TRIALS_RESPONSES.push(finished_trial);
             initNextTrial();
         } else {
@@ -57,13 +68,14 @@
 
     function finishExperiment() {
         LITW.study.params.results[task_type] = TRIALS_RESPONSES;
-        document.onkeydown = function () {};
+        experimentModal.hide();
         $('#btn-next-page').click();
     }
 
 
     $(document).ready(() => {
         setupWindow();
+        experimentModal.show();
         initNextTrial();
     });
 

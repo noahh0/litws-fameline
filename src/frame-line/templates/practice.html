@@ -27,13 +27,12 @@
     <h6 id="practice-done-three" class="text-center" data-i18n="study-fl-practice-done-p2"></h6>
 </div>
 <!-- Practice trial content -->
-<div id="drawing-area" style="justify-content: center">
-    <div style="display:flex">
-        <span id="upBtn" class="bolded-blue" style="visibility: hidden; font-size: 100px; margin-top: 70px;">&#8593;</span>
-        <canvas id='prompt_canvas'></canvas>
-        <span id="downBtn" class="bolded-blue" style="visibility: hidden; font-size: 100px; margin-top: 70px;">&#8595;</span>
-    </div>
-    <img id="before_loading_response" class="mx-auto d-block" src="../img/ajax-loader.gif" style="visibility: hidden">
+<div id="drawing-area" style="display:flex; justify-content: center; position: relative">
+    <i id="up_btn" class="bi bi-arrow-up-square display-3" style="visibility: hidden; margin-top: 10%"></i>
+    <canvas id='prompt_canvas'></canvas>
+    <i id="down_btn" class="bi bi-arrow-down-square display-3" style="visibility: hidden; margin-top: 10%"></i>
+    <img id="before_loading_response" class="mx-auto d-block" src="../img/ajax-loader.gif"
+         style="visibility: hidden; position: absolute; top: 50%">
 </div>
 <div id="button-container" style=" display: flex; justify-content: center;">
     <button id="redoButton" class="btn btn-primary" style="visibility: hidden;  margin-top: 30px; margin-right: 15px;" onclick="rerunPractice()" data-i18n="study-fl-practice-btn-redo"></button>
@@ -47,7 +46,7 @@
         let practice_trial = JSON.parse(JSON.stringify(LITW.study.params.practice_trial));
         let canvas_width = (window.innerWidth < 700) ? 300 : 600;
         let canvas_height = 300;
-        LITW.study.frameline.setup_canvas(practice_trial, "prompt_canvas", canvas_width, canvas_height, "downBtn", "upBtn", "before_loading_response");
+        LITW.study.frameline.setup_canvas(practice_trial, "prompt_canvas", canvas_width, canvas_height, "down_btn", "up_btn", "before_loading_response");
     }
 
     function startPractice() {
@@ -80,8 +79,8 @@
         } else {
             console.error("FrameLine module could not finish the trial correctly.");
         }
-        document.getElementById("upBtn").style.visibility = "hidden";
-        document.getElementById("downBtn").style.visibility = "hidden";
+        document.getElementById("up_btn").style.visibility = "hidden";
+        document.getElementById("down_btn").style.visibility = "hidden";
         document.getElementById("practice-instructions-respond").style.visibility = "hidden";
         document.getElementById("results-two").textContent = `${$.i18n('study-fl-practice-results')}:
                                                               ${trial_result.error_perc}%`;

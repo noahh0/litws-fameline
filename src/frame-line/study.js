@@ -191,7 +191,7 @@ module.exports = (function(exports) {
 	};
 
 	function configureStudy() {
-		// timeline.push(params.slides.INTRODUCTION);
+		timeline.push(params.slides.INTRODUCTION);
 		// timeline.push(params.slides.INFORMED_CONSENT);
 		// timeline.push(params.slides.DEMOGRAPHICS);
 		let relative_first = Math.random()<0.5;
@@ -222,9 +222,6 @@ module.exports = (function(exports) {
 			timeline.push(params.slides.PRACTICE2);
 			timeline.push(params.slides.TASK_RELATIVE);
 		}
-		// params.slides.PRACTICE1.template_data.task_type = "relative";
-		// timeline.push(params.slides.PRACTICE1);
-		// timeline.push(params.slides.TASK_RELATIVE);
 		// timeline.push(params.slides.COMMENTS);
 		timeline.push(params.slides.RESULTS);
 	}

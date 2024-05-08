@@ -4,7 +4,6 @@ let BTN_MINUS = null;
 let WAIT_ANIMATION = null;
 let RANDOM_POSITION = true;
 let BOX_PLACING = {X:0 ,Y:0};
-const LINE_INCREMENT = 1; //TODO: WE likely want to tune this up as some boxes are too large?
 
 // TODO: Create object for this?
 let TRIALS = [];
@@ -37,37 +36,76 @@ const setup_canvas = (trials, canvas_html_id, canvas_width, canvas_height, butto
     WAIT_ANIMATION = document.getElementById(wait_element_id);
     RANDOM_POSITION = random_response_positions;
 
-    // TODO: NEED TO REMOVE THESE LISTENERS!
-    window.addEventListener("keydown", function (event) {
-        if (event.code in ['ArrowUp', 'ArrowDown', 'Space']) {
-            event.preventDefault();
-        }
-    }, false);
-    document.onkeydown = function (event) {
-        if (event.code === 'ArrowDown') {
-            btn_plus_clicked();
-        } else if (event.code === 'ArrowUp') {
-            btn_minus_clicked();
+    // window.addEventListener("keydown", function (event) {
+    //     if (['ArrowUp', 'ArrowDown', 'Space'].includes(event.code)) {
+    //         event.preventDefault();
+    //     }
+    // }, false);
+
+    let increment = 0;
+    let interval = null;
+    document.onkeydown = (event) => {
+        if(!interval) {
+            if (event.code === 'ArrowDown') {
+                event.preventDefault();
+                interval = setInterval(
+                    () => {
+                        increate_line_length(++increment)
+                    },
+                    100);
+            } else if (event.code === 'ArrowUp') {
+                event.preventDefault();
+                interval = setInterval(
+                    () => {
+                        decreate_line_length(++increment)
+                    },
+                    100);
+            }
         }
     }
-    BTN_MINUS.addEventListener("mousedown", btn_minus_clicked);
-    BTN_PLUS.addEventListener("mousedown", btn_plus_clicked);
+    document.onkeyup = (event) => {
+        if (['ArrowDown', 'ArrowUp'].includes(event.code)) {
+            increment = 0;
+            clearInterval(interval);
+            interval = null;
+        }
+    }
+    setup_btn_mouse_down(BTN_MINUS, decreate_line_length);
+    setup_btn_mouse_down(BTN_PLUS, increate_line_length);
 }
 
-const btn_plus_clicked = () => {
-    let newLineLength = current_line_length + LINE_INCREMENT;
+const setup_btn_mouse_down = (button, call_this) => {
+    let interval;
+    let increment = 0;
+    button.addEventListener('mousedown', () => {
+        interval = setInterval(() => {
+            call_this(++increment);
+        }, 100);
+    });
+    button.addEventListener('mouseup', () => {
+        increment = 0;
+        clearInterval(interval);
+    })
+}
+
+const increate_line_length = (increment) => {
+    let newLineLength = current_line_length + increment;
     if (newLineLength <= TRIALS[current_trial_count-1].responseBoxSize) {
         current_line_length = newLineLength;
-        redraw_canvas(current_box_size, current_line_length);
+    } else {
+        current_line_length = TRIALS[current_trial_count-1].responseBoxSize;
     }
+    redraw_canvas(current_box_size, current_line_length);
 }
 
-const btn_minus_clicked = () => {
-    let newLineLength = current_line_length - LINE_INCREMENT;
+const decreate_line_length = (decrement) => {
+    let newLineLength = current_line_length - decrement;
     if (newLineLength >= 0) {
         current_line_length = newLineLength;
-        redraw_canvas(current_box_size, current_line_length);
+    } else {
+        current_line_length = 0;
     }
+    redraw_canvas(current_box_size, current_line_length);
 }
 
 const set_box_to_center = () => {
@@ -76,9 +114,10 @@ const set_box_to_center = () => {
 }
 
 const set_box_to_random = (box_size) => {
-    let min_val = 0+box_size/2;
-    let max_x = CANVAS.width-box_size/2;
-    let max_y = CANVAS.height-box_size/2;
+    let buffer = 10;
+    let min_val = buffer+box_size/2;
+    let max_x = buffer-CANVAS.width-box_size/2;
+    let max_y = buffer-CANVAS.height-box_size/2;
     BOX_PLACING.X = Math.floor(Math.random() * (max_x - min_val + 1) + min_val);
     BOX_PLACING.Y = Math.floor(Math.random() * (max_y - min_val + 1) + min_val);
 }
@@ -149,6 +188,7 @@ const start_next_trial = (prompt_show_time=5000, prompt_callback=()=>{}, respons
         }, prompt_show_time);
         return true;
     } else {
+        document.onkeydown = () => {};
         return false;
     }
 }
@@ -159,7 +199,6 @@ const finish_current_trial = (task_type) => {
         current_line_length = 0;
         current_box_size = 0;
         redraw_canvas(current_box_size, current_line_length);
-        //TODO: remove listeners for every trial???
         return calculate_error(TRIALS[current_trial_count-1], task_type);
     } else {
         return null;

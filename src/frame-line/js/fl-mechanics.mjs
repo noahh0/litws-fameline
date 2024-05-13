@@ -36,12 +36,6 @@ const setup_canvas = (trials, canvas_html_id, canvas_width, canvas_height, butto
     WAIT_ANIMATION = document.getElementById(wait_element_id);
     RANDOM_POSITION = random_response_positions;
 
-    // window.addEventListener("keydown", function (event) {
-    //     if (['ArrowUp', 'ArrowDown', 'Space'].includes(event.code)) {
-    //         event.preventDefault();
-    //     }
-    // }, false);
-
     let increment = 0;
     let interval = null;
     document.onkeydown = (event) => {
@@ -50,14 +44,14 @@ const setup_canvas = (trials, canvas_html_id, canvas_width, canvas_height, butto
                 event.preventDefault();
                 interval = setInterval(
                     () => {
-                        increate_line_length(++increment)
+                        increase_line_length(++increment)
                     },
                     100);
             } else if (event.code === 'ArrowUp') {
                 event.preventDefault();
                 interval = setInterval(
                     () => {
-                        decreate_line_length(++increment)
+                        decrease_line_length(++increment)
                     },
                     100);
             }
@@ -70,8 +64,8 @@ const setup_canvas = (trials, canvas_html_id, canvas_width, canvas_height, butto
             interval = null;
         }
     }
-    setup_btn_mouse_down(BTN_MINUS, decreate_line_length);
-    setup_btn_mouse_down(BTN_PLUS, increate_line_length);
+    setup_btn_mouse_down(BTN_MINUS, decrease_line_length);
+    setup_btn_mouse_down(BTN_PLUS, increase_line_length);
 }
 
 const setup_btn_mouse_down = (button, call_this) => {
@@ -88,7 +82,7 @@ const setup_btn_mouse_down = (button, call_this) => {
     })
 }
 
-const increate_line_length = (increment) => {
+const increase_line_length = (increment) => {
     let newLineLength = current_line_length + increment;
     if (newLineLength <= TRIALS[current_trial_count-1].responseBoxSize) {
         current_line_length = newLineLength;
@@ -98,7 +92,7 @@ const increate_line_length = (increment) => {
     redraw_canvas(current_box_size, current_line_length);
 }
 
-const decreate_line_length = (decrement) => {
+const decrease_line_length = (decrement) => {
     let newLineLength = current_line_length - decrement;
     if (newLineLength >= 0) {
         current_line_length = newLineLength;
@@ -115,9 +109,9 @@ const set_box_to_center = () => {
 
 const set_box_to_random = (box_size) => {
     let buffer = 10;
-    let min_val = buffer+box_size/2;
-    let max_x = buffer-CANVAS.width-box_size/2;
-    let max_y = buffer-CANVAS.height-box_size/2;
+    let min_val = box_size/2+buffer;
+    let max_x = CANVAS.width-box_size/2-buffer;
+    let max_y = CANVAS.height-box_size/2-buffer;
     BOX_PLACING.X = Math.floor(Math.random() * (max_x - min_val + 1) + min_val);
     BOX_PLACING.Y = Math.floor(Math.random() * (max_y - min_val + 1) + min_val);
 }

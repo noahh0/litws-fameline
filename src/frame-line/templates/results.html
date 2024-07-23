@@ -1,6 +1,6 @@
 <!-- Template for the results page -->
-<h3 class="bolded-blue" style="text-align: center" data-i18n="litw-results-header"></h3>
-<h4 class="text-center">{{ data.message }}</h4>
+<h3 id="results-header1" class="bolded-blue" style="text-align: center"></h3>
+<h4 id="results-header2" class="text-center"></h4>
 <br>
 {{#if data.code}}
 <h5 style="text-align: center">
@@ -16,21 +16,27 @@
     <div id="graphic" class="h-100 d-flex align-items-center justify-content-center"></div>
 </div>
 <div id="results-explain" class="container border border-3 p-4" style="width: 90%">
-    <h5 class="bolded-blue text-center" data-i18n="litw-results-details"></h5>
+    <h5 class="bolded-blue text-center" data-i18n="study-fl-results-details"></h5>
     <h6 class="text-center" style="margin-top: 5px;">
-        <span data-i18n="litw-results-details-relative"></span>
+        <span data-i18n="study-fl-results-details-relative"></span>
         <span>{{ data.relative }}</span>
         <span>%</span>
     </h6>
     <h6 class="text-center" style="margin-top: 10px;">
-        <span data-i18n="litw-results-details-absolute"></span>
+        <span data-i18n="study-fl-results-details-absolute"></span>
         <span>{{ data.absolute }}</span>
         <span>%</span>
     </h6>
 
-    <h5 class="bolded-blue text-center" style="margin-top: 40px;" data-i18n="litw-results-explanation"></h5>
-    <h6 class="text-center" style="margin-top: 20px;" data-i18n="litw-results-explanation-analytic"></h6>
-    <h6 class="text-center" style="margin-top: 10px;" data-i18n="litw-results-explanation-holistic"></h6>
+    <h5 class="bolded-blue text-center" style="margin-top: 40px;" data-i18n="study-fl-results-explanation"></h5>
+    <h6 class="text-center" style="margin-top: 20px;" data-i18n="study-fl-results-explanation-analytic"></h6>
+    <h6 class="text-center" style="margin-top: 10px;" data-i18n="study-fl-results-explanation-holistic"></h6>
+
+    <hr>
+
+    <h6 class="text-center" style="margin-top: 20px;" data-i18n="study-fl-results-citation"></h6>
+    <h6 class="text-center" style="margin-top: 20px;" data-i18n="study-fl-results-citation1"></h6>
+
 </div>
 
 <br>
@@ -40,14 +46,25 @@
     let shownHeader;
     $(document).ready(function() {
         LITW.results.drawGraphic('graphic');
-        //OBS: this could be in the study.params, but as this page receives it as a data point, better to reuse it!
         let participant_relative = document.getElementById('participant_relative').dataset.score;
         let participant_absolute = document.getElementById('participant_absolute').dataset.score;
+
         if (participant_relative == participant_absolute) {
             LITW.results.drawMark(participant_absolute, $.i18n('study-fl-results-graphic-legend-ra'));
         } else {
             LITW.results.drawMark(participant_relative, $.i18n('study-fl-results-graphic-legend-r'));
             LITW.results.drawMark(participant_absolute, $.i18n('study-fl-results-graphic-legend-a'));
+            if( participant_relative  < participant_absolute ) {
+                document.getElementById("results-header1").textContent =  
+                    $.i18n('study-fl-results-header1-relative');
+                document.getElementById("results-header2").textContent =  
+                    $.i18n('study-fl-results-header2-relative');
+            } else {
+                document.getElementById("results-header1").textContent =  
+                    $.i18n('study-fl-results-header1-absolute');
+                document.getElementById("results-header2").textContent =  
+                    $.i18n('study-fl-results-header2-absolute');
+            }
         }
     });
 

@@ -248,13 +248,8 @@ module.exports = (function(exports) {
 		
 		let results_data = {
 			relative: _.meanBy(params.results.relative, (trial) => {return trial.error_perc}),
-			absolute: _.meanBy(params.results.absolute, (trial) => {return trial.error_perc}),
-			message: $.i18n('study-fl-results-header2-absolute')
+			absolute: _.meanBy(params.results.absolute, (trial) => {return trial.error_perc})
 		}
-		if(results_data.relative < results_data.absolute) {
-			results_data.message = $.i18n('study-fl-results-header2-relative');
-		}
-		//TODO: We need a message for when the relative and absolute error are the same!
 		showResults(results_data, true);
 	}
 

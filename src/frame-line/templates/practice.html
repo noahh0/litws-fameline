@@ -18,7 +18,8 @@
     <!-- Practice results page -->
     <div id="results" style="display: none;">
         <h4 id="results-one" class="text-center" data-i18n="study-fl-practice-p6"></h4>
-        <h5 id="results-two" class="text-center" data-i18n="study-fl-practice-result-p1"></h5>
+        <h5 id="results-two" class="text-center" data-i18n="study-fl-practice-result"></h5>
+        <h5 id="results-comment" class="text-center"></h5>
     </div>
 </div>
 <!-- Practice results summary page -->
@@ -83,8 +84,13 @@
         document.getElementById("up_btn").style.visibility = "hidden";
         document.getElementById("down_btn").style.visibility = "hidden";
         document.getElementById("practice-instructions-respond").style.visibility = "hidden";
-        document.getElementById("results-two").textContent = `${$.i18n('study-fl-practice-results')}:
-                                                              ${trial_result.error_perc}%`;
+        document.getElementById("results-two").textContent = 
+            `${$.i18n('study-fl-practice-results')}: ${trial_result.error_perc}%`;
+        let result_comment = $.i18n('study-fl-practice-results-bad');
+        if(trial_result.error_perc <=15) {
+            result_comment = $.i18n('study-fl-practice-results-good');
+        }
+        document.getElementById("results-comment").textContent = result_comment;   
         document.getElementById("results").style.display = "block";
 
         document.getElementById("doneButton").style.visibility = "hidden";

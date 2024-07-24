@@ -7,7 +7,7 @@
   "description": "This is the bare bones of a LITW study. Please check the documentation to learn about how to use it.",
   "dependencies": {
     "alpaca": "^1.5.27",
-    "bootstrap": "^4.3.1",
+    "bootstrap": "^5.3",
     "expose-loader": "^4.1.0",
     "handlebars": "^4.7.7",
     "handlebars-loader": "^1.7.3",

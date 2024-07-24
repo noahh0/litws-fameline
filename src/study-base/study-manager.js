@@ -10,10 +10,16 @@
  *************************************************************/
 
 // load webpack modules
-window.$ = window.jQuery = require("jquery");
-window.bootstrap = require("bootstrap");
+window.$ = require("jquery");
+window.jQuery = window.$;
+require("../js/jquery.i18n");
+require("../js/jquery.i18n.messagestore");
 require("jquery-ui-bundle");
-var _ = require('lodash');
+require("handlebars");
+window.$.alpaca = require("alpaca");
+window.bootstrap = require("bootstrap");
+window._ = require("lodash");
+
 var introTemplate = require("../templates/introduction.html");
 var irbTemplate = require("../templates/irb.html");
 var demographicsTemplate = require("../templates/demographics.html");
@@ -22,7 +28,6 @@ var loadingTemplate = require("../templates/loading.html");
 var resultsTemplate = require("../templates/results.html");
 var resultsFooter = require("../templates/results-footer.html");
 var commentsTemplate = require("../templates/comments.html");
-require("../js/litw/jspsych-display-info");
 require("../js/litw/jspsych-display-slide");
 
 //TODO: document "params.study_id" when updating the docs/7-ManageData!!!

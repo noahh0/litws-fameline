@@ -1,4 +1,5 @@
 <div class="row">
+    <div id="local_data_id" data-local_id="{{ local_data_id }}"></div>
     <div class="col-12">
         <div id="title" class="h3 bolded-blue text-center">
             <span data-i18n="litw-demographics-title"></span>
@@ -25,6 +26,8 @@
     }
 
     $(document).ready(function() {
+        const LOCAL_KEY = document.getElementById('local_data_id').dataset.local_id;
+        let localData = LITW.data.loadFromLocal(LOCAL_KEY);
         let countries = {};
         let languages = {};
         let religions = {};
@@ -39,7 +42,7 @@
                     religions = data;
                 }).done(function () {
                     $("#demographicsForm").alpaca({
-                        "data": false,
+                        "data": localData,
                         "schema": {
                             "description": "LITW Project - Demographics",
                             "type": "object",

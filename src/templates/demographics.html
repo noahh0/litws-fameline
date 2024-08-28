@@ -90,7 +90,7 @@
                                     "title": $.i18n('litw-demographics-education'),
                                     "enum": ['no-formal-edu', 'incomplete-primary', 'complete-primary',
                                         'incomplete-sec-high', 'complete-sec-high', 'university-no-degree',
-                                        'university-degree', 'incomplete-grad-prof', 'complete-grad-prof'],
+                                        'university-degree', 'incomplete-grad', 'complete-grad'],
                                     "required": true
                                 },
                                 "demographics-race": {
@@ -112,7 +112,6 @@
                                     "type": 'select',
                                     "optionLabels": [$.i18n('litw-demographics-no'), $.i18n('litw-demographics-yes')],
                                     "sort": false,
-                                    //"fieldClass": "form-group row my-4",
                                     "noneLabel": "--",
                                     "removeDefaultNone": false,
                                     "showMessages": false,
@@ -122,7 +121,6 @@
                                     "type": 'select',
                                     "optionLabels": Object.values(countries),
                                     "sort": false,
-                                    //"fieldClass": "row",
                                     "noneLabel": "--",
                                     "removeDefaultNone": false,
                                     "showMessages": false,
@@ -132,7 +130,6 @@
                                     "type": 'select',
                                     "optionLabels": Object.values(countries),
                                     "sort": false,
-                                    //"fieldClass": "row",
                                     "noneLabel": "--",
                                     "removeDefaultNone": false,
                                     "showMessages": false,
@@ -140,14 +137,12 @@
                                 },
                                 "demographics-age": {
                                     "type": 'integer',
-                                    //"fieldClass": "row",
                                     "showMessages": false
                                 },
                                 "demographics-language-native": {
                                     "type": 'select',
                                     "optionLabels": Object.values(languages),
                                     "sort": false,
-                                    //"fieldClass": "row",
                                     "noneLabel": "--",
                                     "removeDefaultNone": false,
                                     "showMessages": false,
@@ -157,7 +152,6 @@
                                     "type": 'select',
                                     "optionLabels": Object.values(religions),
                                     "sort": false,
-                                    //"fieldClass": "row",
                                     "noneLabel": "--",
                                     "removeDefaultNone": false,
                                     "showMessages": false,
@@ -169,7 +163,6 @@
                                         $.i18n('litw-demographics-male'), $.i18n('litw-demographics-nonbinary'),
                                         $.i18n('litw-demographics-nodisclose'), $.i18n('litw-demographics-other')],
                                     "sort": false,
-                                    //"fieldClass": "row",
                                     "noneLabel": "--",
                                     "removeDefaultNone": false,
                                     "showMessages": false,
@@ -177,7 +170,6 @@
                                 },
                                 "demographics-gender-other": {
                                     "type": 'text',
-                                    //"fieldClass": "row",
                                     "showMessages": false,
                                     "hidden": true
                                 },

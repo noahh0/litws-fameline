@@ -117,9 +117,9 @@ module.exports = (function(exports) {
 	};
 
 	function configureStudy() {
-		// timeline.push(params.slides.INTRODUCTION);
-		// timeline.push(params.slides.INFORMED_CONSENT);
-		// timeline.push(params.slides.DEMOGRAPHICS);
+		timeline.push(params.slides.INTRODUCTION);
+		timeline.push(params.slides.INFORMED_CONSENT);
+		timeline.push(params.slides.DEMOGRAPHICS);
 
 		params.slides.QUESTIONNAIRE_1.template_data = getQuest1Data('quest1', 50);
 		timeline.push(params.slides.QUESTIONNAIRE_1);

@@ -3,7 +3,7 @@
  * 
  * Author: LITW team
  * 
- * © Copyright 2023 LabintheWild
+ * © Copyright 2024 LabintheWild
  * For questions about this file and permission to use
  * the code, contact us at info@labinthewild.org
  *************************************************************/
@@ -104,6 +104,17 @@ body {
 #likert-scale input { 
 	margin-left: 15px; 
 	margin-right: 15px; 
+}
+
+.litw-button-group-container {
+	display: grid;
+	grid-template-columns: 1fr auto;
+}
+
+.litw-button-group {
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(10px, 1fr));
+	word-break: break-word;
 }
 
 .scale-legend {

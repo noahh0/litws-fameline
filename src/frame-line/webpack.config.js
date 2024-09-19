@@ -1,8 +1,8 @@
 var path = require("path");
 
 var config = {
-  // mode: 'development',
-  mode: 'production',
+  mode: 'development',
+  // mode: 'production',
   entry: path.join(__dirname, "study.js"),
   output: {
     path: path.join(__dirname, "js"),
@@ -11,23 +11,11 @@ var config = {
   module: {
     rules: [
         {
-          test: require.resolve('jquery'),
-            use: [{
-              loader: 'expose-loader',
-              options: {
-                exposes: "jquery",
-              },
-            },
-            {
-              loader: 'expose-loader',
-              options: {
-                exposes: '$',
-              },
-            }
-            ]
-        },
-        {
-          test: /.*\.html$/, loader: "handlebars-loader"
+          test: /.*\.html$/,
+          loader: "html-loader",
+          options: {
+            sources: false,
+          }
         }
     ]
   },

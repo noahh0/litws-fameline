@@ -10,36 +10,66 @@
 <br>
 {{/if}}
 <br>
-<div id="results-main" class="container center-content">
-    <div id="participant_relative" data-score="{{ data.relative }}"></div>
-    <div id="participant_absolute" data-score="{{ data.absolute }}"></div>
-    <div id="graphic" class="h-100 d-flex align-items-center justify-content-center"></div>
+<div class="accordion pb-4" id="accordionPanelsStayOpenExample">
+  <div class="accordion-item">
+    <h2 class="accordion-header">
+      <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne"
+              aria-expanded="true" aria-controls="collapseOne" data-i18n="study-fl-results-more">
+      </button>
+    </h2>
+    <div id="collapseOne" class="accordion-collapse collapse show" data-bs-parent="#accordionExample">
+      <div class="accordion-body">
+          <div id="results-main" class="container center-content">
+              <div id="participant_relative" data-score="{{ data.relative }}"></div>
+              <div id="participant_absolute" data-score="{{ data.absolute }}"></div>
+              <div id="graphic" class="h-100 d-flex align-items-center justify-content-center"></div>
+          </div>
+          <h5 data-i18n="study-fl-results-details"></h5>
+          <h6>
+              <span data-i18n="study-fl-results-details-relative"></span>
+              <span>{{ data.relative }}</span>
+              <span>%</span>
+          </h6>
+          <h6>
+              <span data-i18n="study-fl-results-details-absolute"></span>
+              <span>{{ data.absolute }}</span>
+              <span>%</span>
+          </h6>
+      </div>
+    </div>
+  </div>
+  <div class="accordion-item">
+    <h2 class="accordion-header">
+      <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+              data-bs-target="#panelsStayOpen-collapseTwo" aria-expanded="false"
+              aria-controls="panelsStayOpen-collapseTwo" data-i18n="study-fl-results-explanation">
+      </button>
+    </h2>
+    <div id="panelsStayOpen-collapseTwo" class="accordion-collapse collapse">
+      <div class="accordion-body">
+          <div id="results-explain">
+              <h6 data-i18n="study-fl-results-explanation-analytic"></h6>
+              <h6 data-i18n="study-fl-results-explanation-holistic"></h6>
+          </div>
+      </div>
+    </div>
+  </div>
+  <div class="accordion-item">
+    <h2 class="accordion-header">
+      <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+              data-bs-target="#panelsStayOpen-collapseThree" aria-expanded="false"
+              aria-controls="panelsStayOpen-collapseThree" data-i18n="study-fl-results-references">
+      </button>
+    </h2>
+    <div id="panelsStayOpen-collapseThree" class="accordion-collapse collapse">
+      <div class="accordion-body">
+          <h6 data-i18n="study-fl-results-citation"></h6>
+          <h6 data-i18n="study-fl-results-citation1"></h6>
+      </div>
+    </div>
+  </div>
 </div>
-<div id="results-explain" class="container border border-3 p-4" style="width: 90%">
-    <h5 class="bolded-blue text-center" data-i18n="study-fl-results-details"></h5>
-    <h6 class="text-center" style="margin-top: 5px;">
-        <span data-i18n="study-fl-results-details-relative"></span>
-        <span>{{ data.relative }}</span>
-        <span>%</span>
-    </h6>
-    <h6 class="text-center" style="margin-top: 10px;">
-        <span data-i18n="study-fl-results-details-absolute"></span>
-        <span>{{ data.absolute }}</span>
-        <span>%</span>
-    </h6>
 
-    <h5 class="bolded-blue text-center" style="margin-top: 40px;" data-i18n="study-fl-results-explanation"></h5>
-    <h6 class="text-center" style="margin-top: 20px;" data-i18n="study-fl-results-explanation-analytic"></h6>
-    <h6 class="text-center" style="margin-top: 10px;" data-i18n="study-fl-results-explanation-holistic"></h6>
-
-    <hr>
-
-    <h6 class="text-center" style="margin-top: 20px;" data-i18n="study-fl-results-citation"></h6>
-    <h6 class="text-center" style="margin-top: 20px;" data-i18n="study-fl-results-citation1"></h6>
-
-</div>
-
-<br>
 <div id="results-footer"></div>
 
 <script type="text/javascript">
@@ -49,7 +79,7 @@
         let participant_relative = document.getElementById('participant_relative').dataset.score;
         let participant_absolute = document.getElementById('participant_absolute').dataset.score;
 
-        if (participant_relative == participant_absolute) {
+        if (participant_relative === participant_absolute) {
             LITW.results.drawMark(participant_absolute, $.i18n('study-fl-results-graphic-legend-ra'));
         } else {
             LITW.results.drawMark(participant_relative, $.i18n('study-fl-results-graphic-legend-r'));

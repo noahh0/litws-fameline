@@ -1,0 +1,113 @@
+<div id="instructions-container-one">
+    <h3 id="practice-title" class="text-center bolded-blue" data-i18n="study-fl-practice-{{ task_type }}"></h3>
+    <div id="task_type" data-type="{{ task_type }}"></div>
+    <!-- Practice starting page -->
+    <div id="practice-start">
+        <p id="instructions-one" class="text-center" style="margin-top: 20px;" data-i18n="study-fl-practice-p1"></p>
+        <div style=" display: flex; justify-content: center; align-items: center;">
+            <button id="startButton" class="btn btn-primary" type="submit" onclick="startPractice()" style="margin-top: 120px;"   data-i18n="study-fl-practice-start"></button>
+        </div>
+    </div>
+    <!-- Practice instructions page -->
+    <div id="practice-instructions-look" style="display: none;">
+        <p id="instructions-two" class="text-center" data-i18n="study-fl-practice-p2-{{task_type}}"></p>
+    </div>
+    <div id="practice-instructions-respond" style="display: none;">
+        <p id="instructions-three" class="text-center" data-i18n="study-fl-practice-p3"></p>
+    </div>
+    <!-- Practice results page -->
+    <div id="results" style="display: none;">
+        <h4 id="results-one" class="text-center" data-i18n="study-fl-practice-p6"></h4>
+        <h5 id="results-two" class="text-center" data-i18n="study-fl-practice-result"></h5>
+        <h5 id="results-comment" class="text-center"></h5>
+    </div>
+</div>
+<!-- Practice results summary page -->
+<div id="practice-done" style="display: none;">
+    <h4 id="practice-done-two" class="text-center" data-i18n="study-fl-practice-done-p1"></h4>
+    <h6 id="practice-done-three" class="text-center" data-i18n="study-fl-practice-done-p2"></h6>
+</div>
+<!-- Practice trial content -->
+<div id="drawing-area" style="display:flex; justify-content: center; position: relative">
+    <i id="up_btn" class="bi bi-arrow-up-square display-3" style="visibility: hidden; margin-top: 10%"></i>
+    <canvas id='prompt_canvas'></canvas>
+    <i id="down_btn" class="bi bi-arrow-down-square display-3" style="visibility: hidden; margin-top: 10%"></i>
+    <img id="before_loading_response" class="mx-auto d-block" src="../img/ajax-loader.gif"
+         style="visibility: hidden; position: absolute; top: 50%">
+</div>
+<div id="button-container" style=" display: flex; justify-content: center;">
+    <button id="redoButton" class="btn btn-primary" style="visibility: hidden;  margin-top: 30px; margin-right: 15px;" onclick="rerunPractice()" data-i18n="study-fl-practice-btn-redo"></button>
+    <button id="doneButton" class="btn btn-primary" style="visibility: hidden; margin-top: 30px; margin-left: 15px;" onclick="doneResponding()" data-i18n="study-fl-btn-done"></button>
+    <button id="finishButton" class="btn btn-primary" style="visibility: hidden; margin-top: 30px; margin-left: 15px;" onclick="finishPractice()" data-i18n="study-fl-practice-btn-finish"></button>
+</div>
+
+<script type="text/javascript">
+
+    function setupWindow() {
+        let practice_trial = JSON.parse(JSON.stringify(LITW.study.params.practice_trial));
+        let canvas_width = (window.innerWidth < 700) ? 300 : 600;
+        let canvas_height = 300;
+        LITW.study.frameline.setup_canvas(practice_trial, "prompt_canvas", canvas_width, canvas_height,
+            "down_btn", "up_btn", "before_loading_response", false);
+    }
+
+    function startPractice() {
+        LITW.study.frameline.start_next_trial(prompt_show_time=5000,
+            prompt_callback= ()=>{
+                document.getElementById("practice-start").style.display = "none";
+                document.getElementById("practice-instructions-look").style.display = "block";
+            },
+            response_callback= ()=>{
+                document.getElementById("practice-instructions-look").style.display = "none";
+                document.getElementById("practice-instructions-respond").style.display = "block";
+                document.getElementById("doneButton").style.visibility = "visible";
+            }
+        );
+    }
+
+    function rerunPractice() {
+        document.getElementById("redoButton").style.visibility = "hidden";
+        document.getElementById("finishButton").style.visibility = "hidden";
+        document.getElementById("results").style.display = "none";
+        setupWindow();
+        startPractice();
+    }
+
+    function doneResponding() {
+        let trial_type = document.getElementById("task_type").dataset.type;
+        let trial_result = LITW.study.frameline.finish_current_trial(trial_type);
+        if (trial_result) {
+            LITW.study.frameline.draw_trial_result(trial_result);
+        } else {
+            console.error("FrameLine module could not finish the trial correctly.");
+        }
+        document.getElementById("up_btn").style.visibility = "hidden";
+        document.getElementById("down_btn").style.visibility = "hidden";
+        document.getElementById("practice-instructions-respond").style.visibility = "hidden";
+        document.getElementById("results-two").textContent = 
+            `${$.i18n('study-fl-practice-results')}: ${trial_result.error_perc}%`;
+        let result_comment = $.i18n('study-fl-practice-results-bad');
+        if(trial_result.error_perc <=15) {
+            result_comment = $.i18n('study-fl-practice-results-good');
+        }
+        document.getElementById("results-comment").textContent = result_comment;   
+        document.getElementById("results").style.display = "block";
+
+        document.getElementById("doneButton").style.visibility = "hidden";
+        document.getElementById("redoButton").style.visibility = "visible";
+        document.getElementById("finishButton").style.visibility = "visible";
+    }
+
+    function finishPractice() {
+        document.getElementById("practice-title").innerText = $.i18n("study-fl-practice-done");
+        document.getElementById("drawing-area").style.display = "none";
+        document.getElementById("results").style.display = "none";
+        document.getElementById("button-container").style.display = "none";
+        document.getElementById("btn-next-page").style.display = "block";
+        document.getElementById("practice-done").style.display = "block";
+    }
+
+    $(document).ready(() => {
+        setupWindow();
+    });
+</script>

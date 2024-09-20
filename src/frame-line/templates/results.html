@@ -18,23 +18,25 @@
       </button>
     </h2>
     <div id="collapseOne" class="accordion-collapse collapse show" data-bs-parent="#accordionExample">
-      <div class="accordion-body">
-          <div id="results-main" class="container center-content">
+      <div class="accordion-body p-0">
+          <div id="results-main" class="container center-content p-0">
               <div id="participant_relative" data-score="{{ data.relative }}"></div>
               <div id="participant_absolute" data-score="{{ data.absolute }}"></div>
-              <div id="graphic" class="h-100 d-flex align-items-center justify-content-center"></div>
+              <div id="graphic"></div>
           </div>
-          <h5 data-i18n="study-fl-results-details"></h5>
-          <h6>
-              <span data-i18n="study-fl-results-details-relative"></span>
-              <span>{{ data.relative }}</span>
-              <span>%</span>
-          </h6>
-          <h6>
-              <span data-i18n="study-fl-results-details-absolute"></span>
-              <span>{{ data.absolute }}</span>
-              <span>%</span>
-          </h6>
+          <div class="p-4">
+              <h5 data-i18n="study-fl-results-details"></h5>
+              <h6>
+                  <span data-i18n="study-fl-results-details-relative"></span>
+                  <span>{{ data.relative }}</span>
+                  <span>%</span>
+              </h6>
+              <h6>
+                  <span data-i18n="study-fl-results-details-absolute"></span>
+                  <span>{{ data.absolute }}</span>
+                  <span>%</span>
+              </h6>
+          </div>
       </div>
     </div>
   </div>

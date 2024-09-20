@@ -53,13 +53,13 @@
     let draw = function(divID) {
         const PAGE_CONTENT_WIDTH = document.getElementById(divID).offsetWidth;
         width = PAGE_CONTENT_WIDTH-(2*margin);
-        height = width/2;
+        height = width/3;
         margin = height/10;
 
         // Create the SVG container.
         svg = d3.select(`#${divID}`)
             .append("svg")
-            .attr("width", width+(2*margin))
+            .attr("width", width)
             .attr("height", height);
 
         // Add bar
@@ -67,7 +67,7 @@
         bar.append("rect")
             .attr('x', 0)
             .attr('y', 0)
-            .attr('width', width)
+            .attr('width', width-(2*margin))
             .attr('height', barHeight())
             .attr('stroke', 'black')
             .attr('fill', '#6A9341')
@@ -76,7 +76,7 @@
             .attr('y', barHeight()*2)
             .text($.i18n('study-fl-results-graphic-legend-1'))
         bar.append("text")
-            .attr('x', width)
+            .attr('x', width-(2*margin))
             .attr('y', barHeight()*2)
             .attr('text-anchor', 'end')
             .text($.i18n('study-fl-results-graphic-legend-2'))

@@ -78,15 +78,15 @@
     let shownHeader;
     $(document).ready(function() {
         LITW.results.drawGraphic('graphic');
-        let participant_relative = document.getElementById('participant_relative').dataset.score;
-        let participant_absolute = document.getElementById('participant_absolute').dataset.score;
+        let participant_relative = parseInt(document.getElementById('participant_relative').dataset.score);
+        let participant_absolute = parseInt(document.getElementById('participant_absolute').dataset.score);
 
         if (participant_relative === participant_absolute) {
             LITW.results.drawMark(participant_absolute, $.i18n('study-fl-results-graphic-legend-ra'));
         } else {
             LITW.results.drawMark(participant_relative, $.i18n('study-fl-results-graphic-legend-r'));
             LITW.results.drawMark(participant_absolute, $.i18n('study-fl-results-graphic-legend-a'));
-            if( participant_relative  < participant_absolute ) {
+            if( participant_relative < participant_absolute ) {
                 document.getElementById("results-header1").textContent =  
                     $.i18n('study-fl-results-header1-relative');
                 document.getElementById("results-header2").textContent =  

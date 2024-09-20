@@ -112,8 +112,8 @@ const set_box_to_random = (box_size) => {
     let min_val = box_size/2+buffer;
     let max_x = CANVAS.width-(box_size/2)-buffer;
     let max_y = CANVAS.height-(box_size/2)-buffer;
-    BOX_PLACING.X = Math.floor(Math.random() * (max_x - min_val) + min_val);
-    BOX_PLACING.Y = Math.floor(Math.random() * (max_y - min_val) + min_val);
+    BOX_PLACING.X = Math.floor(Math.random() * (max_x - min_val)) + min_val;
+    BOX_PLACING.Y = Math.floor(Math.random() * (max_y - min_val)) + min_val;
 }
 
 

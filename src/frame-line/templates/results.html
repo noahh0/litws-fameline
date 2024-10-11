@@ -24,19 +24,6 @@
               <div id="participant_absolute" data-score="{{ data.absolute }}"></div>
               <div id="graphic"></div>
           </div>
-          <div class="p-4">
-              <h5 data-i18n="study-fl-results-details"></h5>
-              <h6>
-                  <span data-i18n="study-fl-results-details-relative"></span>
-                  <span>{{ data.relative }}</span>
-                  <span>%</span>
-              </h6>
-              <h6>
-                  <span data-i18n="study-fl-results-details-absolute"></span>
-                  <span>{{ data.absolute }}</span>
-                  <span>%</span>
-              </h6>
-          </div>
       </div>
     </div>
   </div>
@@ -50,6 +37,21 @@
     <div id="panelsStayOpen-collapseTwo" class="accordion-collapse collapse">
       <div class="accordion-body">
           <div id="results-explain">
+              <div>
+                  <h6 data-i18n="study-fl-results-details"></h6>
+                  <ul>
+                      <li>
+                          <span data-i18n="study-fl-results-details-relative"></span>
+                          <span>{{ data.relative }}</span>
+                          <span>%</span>
+                      </li>
+                      <li>
+                          <span data-i18n="study-fl-results-details-absolute"></span>
+                          <span>{{ data.absolute }}</span>
+                          <span>%</span>
+                      </li>
+                  </ul>
+              </div>
               <h6 data-i18n="study-fl-results-explanation-analytic"></h6>
               <h6 data-i18n="study-fl-results-explanation-holistic"></h6>
           </div>

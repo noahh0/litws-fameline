@@ -1,13 +1,5 @@
 <div id="instructions-container-one">
-    <h3 id="practice-title" class="text-center bolded-blue" data-i18n="study-fl-practice-{{ task_type }}"></h3>
     <div id="task_type" data-type="{{ task_type }}"></div>
-    <!-- Practice starting page -->
-    <div id="practice-start">
-        <p id="instructions-one" class="text-center" style="margin-top: 20px;" data-i18n="study-fl-practice-p1"></p>
-        <div style=" display: flex; justify-content: center; align-items: center;">
-            <button id="startButton" class="btn btn-primary" type="submit" onclick="startPractice()" style="margin-top: 120px;"   data-i18n="study-fl-practice-start"></button>
-        </div>
-    </div>
     <!-- Practice instructions page -->
     <div id="practice-instructions-look" style="display: none;">
         <p id="instructions-two" class="text-center" data-i18n="study-fl-practice-p2-{{task_type}}"></p>
@@ -21,11 +13,6 @@
         <h5 id="results-two" class="text-center" data-i18n="study-fl-practice-result"></h5>
         <h5 id="results-comment" class="text-center"></h5>
     </div>
-</div>
-<!-- Practice results summary page -->
-<div id="practice-done" style="display: none;">
-    <h4 id="practice-done-two" class="text-center" data-i18n="study-fl-practice-done-p1"></h4>
-    <h6 id="practice-done-three" class="text-center" data-i18n="study-fl-practice-done-p2"></h6>
 </div>
 <!-- Practice trial content -->
 <div id="drawing-area" style="display:flex; justify-content: center; position: relative">
@@ -49,15 +36,15 @@
         let canvas_height = 300;
         LITW.study.frameline.setup_canvas(practice_trial, "prompt_canvas", canvas_width, canvas_height,
             "down_btn", "up_btn", "before_loading_response", false);
+        startPractice();
     }
 
     function startPractice() {
-        LITW.study.frameline.start_next_trial(prompt_show_time=5000,
-            prompt_callback= ()=>{
-                document.getElementById("practice-start").style.display = "none";
+        LITW.study.frameline.start_next_trial(5000,
+            ()=>{
                 document.getElementById("practice-instructions-look").style.display = "block";
             },
-            response_callback= ()=>{
+            ()=>{
                 document.getElementById("practice-instructions-look").style.display = "none";
                 document.getElementById("practice-instructions-respond").style.display = "block";
                 document.getElementById("doneButton").style.visibility = "visible";
@@ -70,7 +57,6 @@
         document.getElementById("finishButton").style.visibility = "hidden";
         document.getElementById("results").style.display = "none";
         setupWindow();
-        startPractice();
     }
 
     function doneResponding() {
@@ -99,12 +85,7 @@
     }
 
     function finishPractice() {
-        document.getElementById("practice-title").innerText = $.i18n("study-fl-practice-done");
-        document.getElementById("drawing-area").style.display = "none";
-        document.getElementById("results").style.display = "none";
-        document.getElementById("button-container").style.display = "none";
-        document.getElementById("btn-next-page").style.display = "block";
-        document.getElementById("practice-done").style.display = "block";
+        document.getElementById("btn-next-page").click();
     }
 
     $(document).ready(() => {

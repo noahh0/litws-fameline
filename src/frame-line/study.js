@@ -83,7 +83,7 @@ module.exports = (function(exports) {
 			{promptBoxSize:	159.0	, promptLineLength:	136.7	, responseBoxSize:	145.0	},
 			{promptBoxSize:	170.0	, promptLineLength:	151.3	, responseBoxSize:	121.0	}
 		],
-		task_qtd: 2,
+		task_qtd: 4,
 		practice_trial: [{promptBoxSize: 150, promptLineLength: 50, responseBoxSize: 100}],
 		results: {
 			absolute: [],

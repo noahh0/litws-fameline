@@ -10,6 +10,14 @@
  * the code, contact us at tech@labinthewild.org
  *************************************************************/
 
+//TODO: This is probably a bad idea, as it makes it harder to add new types of SLIDES.
+    // We need a plugin system if we identify the need to add slides.
+const SLIDE_TYPE = {
+    version: '1.0',
+    SHOW_SLIDE: 'SHOW_SLIDE',
+    CALL_FUNCTION: 'CALL_FUNCTION'
+}
+
 const STUDY_STATUS_OPTIONS = {
     NEW: 'NEW',
     CONFIGURED: 'CONFIGURED',
@@ -18,95 +26,149 @@ const STUDY_STATUS_OPTIONS = {
     FINISHED: 'FINISHED',
     ERROR: 'ERROR'
 }
+
 const SLIDE_RUNTIME = {
     start: 0,
     duration: 0,
     data: {}
 }
 
-let timeline = {
-    current_pos: -1,
-    current_slide: null,
-    slides: [],
-    status: STUDY_STATUS_OPTIONS.NEW
-}
+const RUNTIME = {
+    timeline: {
+        current_pos: -1,
+        current_slide: null,
+        slides: [],
+        status: STUDY_STATUS_OPTIONS.NEW
+    },
+    lang_to_load: {
+        'en': './i18n/en.json'
+    }
+};
 
 let set_slides = (slides_config = []) => {
-    if(timeline.status === STUDY_STATUS_OPTIONS.NEW) {
+    if(RUNTIME.timeline.status === STUDY_STATUS_OPTIONS.NEW && slides_config.length > 0) {
         //TODO check slides integrity
-        timeline.slides = slides_config;
+        RUNTIME.timeline.slides = slides_config;
         return true;
     }
     return false;
 }
 
-function start_study() {
-    console.log("STARTED!");
-    timeline.status = STUDY_STATUS_OPTIONS.RUNNING;
+let configure_study = (available_lang = {}, slides_config = []) => {
+    document.getElementById('btn-next-page').onclick = () => {finish_slide()};
+    let good_slides = set_slides(slides_config);
+    if (good_slides) {
+        if(Object.keys(available_lang).length > 0){
+            set_lang_to_load(available_lang);
+            LITW.data.initialize();
+            //PRELOAD
+            LITW.engage.getStudiesRecommendation((studies_list) => {});
+            return true;
+        }
+    }
+    return false;
 }
 
-function end_study() {
-    console.log("FINISHED!");
-    timeline.status = STUDY_STATUS_OPTIONS.FINISHED;
+let start_study = () => {
+    if(RUNTIME.lang_to_load) {
+        $.i18n().load(RUNTIME.lang_to_load).done(() => {
+            $('head').i18n();
+            $('body').i18n();
+            console.log("STUDY STARTED!", Date.now());
+            RUNTIME.timeline.status = STUDY_STATUS_OPTIONS.RUNNING;
+            advance_study();
+        });
+    } else {
+        console.error("Could not load the study language based on configuration.");
+    }
+}
+
+let end_study = () => {
+    console.log("STUDY FINISHED!", Date.now());
+    RUNTIME.timeline.status = STUDY_STATUS_OPTIONS.FINISHED;
+}
+
+let show_slide = (slide) => {
+    //TODO Needs to be done via jQuery for now because the $.i18n library!
+    let display_element = $('#' + slide.display_element_id);
+    if (display_element.length !== 1) {
+        console.error(`Could not find DIV_ID where to show slide "${slide.name}."`);
+        return false;
+    } else {
+        let template_data = {};
+        if (slide.template_data) {
+            if (typeof (slide.template_data) === "function") {
+                template_data = slide.template_data();
+            } else {
+                template_data = slide.template_data;
+            }
+        }
+
+        display_element.html(slide.template(template_data));
+        display_element.i18n();
+        display_element.show();
+        return true;
+    }
 }
 
 let advance_study = () => {
-    if(timeline.status === STUDY_STATUS_OPTIONS.NEW) {
+    let advance_result = true;
+    if(RUNTIME.timeline.status === STUDY_STATUS_OPTIONS.NEW) {
         start_study();
     }
-    if(timeline.current_pos >= timeline.slides.length) {
+    if(RUNTIME.timeline.current_pos >= RUNTIME.timeline.slides.length) {
         end_study();
-        return false;
+        advance_result = false;
     }
 
-    timeline.current_slide = timeline.slides[++timeline.current_pos];
-    let slide = timeline.current_slide;
-    //TODO Needs to be done via jQuery for now because the $.i18n library!
-    let display_element = $('#' + slide.display_element_id);
+    RUNTIME.timeline.current_slide = RUNTIME.timeline.slides[++RUNTIME.timeline.current_pos];
+    let slide = RUNTIME.timeline.current_slide;
+    slide.runtime = JSON.parse(JSON.stringify(SLIDE_RUNTIME));
+    slide.runtime.start = Date.now();
+
     if('setup' in slide && typeof(slide.setup) === "function") {
         slide.setup();
     }
 
-    let template_data = {};
-    if(slide.template_data) {
-        if(typeof(slide.template_data) === "function"){
-            template_data = slide.template_data();
-        } else {
-            template_data = slide.template_data;
-        }
-    }
-
-    display_element.html(slide.template(template_data));
-    display_element.i18n();
-
-    LITW.utils.showNextButton(function() {
-        finish_slide();
-    }, {submitKeys: []});
-
-    //TODO Refactor
-    if(slide.display_next_button) {
+    if('display_next_button' in slide && !slide.display_next_button) {
         document.getElementById('btn-next-page').style.display = 'none';
+    } else {
+        document.getElementById('btn-next-page').style.display = 'block';
     }
-    LITW.utils.showSlide(slide.display_element_id);
+
+    if (slide.type && slide.type === SLIDE_TYPE.SHOW_SLIDE) {
+        advance_result = show_slide(slide);
+    }
+
     LITW.tracking.recordSlideVisit(slide.name);
-    return true;
+    return advance_result;
 };
 
-let finish_slide = (slide_data = null) => {
-    let slide = timeline.current_slide;
-    document.getElementById(slide.display_element_id).innerHTML = '';
-    slide.runtime = JSON.parse(JSON.stringify(SLIDE_RUNTIME));
-    let time_now = new Date();
-    slide.runtime.duration = time_now - slide.runtime.start;
-    //TODO check if data is a JSON
-    if(slide_data) {
-        slide.runtime.data = JSON.parse(JSON.stringify(slide_data));
-    }
+//TODO Do we need a place to add the data produced by a SLIDE in RUNTIME?
+let finish_slide = () => {
+    document.getElementById('btn-next-page').style.display = 'none';
+    let slide = RUNTIME.timeline.current_slide;
     if(slide.finish) {
         slide.finish();
     }
+
+    document.getElementById(slide.display_element_id).innerHTML = '';
+    slide.runtime.duration = Date.now() - slide.runtime.start;
     LITW.tracking.recordSlideTime(slide.name, slide.runtime.duration);
+    console.log('FINISHED SLIDE', slide);
+    advance_study();
 }
 
-export {set_slides, advance_study};
+let set_lang_to_load = (available_langs) => {
+    //TODO needs to be a little smarter than this when serving specific language versions, like pt-BR!
+    $.i18n().locale = LITW.locale.getLocale();
+    let language = $.i18n().locale.substring(0, 2);
+    if (language in available_langs) {
+        RUNTIME.lang_to_load[language] = available_langs[language];
+    } else {
+        RUNTIME.lang_to_load = null;
+    }
+}
 
+
+export {configure_study, start_study, SLIDE_TYPE};

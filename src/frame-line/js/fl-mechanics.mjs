@@ -4,6 +4,7 @@ let BTN_MINUS = null;
 let WAIT_ANIMATION = null;
 let RANDOM_POSITION = true;
 let BOX_PLACING = {X:0 ,Y:0};
+let RESPONSE = false;
 
 // TODO: Create object for this?
 let TRIALS = [];
@@ -35,6 +36,7 @@ const setup_canvas = (trials, canvas_html_id, canvas_width, canvas_height, butto
     BTN_PLUS = document.getElementById(button_plus_id);
     WAIT_ANIMATION = document.getElementById(wait_element_id);
     RANDOM_POSITION = random_response_positions;
+    RESPONSE = false;
 
     let increment = 0;
     let interval = null;
@@ -44,14 +46,16 @@ const setup_canvas = (trials, canvas_html_id, canvas_width, canvas_height, butto
                 event.preventDefault();
                 interval = setInterval(
                     () => {
-                        increase_line_length(++increment)
+                        if (RESPONSE) 
+                            increase_line_length(++increment)
                     },
                     100);
             } else if (event.code === 'ArrowUp') {
                 event.preventDefault();
                 interval = setInterval(
                     () => {
-                        decrease_line_length(++increment)
+                        if (RESPONSE) 
+                            decrease_line_length(++increment)
                     },
                     100);
             }
@@ -162,6 +166,7 @@ const start_next_trial = (prompt_show_time=5000, prompt_callback=()=>{}, respons
         current_box_size = current_trial.promptBoxSize;
         redraw_canvas(current_box_size, current_line_length);
         setTimeout( () => {
+            RESPONSE = false;
             CANVAS.style.visibility = 'hidden';
             BTN_PLUS.style.visibility = 'hidden';
             BTN_MINUS.style.visibility = 'hidden';
@@ -169,6 +174,7 @@ const start_next_trial = (prompt_show_time=5000, prompt_callback=()=>{}, respons
             setTimeout(()=>{
                 response_callback();
                 if(RANDOM_POSITION) set_box_to_random(current_box_size);
+                RESPONSE = true;
                 CANVAS.style.visibility = 'visible';
                 BTN_PLUS.style.visibility = 'visible';
                 BTN_MINUS.style.visibility = 'visible';
@@ -187,6 +193,7 @@ const start_next_trial = (prompt_show_time=5000, prompt_callback=()=>{}, respons
 }
 
 const finish_current_trial = (task_type) => {
+    RESPONSE = false;
     if(current_trial_count <= TRIALS.length) {
         TRIALS[current_trial_count-1].response = current_line_length;
         current_line_length = 0;

@@ -173,7 +173,6 @@ const start_next_trial = (prompt_show_time=5000, prompt_callback=()=>{}, respons
             WAIT_ANIMATION.style.visibility = 'visible';
             setTimeout(()=>{
                 response_callback();
-                if(RANDOM_POSITION) set_box_to_random(current_box_size);
                 RESPONSE = true;
                 CANVAS.style.visibility = 'visible';
                 BTN_PLUS.style.visibility = 'visible';
@@ -181,6 +180,7 @@ const start_next_trial = (prompt_show_time=5000, prompt_callback=()=>{}, respons
                 WAIT_ANIMATION.style.visibility = 'hidden';
 
                 current_box_size = current_trial.responseBoxSize;
+                if(RANDOM_POSITION) set_box_to_random(current_box_size);
                 current_line_length = 0;
                 redraw_canvas(current_box_size, current_line_length);
             }, prompt_show_time)

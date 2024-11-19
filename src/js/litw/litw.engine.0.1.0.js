@@ -54,19 +54,46 @@ let set_slides = (slides_config = []) => {
     return false;
 }
 
-let configure_study = (available_lang = {}, slides_config = []) => {
-    document.getElementById('btn-next-page').onclick = () => {finish_slide()};
-    let good_slides = set_slides(slides_config);
-    if (good_slides) {
-        if(Object.keys(available_lang).length > 0){
-            set_lang_to_load(available_lang);
+/**
+ * Preloads images and json files that cannot wait for loading with the slide.
+ * ALERT: This is non-blocking (as the human reading first slides should be enough time to preLoad everything).
+ * CHECK: https://developer.mozilla.org/en-US/docs/Web/HTML/Attributes/rel/preload
+ * @param preload list of paths to resources. If file NOT '.json' it will be loaded as 'image'
+ * @return {number} the number of preload requested resources.
+ */
+function preload_resources(preload) {
+    LITW.engage.getStudiesRecommendation((studies_list) => {});
+    let count = 0;
+    for(let resource of preload) {
+        let preloadLink = document.createElement("link");
+        preloadLink.href = resource;
+        preloadLink.rel = "preload";
+        preloadLink.as = "image";
+        if(resource.toLocaleLowerCase().includes('.json')) {
+            preloadLink.as = "fetch";
+        }
+        document.head.appendChild(preloadLink);
+        count += 1;
+    }
+    return count;
+}
+
+let configure_study = (
+    preload = [],
+    available_lang = {'default': 'en', 'en': './i18n/en.json'},
+    slides_config = [],
+) => {
+    document.getElementById('btn-next-page').onclick = () => { finish_slide() };
+    let language_files = set_lang_to_load(available_lang);
+    if (language_files) {
+        let preloaded = preload_resources(preload);
+        let good_slides = set_slides(slides_config);
+        if (good_slides) {
             LITW.data.initialize();
-            //PRELOAD
-            LITW.engage.getStudiesRecommendation((studies_list) => {});
             return true;
         }
+        return false;
     }
-    return false;
 }
 
 let start_study = () => {
@@ -161,12 +188,21 @@ let finish_slide = () => {
 
 let set_lang_to_load = (available_langs) => {
     //TODO needs to be a little smarter than this when serving specific language versions, like pt-BR!
-    $.i18n().locale = LITW.locale.getLocale();
-    let language = $.i18n().locale.substring(0, 2);
+    let language = LITW.locale.getLocale().substring(0, 2);
+    $.i18n().locale = language;
     if (language in available_langs) {
         RUNTIME.lang_to_load[language] = available_langs[language];
+        return available_langs[language];
+    } else if('default' in available_langs) {
+        let default_lang = available_langs['default'];
+        console.log(`Loading default language: ${default_lang}`);
+        RUNTIME.lang_to_load[default_lang] = available_langs[default_lang];
+        $.i18n().locale = default_lang;
+        return available_langs[default_lang];
     } else {
+        console.error('Could not load find a suitable language configuration.');
         RUNTIME.lang_to_load = null;
+        return null;
     }
 }
 

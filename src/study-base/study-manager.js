@@ -58,6 +58,7 @@ module.exports = (function(exports) {
 	let timeline = [];
 	let config = {
 		languages: {
+			'default': 'en',
 			'en': './i18n/en.json?v=1.0',
 			'pt': './i18n/pt-br.json?v=1.0',
 		},
@@ -122,7 +123,7 @@ module.exports = (function(exports) {
 				name: "comments",
 				type: LITW.engine.SLIDE_TYPE.SHOW_SLIDE,
 				display_element_id: "comments",
-				display_next_button: false,
+				display_next_button: true,
 				template: commentsTemplate,
 				finish: function(){
 					let comments = $('#commentsForm').alpaca().getValue();
@@ -156,7 +157,7 @@ module.exports = (function(exports) {
 		config.slides.QUESTIONNAIRE_2.template_data = () => {
 			return getQuest2Data('quest2', './img/cat-computer.png', 100);
 		}
-
+		timeline.push(config.slides.QUESTIONNAIRE_2);
 		timeline.push(config.slides.COMMENTS);
 		timeline.push(config.slides.RESULTS);
 		return timeline;
@@ -246,6 +247,7 @@ module.exports = (function(exports) {
 		LITW.utils.showSlide("results");
 	}
 
+	//TODO Move to LITW.DATA library
 	function readSummaryData() {
 		$.getJSON( "summary.json", function( data ) {
 			//TODO: 'data' contains the produced summary form DB data
@@ -257,7 +259,7 @@ module.exports = (function(exports) {
 
 
 	function bootstrap() {
-		let good_config = LITW.engine.configure_study(config.languages, configureTimeline());
+		let good_config = LITW.engine.configure_study(config.preLoad, config.languages, configureTimeline());
 		if (good_config){
 			LITW.engine.start_study();
 		} else {

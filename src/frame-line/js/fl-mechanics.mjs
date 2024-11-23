@@ -138,7 +138,7 @@ const draw_trial_result = (finished_trial) => {
     ctx.stroke();
     //RESPONSE
     ctx.strokeRect((boxResponseCenter-(boxResponseSize/2)), BOX_PLACING.Y, boxResponseSize, boxResponseSize);
-    ctx.strokeStyle = finished_trial.error_perc <= 15 ? "#00fe11" : "#ff0000";
+    ctx.strokeStyle = finished_trial.error_perc <= 10 ? "#00fe11" : "#ff0000";
     ctx.lineWidth = 3.;
     ctx.beginPath();
     ctx.moveTo(boxResponseCenter, BOX_PLACING.Y);

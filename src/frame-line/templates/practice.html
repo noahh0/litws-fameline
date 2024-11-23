@@ -73,7 +73,7 @@
         document.getElementById("results-two").textContent = 
             `${$.i18n('study-fl-practice-results')}: ${trial_result.error_perc}%`;
         let result_comment = $.i18n('study-fl-practice-results-bad');
-        if(trial_result.error_perc <=15) {
+        if(trial_result.error_perc <=10) {
             result_comment = $.i18n('study-fl-practice-results-good');
         }
         document.getElementById("results-comment").textContent = result_comment;   

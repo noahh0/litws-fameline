@@ -13,16 +13,16 @@
   // We need to implement a check for multiple points
   let _isTooClose = function (mark1_x, mark2_x) {
     let dist = Math.abs(mark1_x - mark2_x);
-    return dist < 2.8 * barHeight();
+    return dist < 3 * barHeight();
   };
 
   let _calculateMarkX = function (score) {
-    return (width / MAX_SCORE) * score + margin;
+    return ((width - 2 * margin) / MAX_SCORE) * score + margin;
   };
   let _addMark = function (context) {
-    context.moveTo(barHeight() / 2, barHeight());
-    context.lineTo(0, 0);
-    context.lineTo(barHeight(), 0);
+    context.moveTo(0, barHeight());
+    context.lineTo(-barHeight() / 2, 0);
+    context.lineTo(barHeight() / 2, 0);
     context.closePath();
     return context;
   };
@@ -44,7 +44,7 @@
       .attr("d", _addMark(d3.path()));
     mark
       .append("text")
-      .attr("x", barHeight() / 2)
+      .attr("x", 0)
       .attr("y", tooClose ? -barHeight() : -(barHeight() / 6))
       .attr("text-anchor", "middle")
       .attr("font-size", "1.5em")
@@ -56,9 +56,9 @@
 
   let draw = function (divID) {
     const PAGE_CONTENT_WIDTH = document.getElementById(divID).offsetWidth;
-    width = PAGE_CONTENT_WIDTH - 2 * margin;
+    width = PAGE_CONTENT_WIDTH;
     height = width / 3;
-    margin = height / 10;
+    margin = height / 6;
 
     // Create the SVG container.
     svg = d3

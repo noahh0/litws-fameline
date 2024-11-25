@@ -7,7 +7,7 @@
     "message-documentation": "qqq"
   },
   "litw-study-title": "Is your perception more Eastern or Western?",
-  "litw-study-description-p1":"Test how your cultural background influences the way you perceive information and compare yourself to others!",
+  "litw-study-description-p1": "Test how your cultural background influences the way you perceive information and compare yourself to others!",
   "litw-study-description-p2": "This study takes 8-10 minutes.",
   "litw-study-description-p3": "Click the button below to get started!",
   "litw-study-intro-button": "Begin Study",
@@ -119,6 +119,10 @@
   "study-fl-practice-p7-relative": "Remember, draw a line that has the same RELATIVE length to the frame size as in the first one.",
   "study-fl-practice-p7-absolute": "Remember, draw a line that has the same ABSOLUTE length as the first one, regardless of the size of the frame.",
   "study-fl-practice-p8": "Are you ready for another practice trial? If so, please press XX to start.",
+  "study-fl-pretrial-instructions-absolute": "Here is your first frame.\nTry drawing the line the same size regardless of the size of the frame.",
+  "study-fl-pretrial-instructions-relative": "Here is your first frame.\nTry drawing the line the same size relative to the size of the frame.",
+  "task-type-absolute": "Absolute",
+  "task-type-relative": "Relative",
   "litw-study-progress": "Progress",
   "study-fl-results-header1-absolute": "Your visual perception is more Westerner than Easterner!",
   "study-fl-results-header1-relative": "Your visual perception is more Easterner than Westerner!",
@@ -150,5 +154,4 @@
   "litw-more-study1-description": "Find out how well AI can understand your speech by reading out loud a few words and sentences! The test takes around 7 minutes.",
   "litw-more-study2-slogan": "Learn to be a better writer!",
   "litw-more-study2-description": "Can you identify the writing strategies of experts? Improve your reading and writing while comparing yourself to experts in this 10 minute study!"
-
 }

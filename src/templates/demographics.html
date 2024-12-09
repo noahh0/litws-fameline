@@ -102,6 +102,11 @@
                                 "demographics-race-other": {
                                     "title": $.i18n('litw-demographics-race-other'),
                                     "required": false
+                                },
+                                "demographics-allergy": {
+                                    "title": $.i18n('litw-demographics-pet-allergy'),
+                                    "enum": ['yes', 'no', 'unsure'],
+                                    "required": true
                                 }
                             }
                         },
@@ -211,6 +216,16 @@
                                     //"fieldClass": "row",
                                     "showMessages": false,
                                     "hidden": true
+                                },
+                                "demographics-allergy": {
+                                    "type": 'select',
+                                    "optionLabels": [$.i18n('litw-demographics-yes'), $.i18n('litw-demographics-no'),
+                                        $.i18n('litw-demographics-unsure')],
+                                    "sort": false,
+                                    "noneLabel": "--",
+                                    "removeDefaultNone": false,
+                                    "showMessages": false,
+                                    "default": "--"
                                 }
                             }
                         },

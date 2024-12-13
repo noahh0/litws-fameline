@@ -28,10 +28,10 @@ LITW.engine = litw_engine;
 import progressHTML from "../templates/progress.html";
 Handlebars.registerPartial('prog', Handlebars.compile(progressHTML));
 import introHTML from "../templates/introduction.html";
-import irbHTML from "../templates/irb.html";
 import irb_LITW_HTML from "../templates/irb2-litw.html";
-import questHTML from "../templates/questionnaire.html";
 import demographicsHTML from "../templates/demographics.html";
+import instructionsHTML from "./templates/instructions.html";
+import questHTML from "../templates/questionnaire.html";
 import loadingHTML from "../templates/loading.html";
 import resultsHTML from "../templates/results.html";
 import resultsFooterHTML from "../templates/results-footer.html";
@@ -39,16 +39,15 @@ import commentsHTML from "../templates/comments.html";
 
 //CONVERT HTML INTO TEMPLATES
 let introTemplate = Handlebars.compile(introHTML);
-let irbTemplate = Handlebars.compile(irbHTML);
 let irbLITWTemplate = Handlebars.compile(irb_LITW_HTML);
-let questTemplate = Handlebars.compile(questHTML);
 let demographicsTemplate = Handlebars.compile(demographicsHTML);
+let instructionsTemplate = Handlebars.compile(instructionsHTML);
+let questTemplate = Handlebars.compile(questHTML);
 let loadingTemplate = Handlebars.compile(loadingHTML);
 let resultsTemplate = Handlebars.compile(resultsHTML);
 let resultsFooterTemplate = Handlebars.compile(resultsFooterHTML);
 let commentsTemplate = Handlebars.compile(commentsHTML);
 
-//TODO: document "params.study_id" when updating the docs/7-ManageData!!!
 module.exports = (function(exports) {
 	const study_times= {
 			SHORT: 5,
@@ -73,13 +72,6 @@ module.exports = (function(exports) {
 				template: introTemplate,
 				display_next_button: false,
 			},
-			INFORMED_CONSENT: {
-				name: "informed_consent",
-				type: LITW.engine.SLIDE_TYPE.SHOW_SLIDE,
-				display_element_id: "irb",
-				template: irbTemplate,
-				display_next_button: false,
-			},
 			INFORMED_CONSENT_LITW: {
 				name: "informed_consent",
 				type: LITW.engine.SLIDE_TYPE.SHOW_SLIDE,
@@ -89,6 +81,13 @@ module.exports = (function(exports) {
 					time: study_times.SHORT,
 				},
 				display_next_button: false,
+			},
+			INSTRUCTIONS: {
+				name: "instructions",
+				type: LITW.engine.SLIDE_TYPE.SHOW_SLIDE,
+				display_element_id: "instructions",
+				template: instructionsTemplate,
+				display_next_button: true,
 			},
 			QUESTIONNAIRE_1: {
 				name: "quest1",
@@ -148,8 +147,8 @@ module.exports = (function(exports) {
 		timeline.push(config.slides.INTRODUCTION);
 		timeline.push(config.slides.INFORMED_CONSENT_LITW);
 		timeline.push(config.slides.DEMOGRAPHICS);
+		timeline.push(config.slides.INSTRUCTIONS);
 
-		// MUST BE a function because we don't have $.i18() available at configuration time! SHOULD WE?
 		config.slides.QUESTIONNAIRE_1.template_data = () => {
 			return getQuest1Data('quest1', 50)
 		};

@@ -31,17 +31,22 @@ import introHTML from "../templates/introduction.html";
 import irb_LITW_HTML from "../templates/irb2-litw.html";
 import demographicsHTML from "../templates/demographics.html";
 import instructionsHTML from "./templates/instructions.html";
+import practiceHTML from "./templates/practice.html";
+import preTrialBreakHTML from "./templates/pre-trial-break.html";
 import questHTML from "../templates/questionnaire.html";
 import loadingHTML from "../templates/loading.html";
 import resultsHTML from "../templates/results.html";
 import resultsFooterHTML from "../templates/results-footer.html";
 import commentsHTML from "../templates/comments.html";
+import { template } from "lodash";
 
 //CONVERT HTML INTO TEMPLATES
 let introTemplate = Handlebars.compile(introHTML);
 let irbLITWTemplate = Handlebars.compile(irb_LITW_HTML);
 let demographicsTemplate = Handlebars.compile(demographicsHTML);
 let instructionsTemplate = Handlebars.compile(instructionsHTML);
+let practiceTemplate = Handlebars.compile(practiceHTML);
+let preTrialBreakTemplate = Handlebars.compile(preTrialBreakHTML);
 let questTemplate = Handlebars.compile(questHTML);
 let loadingTemplate = Handlebars.compile(loadingHTML);
 let resultsTemplate = Handlebars.compile(resultsHTML);
@@ -89,20 +94,6 @@ module.exports = (function(exports) {
 				template: instructionsTemplate,
 				display_next_button: true,
 			},
-			QUESTIONNAIRE_1: {
-				name: "quest1",
-				type: LITW.engine.SLIDE_TYPE.SHOW_SLIDE,
-				display_element_id: "quest1",
-				template: questTemplate,
-				display_next_button: false,
-			},
-			QUESTIONNAIRE_2: {
-				name: "quest2",
-				type: LITW.engine.SLIDE_TYPE.SHOW_SLIDE,
-				display_element_id: "quest2",
-				template: questTemplate,
-				display_next_button: false,
-			},
 			DEMOGRAPHICS: {
 				name: "demographics",
 				type: LITW.engine.SLIDE_TYPE.SHOW_SLIDE,
@@ -117,6 +108,34 @@ module.exports = (function(exports) {
 					LITW.data.addToLocal(this.template_data.local_data_id, dem_data);
 					LITW.data.submitDemographics(dem_data);
 				}
+			},
+			PRACTICE: {
+				name: "practice",
+				type: LITW.engine.SLIDE_TYPE.SHOW_SLIDE,
+				display_element_id: "practice",
+				display_next_button: false,
+				template: practiceTemplate,
+			},
+			PRE_TRIAL_BREAK: {
+				name: "pre_trial_break",
+				type: LITW.engine.SLIDE_TYPE.SHOW_SLIDE,
+				display_element_id: "pre-trial-break",
+				display_next_button: true,
+				template: preTrialBreakTemplate,
+			},
+			QUESTIONNAIRE_1: {
+				name: "quest1",
+				type: LITW.engine.SLIDE_TYPE.SHOW_SLIDE,
+				display_element_id: "quest1",
+				template: questTemplate,
+				display_next_button: false,
+			},
+			QUESTIONNAIRE_2: {
+				name: "quest2",
+				type: LITW.engine.SLIDE_TYPE.SHOW_SLIDE,
+				display_element_id: "quest2",
+				template: questTemplate,
+				display_next_button: false,
 			},
 			COMMENTS: {
 				name: "comments",
@@ -148,6 +167,8 @@ module.exports = (function(exports) {
 		timeline.push(config.slides.INFORMED_CONSENT_LITW);
 		timeline.push(config.slides.DEMOGRAPHICS);
 		timeline.push(config.slides.INSTRUCTIONS);
+		timeline.push(config.slides.PRACTICE);
+		timeline.push(config.slides.PRE_TRIAL_BREAK);
 
 		config.slides.QUESTIONNAIRE_1.template_data = () => {
 			return getQuest1Data('quest1', 50)

@@ -47,51 +47,56 @@ function initTrial() {
 }
 
 function incrementNiceCatCount() {
-  let counter = document.getElementById("counter");
-  counter.textContent = progress + 1 + "/10";
   niceCatCount++;
   console.log("mean:" + meanCatCount);
   console.log("nice:" + niceCatCount);
-  console.log("progress:" + progress);
-  let container = document.getElementById("cat-container");
-  let niceCat = document.getElementById("cat1");
-  let meanCat = document.getElementById("cat2");
-  container.removeChild(niceCat);
-  container.removeChild(meanCat);
-  chooseRandomCatImages();
+  console.log("progress:" + (progress + 1));
+  if (checkProgress()) {
+    let counter = document.getElementById("counter");
+    counter.textContent = Math.min(progress + 1, 10) + "/10";
+    let container = document.getElementById("cat-container");
+    let niceCat = document.getElementById("cat1");
+    let meanCat = document.getElementById("cat2");
+    container.removeChild(niceCat);
+    container.removeChild(meanCat);
+    chooseRandomCatImages();
+  }
 }
 
 function incrementMeanCatCount() {
-  let counter = document.getElementById("counter");
-  counter.textContent = progress + 1 + "/10";
   meanCatCount++;
   console.log("mean:" + meanCatCount);
-  console.log("nice:" +niceCatCount);
-  console.log("progress:" + progress);
-  let container = document.getElementById("cat-container");
-  let niceCat = document.getElementById("cat1");
-  let meanCat = document.getElementById("cat2");
-  container.removeChild(niceCat);
-  container.removeChild(meanCat);
-  chooseRandomCatImages();
+  console.log("nice:" + niceCatCount);
+  console.log("progress:" + (progress + 1));
+  if (checkProgress()) {
+    let counter = document.getElementById("counter");
+    counter.textContent = Math.min(progress + 1, 10) + "/10";
+    let container = document.getElementById("cat-container");
+    let niceCat = document.getElementById("cat1");
+    let meanCat = document.getElementById("cat2");
+    container.removeChild(niceCat);
+    container.removeChild(meanCat);
+    chooseRandomCatImages();
+  }
 }
 
 function checkProgress() {
   progress++;
   if (progress >= 10) {
-    let niceCat = document.getElementById("cat1");
-    let meanCat = document.getElementById("cat2");
+    const niceCat = document.getElementById("cat1");
+    const meanCat = document.getElementById("cat2");
     document.onkeydown = null;
     niceCat.removeEventListener("click", incrementNiceCatCount);
     meanCat.removeEventListener("click", incrementMeanCatCount);
     viewNextButton();
+    return false;
   }
+  return true;
 }
 
 function chooseRandomCatImages() {
   setNiceCatImage();
   setMeanCatImage();
-  checkProgress();
 }
 
 function selectRandomNiceCat() {

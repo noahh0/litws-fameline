@@ -4,13 +4,13 @@ let progress = 0;
 let niceCatIsChosen = false;
 let meanCatIsChosen = false;
 let countHasIncreased = false;
-let niceCatsArray = ["img/stim-img/cat1.jpg", "img/stim-img/cat4.jpg", "img/stim-img/cat6.jpg", "img/stim-img/cat8.jpg", "img/stim-img/cat10.jpg"];
-let meanCatsArray = ["img/stim-img/cat2.jpg", "img/stim-img/cat3.jpg", "img/stim-img/cat5.jpg", "img/stim-img/cat7.jpg", "img/stim-img/cat9.jpg"];
+let niceCatsArray = ["img/cat1.jpg", "img/cat4.jpg", "img/cat6.jpg", "img/cat8.jpg", "img/cat10.jpg"];
+let meanCatsArray = ["img/cat2.jpg", "img/cat3.jpg", "img/cat5.jpg", "img/cat7.jpg", "img/cat9.jpg"];
 
 function initPractice() {
   progress = 9;
-  let niceCat = document.getElementById("cat1");
-  let meanCat = document.getElementById("cat2");
+  const niceCat = document.getElementById("cat1");
+  const meanCat = document.getElementById("cat2");
 
   const finishPractice = () => {
     viewNextButton();
@@ -39,11 +39,10 @@ function initTrial() {
   niceCat.addEventListener("click", incrementNiceCatCount);
   meanCat.addEventListener("click", incrementMeanCatCount);
   document.onkeydown = function(e) {
-    if (e.keyCode === 49) {
+    if (e.key === '1')
       incrementNiceCatCount();
-    } else if(e.keyCode == 50) {
+    else if(e.key === '2')
       incrementMeanCatCount();
-    }
   }
 }
 
@@ -52,7 +51,7 @@ function incrementNiceCatCount() {
   counter.textContent = progress + 1 + "/10";
   niceCatCount++;
   console.log("mean:" + meanCatCount);
-  console.log("nice:" +niceCatCount);
+  console.log("nice:" + niceCatCount);
   console.log("progress:" + progress);
   let container = document.getElementById("cat-container");
   let niceCat = document.getElementById("cat1");
@@ -125,13 +124,13 @@ function setMeanCatImage() {
   container.appendChild(image);
 }
 
-function calculateResults() {
-  /*if (niceCatCount > meanCatCount) {
-    setNiceCatImage();
-  } else {
-    setMeanCatImage();
-  }*/
-}
+// function calculateResults() {
+//   /*if (niceCatCount > meanCatCount) {
+//     setNiceCatImage();
+//   } else {
+//     setMeanCatImage();
+//   }*/
+// }
 
 function calcResults() {
   if (niceCatCount > meanCatCount) {

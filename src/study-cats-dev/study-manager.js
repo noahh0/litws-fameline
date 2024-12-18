@@ -33,8 +33,7 @@ import demographicsHTML from "../templates/demographics.html";
 import instructionsHTML from "./templates/instructions.html";
 import practiceHTML from "./templates/practice.html";
 import preTrialBreakHTML from "./templates/pre-trial-break.html";
-import questHTML from "../templates/questionnaire.html";
-import loadingHTML from "../templates/loading.html";
+import trialHTML from "./templates/trial.html";
 import resultsHTML from "../templates/results.html";
 import resultsFooterHTML from "../templates/results-footer.html";
 import commentsHTML from "../templates/comments.html";
@@ -47,8 +46,7 @@ let demographicsTemplate = Handlebars.compile(demographicsHTML);
 let instructionsTemplate = Handlebars.compile(instructionsHTML);
 let practiceTemplate = Handlebars.compile(practiceHTML);
 let preTrialBreakTemplate = Handlebars.compile(preTrialBreakHTML);
-let questTemplate = Handlebars.compile(questHTML);
-let loadingTemplate = Handlebars.compile(loadingHTML);
+let trialTemplate = Handlebars.compile(trialHTML);
 let resultsTemplate = Handlebars.compile(resultsHTML);
 let resultsFooterTemplate = Handlebars.compile(resultsFooterHTML);
 let commentsTemplate = Handlebars.compile(commentsHTML);
@@ -123,19 +121,26 @@ module.exports = (function(exports) {
 				display_next_button: true,
 				template: preTrialBreakTemplate,
 			},
-			QUESTIONNAIRE_1: {
-				name: "quest1",
+			// QUESTIONNAIRE_1: {
+			// 	name: "quest1",
+			// 	type: LITW.engine.SLIDE_TYPE.SHOW_SLIDE,
+			// 	display_element_id: "quest1",
+			// 	template: questTemplate,
+			// 	display_next_button: false,
+			// },
+			// QUESTIONNAIRE_2: {
+			// 	name: "quest2",
+			// 	type: LITW.engine.SLIDE_TYPE.SHOW_SLIDE,
+			// 	display_element_id: "quest2",
+			// 	template: questTemplate,
+			// 	display_next_button: false,
+			// },
+			TRIAL: {
+				name: "trial",
 				type: LITW.engine.SLIDE_TYPE.SHOW_SLIDE,
-				display_element_id: "quest1",
-				template: questTemplate,
+				display_element_id: "trial",
 				display_next_button: false,
-			},
-			QUESTIONNAIRE_2: {
-				name: "quest2",
-				type: LITW.engine.SLIDE_TYPE.SHOW_SLIDE,
-				display_element_id: "quest2",
-				template: questTemplate,
-				display_next_button: false,
+				template: trialTemplate,
 			},
 			COMMENTS: {
 				name: "comments",
@@ -170,69 +175,70 @@ module.exports = (function(exports) {
 		timeline.push(config.slides.PRACTICE);
 		timeline.push(config.slides.PRE_TRIAL_BREAK);
 
-		config.slides.QUESTIONNAIRE_1.template_data = () => {
-			return getQuest1Data('quest1', 50)
-		};
-		timeline.push(config.slides.QUESTIONNAIRE_1);
-		config.slides.QUESTIONNAIRE_2.template_data = () => {
-			return getQuest2Data('quest2', './img/cat-computer.png', 100);
-		}
-		timeline.push(config.slides.QUESTIONNAIRE_2);
+		// config.slides.QUESTIONNAIRE_1.template_data = () => {
+		// 	return getQuest1Data('quest1', 50)
+		// };
+		// timeline.push(config.slides.QUESTIONNAIRE_1);
+		// config.slides.QUESTIONNAIRE_2.template_data = () => {
+		// 	return getQuest2Data('quest2', './img/cat-computer.png', 100);
+		// }
+		// timeline.push(config.slides.QUESTIONNAIRE_2);
+		timeline.push(config.slides.TRIAL);
 		timeline.push(config.slides.COMMENTS);
 		timeline.push(config.slides.RESULTS);
 		return timeline;
 	}
 
-	function getQuest1Data(quest_id, completion) {
-		return {
-			title: $.i18n(`litw-study-${quest_id}-title`),
-			progress: {
-				value: completion
-			},
-			quest_id: quest_id,
-			done_button: $.i18n(`litw-study-${quest_id}-save`),
-			questions: [1, 2].map((x)=> {
-				return {
-					id: x,
-					text: $.i18n(`litw-study-${quest_id}-q${x}`)
-				}
-			}),
-			responses: [1, 2, 3, 4, 5].map((x)=> {
-				return {
-					id: x,
-					text: $.i18n(`litw-study-quest-a${x}`)
-				}
-			})
-		}
-	}
+	// function getQuest1Data(quest_id, completion) {
+	// 	return {
+	// 		title: $.i18n(`litw-study-${quest_id}-title`),
+	// 		progress: {
+	// 			value: completion
+	// 		},
+	// 		quest_id: quest_id,
+	// 		done_button: $.i18n(`litw-study-${quest_id}-save`),
+	// 		questions: [1, 2].map((x)=> {
+	// 			return {
+	// 				id: x,
+	// 				text: $.i18n(`litw-study-${quest_id}-q${x}`)
+	// 			}
+	// 		}),
+	// 		responses: [1, 2, 3, 4, 5].map((x)=> {
+	// 			return {
+	// 				id: x,
+	// 				text: $.i18n(`litw-study-quest-a${x}`)
+	// 			}
+	// 		})
+	// 	}
+	// }
 
-	function getQuest2Data(quest_id, img_url, completion) {
-		return {
-			title: $.i18n(`litw-study-${quest_id}-title`),
-			img_prompt: {
-				url: img_url,
-				text_before: $.i18n(`litw-study-${quest_id}-prompt`),
-			},
-			progress: {
-				value: completion
-			},
-			quest_id: quest_id,
-			done_button: $.i18n(`litw-study-${quest_id}-save`),
-			questions: [1, 2].map((q)=> {
-				return {
-					id: q,
-					text: $.i18n(`litw-study-${quest_id}-q${q}`),
-				}
-				//ALERT: You can also add responses for each question.
-			}),
-			responses: [1, 2, 3, 4, 5].map((x)=> {
-				return {
-					id: x,
-					text: $.i18n(`litw-study-quest-a${x}`)
-				}
-			})
-		}
-	}
+	// function getQuest2Data(quest_id, img_url, completion) {
+	// 	return {
+	// 		title: $.i18n(`litw-study-${quest_id}-title`),
+	// 		img_prompt: {
+	// 			url: img_url,
+	// 			text_before: $.i18n(`litw-study-${quest_id}-prompt`),
+	// 		},
+	// 		progress: {
+	// 			value: completion
+	// 		},
+	// 		quest_id: quest_id,
+	// 		done_button: $.i18n(`litw-study-${quest_id}-save`),
+	// 		questions: [1, 2].map((q)=> {
+	// 			return {
+	// 				id: q,
+	// 				text: $.i18n(`litw-study-${quest_id}-q${q}`),
+	// 			}
+	// 			//ALERT: You can also add responses for each question.
+	// 		}),
+	// 		responses: [1, 2, 3, 4, 5].map((x)=> {
+	// 			return {
+	// 				id: x,
+	// 				text: $.i18n(`litw-study-quest-a${x}`)
+	// 			}
+	// 		})
+	// 	}
+	// }
 
 	function calculateResults() {
 		//TODO: Nothing to calculate

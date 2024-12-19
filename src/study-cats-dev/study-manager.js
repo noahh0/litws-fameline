@@ -25,19 +25,18 @@ import * as litw_engine from "../js/litw/litw.engine.0.1.0";
 LITW.engine = litw_engine;
 
 //LOAD THE HTML FOR STUDY PAGES
-import progressHTML from "../templates/progress.html";
+import progressHTML from "./templates/progress.html";
 Handlebars.registerPartial('prog', Handlebars.compile(progressHTML));
 import introHTML from "./templates/introduction.html";
-import irb_LITW_HTML from "../templates/irb2-litw.html";
-import demographicsHTML from "../templates/demographics.html";
+import irb_LITW_HTML from "./templates/irb2-litw.html";
+import demographicsHTML from "./templates/demographics.html";
 import instructionsHTML from "./templates/instructions.html";
 import practiceHTML from "./templates/practice.html";
 import preTrialBreakHTML from "./templates/pre-trial-break.html";
 import trialHTML from "./templates/trial.html";
-import resultsHTML from "../templates/results.html";
-import resultsFooterHTML from "../templates/results-footer.html";
+import resultsHTML from "./templates/results.html";
+import resultsFooterHTML from "./templates/results-footer.html";
 import commentsHTML from "../templates/comments.html";
-import { template } from "lodash";
 
 //CONVERT HTML INTO TEMPLATES
 let introTemplate = Handlebars.compile(introHTML);

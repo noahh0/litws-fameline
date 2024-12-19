@@ -129,14 +129,6 @@ function setMeanCatImage() {
   container.appendChild(image);
 }
 
-// function calculateResults() {
-//   /*if (niceCatCount > meanCatCount) {
-//     setNiceCatImage();
-//   } else {
-//     setMeanCatImage();
-//   }*/
-// }
-
 function calcResults() {
   if (niceCatCount > meanCatCount) {
     setNiceCatImage();

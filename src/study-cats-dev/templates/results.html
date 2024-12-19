@@ -23,7 +23,7 @@
             <div class="accordion-body pb-4">
                 <div id="results-main" class="container center-content p-0">
                     <h5 class="text-center p-2" data-i18n="litw-results-detail-p1"></h5>
-                    <img src="./img/cat-computer.png" class="img-fluid" alt="Cat Computer">
+                    <div id= "cat-container" class="text-center instructions-stim-container"></div>
                     <div class="p-4">
                         <p data-i18n="litw-results-detail-p2"></p>
                     </div>
@@ -75,7 +75,5 @@
 <div id="results-footer"></div>
 
 <script type="text/javascript">
-    $(document).ready(function () {
-        //TODO: trigger post-loading functions?
-    });
+	window.onload = calcResults();
 </script>

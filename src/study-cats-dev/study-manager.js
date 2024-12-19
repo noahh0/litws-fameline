@@ -36,7 +36,7 @@ import preTrialBreakHTML from "./templates/pre-trial-break.html";
 import trialHTML from "./templates/trial.html";
 import resultsHTML from "./templates/results.html";
 import resultsFooterHTML from "./templates/results-footer.html";
-import commentsHTML from "../templates/comments.html";
+import commentsHTML from "./templates/comments.html";
 
 //CONVERT HTML INTO TEMPLATES
 let introTemplate = Handlebars.compile(introHTML);

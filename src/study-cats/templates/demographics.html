@@ -1,4 +1,5 @@
 <div class="row">
+    <div id="local_data_id" data-local_id="{{ local_data_id }}"></div>
     <div class="col-12">
         <div id="title" class="h3 bolded-blue text-center">
             <span data-i18n="litw-demographics-title"></span>
@@ -25,6 +26,8 @@
     }
 
     $(document).ready(function() {
+        const LOCAL_KEY = document.getElementById('local_data_id').dataset.local_id;
+        let localData = LITW.data.loadFromLocal(LOCAL_KEY);
         let countries = {};
         let languages = {};
         let religions = {};
@@ -39,23 +42,23 @@
                     religions = data;
                 }).done(function () {
                     $("#demographicsForm").alpaca({
-                        "data": false,
+                        "data": localData,
                         "schema": {
                             "description": "LITW Project - Demographics",
                             "type": "object",
                             "properties": {
                                 "demographics-retake": {
                                     "title": $.i18n('litw-demographics-retake'),
-                                    "enum": ['no', 'yes', 'unsure'],
+                                    "enum": ['no', 'yes'],
                                     "required": true
                                 },
-                                "demographics-country": {
-                                    "title": $.i18n("litw-demographics-country"),
+                                "demographics-country-grow": {
+                                    "title": $.i18n('litw-demographics-country-grow'),
                                     "enum": Object.keys(countries),
                                     "required": true
                                 },
-                                "demographics-culture": {
-                                    "title": $.i18n("litw-demographics-culture"),
+                                "demographics-country-live": {
+                                    "title": $.i18n('litw-demographics-country-live'),
                                     "enum": Object.keys(countries),
                                     "required": true
                                 },
@@ -63,6 +66,16 @@
                                     "title": $.i18n('litw-demographics-age'),
                                     "required": true,
                                     //"minimum": 18
+                                },
+                                "demographics-language-native": {
+                                    "title": $.i18n('litw-demographics-language-native'),
+                                    "enum": Object.keys(languages),
+                                    "required": true
+                                },
+                                "demographics-religion": {
+                                    "title": $.i18n('litw-demographics-religion'),
+                                    "enum": Object.keys(religions),
+                                    "required": true
                                 },
                                 "demographics-gender": {
                                     "title": $.i18n('litw-demographics-gender'),
@@ -77,23 +90,24 @@
                                     "title": $.i18n('litw-demographics-education'),
                                     "enum": ['no-formal-edu', 'incomplete-primary', 'complete-primary',
                                         'incomplete-sec-high', 'complete-sec-high', 'university-no-degree',
-                                        'university-degree', 'incomplete-grad-prof', 'complete-grad-prof'],
+                                        'university-degree', 'incomplete-grad', 'complete-grad'],
                                     "required": true
                                 },
                                 "demographics-race": {
                                     "title": $.i18n('litw-demographics-race'),
-                                    "enum": ['native', 'asian', 'black', 'latino', 'islander', 'white','other'],
-                                    "required": true
+                                    "enum": ['native', 'asian', 'black', 'latino', 'islander', 'white', 'no-disclosure',
+                                        'other'],
+                                    "required": false
                                 },
                                 "demographics-race-other": {
                                     "title": $.i18n('litw-demographics-race-other'),
                                     "required": false
                                 },
-                                "demographics-pet-allergy": {
-                                    "title": $.i18n("litw-demographics-pet-allergy"),
-                                    "enum": ['no', 'yes', 'unsure'],
+                                "demographics-allergy": {
+                                    "title": $.i18n('litw-demographics-pet-allergy'),
+                                    "enum": ['yes', 'no', 'unsure'],
                                     "required": true
-                                },
+                                }
                             }
                         },
                         "options": {
@@ -101,29 +115,26 @@
                             "fields": {
                                 "demographics-retake": {
                                     "type": 'select',
-                                    "optionLabels": [$.i18n('litw-demographics-no'), $.i18n('litw-demographics-unsure'), $.i18n('litw-demographics-yes')],
+                                    "optionLabels": [$.i18n('litw-demographics-no'), $.i18n('litw-demographics-yes')],
                                     "sort": false,
-                                    //"fieldClass": "form-group row my-4",
                                     "noneLabel": "--",
                                     "removeDefaultNone": false,
                                     "showMessages": false,
                                     "default": "--"
                                 },
-                                "demographics-country": {
+                                "demographics-country-grow": {
                                     "type": 'select',
                                     "optionLabels": Object.values(countries),
                                     "sort": false,
-                                    //"fieldClass": "row",
                                     "noneLabel": "--",
                                     "removeDefaultNone": false,
                                     "showMessages": false,
                                     "default": "--"
                                 },
-                                "demographics-culture": {
+                                "demographics-country-live": {
                                     "type": 'select',
                                     "optionLabels": Object.values(countries),
                                     "sort": false,
-                                    //"fieldClass": "row",
                                     "noneLabel": "--",
                                     "removeDefaultNone": false,
                                     "showMessages": false,
@@ -131,8 +142,25 @@
                                 },
                                 "demographics-age": {
                                     "type": 'integer',
-                                    //"fieldClass": "row",
                                     "showMessages": false
+                                },
+                                "demographics-language-native": {
+                                    "type": 'select',
+                                    "optionLabels": Object.values(languages),
+                                    "sort": false,
+                                    "noneLabel": "--",
+                                    "removeDefaultNone": false,
+                                    "showMessages": false,
+                                    "default": "--"
+                                },
+                                "demographics-religion": {
+                                    "type": 'select',
+                                    "optionLabels": Object.values(religions),
+                                    "sort": false,
+                                    "noneLabel": "--",
+                                    "removeDefaultNone": false,
+                                    "showMessages": false,
+                                    "default": "--"
                                 },
                                 "demographics-gender": {
                                     "type": 'select',
@@ -140,7 +168,6 @@
                                         $.i18n('litw-demographics-male'), $.i18n('litw-demographics-nonbinary'),
                                         $.i18n('litw-demographics-nodisclose'), $.i18n('litw-demographics-other')],
                                     "sort": false,
-                                    //"fieldClass": "row",
                                     "noneLabel": "--",
                                     "removeDefaultNone": false,
                                     "showMessages": false,
@@ -148,7 +175,6 @@
                                 },
                                 "demographics-gender-other": {
                                     "type": 'text',
-                                    //"fieldClass": "row",
                                     "showMessages": false,
                                     "hidden": true
                                 },
@@ -176,31 +202,31 @@
                                         $.i18n('litw-demographics-race-latino'),
                                         $.i18n('litw-demographics-race-islander'),
                                         $.i18n('litw-demographics-race-white'),
+                                        $.i18n('litw-demographics-nodisclose'),
                                         $.i18n('litw-demographics-other'),
                                     ],
                                     "sort": false,
-                                    "noneLabel": "--",
-                                    "removeDefaultNone": false,
+                                    "removeDefaultNone": true,
+                                    //"fieldClass": "row",
                                     "showMessages": false,
-                                    "hidden": true,
-                                    "default": "--"
+                                    "hidden": true
                                 },
                                 "demographics-race-other": {
                                     "type": 'text',
+                                    //"fieldClass": "row",
                                     "showMessages": false,
-                                    "hidden": true,
-                                    "default": "--"
+                                    "hidden": true
                                 },
-                                "demographics-pet-allergy": {
+                                "demographics-allergy": {
                                     "type": 'select',
-                                    "optionLabels": [$.i18n('litw-demographics-no'), $.i18n('litw-demographics-yes'), $.i18n('litw-demographics-unsure')],
+                                    "optionLabels": [$.i18n('litw-demographics-yes'), $.i18n('litw-demographics-no'),
+                                        $.i18n('litw-demographics-unsure')],
                                     "sort": false,
-                                    //"fieldClass": "form-group row my-4",
                                     "noneLabel": "--",
                                     "removeDefaultNone": false,
                                     "showMessages": false,
                                     "default": "--"
-                                },
+                                }
                             }
                         },
                         "postRender": function (control) {

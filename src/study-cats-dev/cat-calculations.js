@@ -34,8 +34,8 @@ function initTrial() {
   meanCatCount = 0;
   progress = 0;
   chooseRandomCatImages();
-  let niceCat = document.getElementById("cat1");
-  let meanCat = document.getElementById("cat2");
+  const niceCat = document.getElementById("cat1");
+  const meanCat = document.getElementById("cat2");
   niceCat.addEventListener("click", incrementNiceCatCount);
   meanCat.addEventListener("click", incrementMeanCatCount);
   document.onkeydown = function(e) {
@@ -52,11 +52,11 @@ function incrementNiceCatCount() {
   console.log("nice:" + niceCatCount);
   console.log("progress:" + (progress + 1));
   if (checkProgress()) {
-    let counter = document.getElementById("counter");
+    const counter = document.getElementById("counter");
     counter.textContent = Math.min(progress + 1, 10) + "/10";
-    let container = document.getElementById("cat-container");
-    let niceCat = document.getElementById("cat1");
-    let meanCat = document.getElementById("cat2");
+    const container = document.getElementById("cat-container");
+    const niceCat = document.getElementById("cat1");
+    const meanCat = document.getElementById("cat2");
     container.removeChild(niceCat);
     container.removeChild(meanCat);
     chooseRandomCatImages();
@@ -69,11 +69,11 @@ function incrementMeanCatCount() {
   console.log("nice:" + niceCatCount);
   console.log("progress:" + (progress + 1));
   if (checkProgress()) {
-    let counter = document.getElementById("counter");
+    const counter = document.getElementById("counter");
     counter.textContent = Math.min(progress + 1, 10) + "/10";
-    let container = document.getElementById("cat-container");
-    let niceCat = document.getElementById("cat1");
-    let meanCat = document.getElementById("cat2");
+    const container = document.getElementById("cat-container");
+    const niceCat = document.getElementById("cat1");
+    const meanCat = document.getElementById("cat2");
     container.removeChild(niceCat);
     container.removeChild(meanCat);
     chooseRandomCatImages();
@@ -100,18 +100,18 @@ function chooseRandomCatImages() {
 }
 
 function selectRandomNiceCat() {
-  let randomNum = Math.floor(Math.random() * 5);
+  const randomNum = Math.floor(Math.random() * 5);
   return niceCatsArray[randomNum];
 }
 
 function selectRandomMeanCat() {
-  let randomNum = Math.floor(Math.random() * 5);
+  const randomNum = Math.floor(Math.random() * 5);
   return meanCatsArray[randomNum];
 }
 
 function setNiceCatImage() {
-  let container = document.getElementById("cat-container");
-  let image = document.createElement("img");
+  const container = document.getElementById("cat-container");
+  const image = document.createElement("img");
   image.setAttribute("id", "cat1");
   image.src = selectRandomNiceCat();
   image.alt = "a nice cat";
@@ -120,8 +120,8 @@ function setNiceCatImage() {
 }
 
 function setMeanCatImage() {
-  let container = document.getElementById("cat-container");
-  let image = document.createElement("img");
+  const container = document.getElementById("cat-container");
+  const image = document.createElement("img");
   image.setAttribute("id", "cat2");
   image.src = selectRandomMeanCat();
   image.alt = "a mean cat";
